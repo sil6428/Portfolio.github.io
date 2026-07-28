@@ -1597,7 +1597,16 @@ main { min-height: 100vh; padding-left: 248px; }
 /* Match global controls to the workspace theme */
 @media (min-width: 901px) {
   .header-links { margin-bottom: 76px; }
-  .site-footer { display: none; }
+  .site-footer {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 24px 0 30px;
+  }
+  .site-footer > div { display: none; }
+  .site-footer > p {
+    grid-column: 1;
+    margin: 0;
+  }
 }
 
 .soundtrack-bars i { background: var(--accent); }
