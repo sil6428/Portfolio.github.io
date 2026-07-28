@@ -65,7 +65,7 @@ function runTerminalCommand(command: string) {
   return responses[normalized] ?? [`Command not found: ${normalized}`, "Type help to see the command list."];
 }
 
-type CatMood = "sit" | "walk" | "pet" | "swat" | "nap";
+type CatMood = "sit" | "walk" | "pet" | "swat" | "nap" | "home";
 
 function PortfolioCat() {
   const [position, setPosition] = useState(280);
@@ -73,6 +73,7 @@ function PortfolioCat() {
   const [mood, setMood] = useState<CatMood>("sit");
   const [message, setMessage] = useState("pspsps?");
   const positionRef = useRef(280);
+  const homeRef = useRef(false);
   const messageTimerRef = useRef<number | null>(null);
   const actionTimersRef = useRef<number[]>([]);
 
@@ -97,6 +98,7 @@ function PortfolioCat() {
   }, []);
 
   const swatSoundtrack = useCallback(() => {
+    if (homeRef.current) return;
     const soundtrack = document.querySelector<HTMLElement>(".soundtrack-toggle");
     if (!soundtrack) return;
 
@@ -107,6 +109,7 @@ function PortfolioCat() {
     showMessage("target spotted", 1500);
 
     later(() => {
+      if (homeRef.current) return;
       setMood("swat");
       soundtrack.classList.add("cat-swatted");
       showMessage("bonk!", 1300);
@@ -114,7 +117,7 @@ function PortfolioCat() {
 
     later(() => {
       soundtrack.classList.remove("cat-swatted");
-      setMood("sit");
+      if (!homeRef.current) setMood("sit");
     }, 2350);
   }, [later, moveTo, showMessage]);
 
@@ -140,7 +143,7 @@ function PortfolioCat() {
 
   useEffect(() => {
     const wander = window.setInterval(() => {
-      if (document.hidden) return;
+      if (document.hidden || homeRef.current) return;
 
       if (Math.random() < 0.3) {
         swatSoundtrack();
@@ -150,7 +153,9 @@ function PortfolioCat() {
       const target = 24 + Math.random() * Math.max(40, window.innerWidth - 130);
       moveTo(target);
       showMessage(Math.random() < 0.5 ? "patrol..." : "mrrp", 1400);
-      later(() => setMood(Math.random() < 0.24 ? "nap" : "sit"), 1900);
+      later(() => {
+        if (!homeRef.current) setMood(Math.random() < 0.24 ? "nap" : "sit");
+      }, 1900);
     }, 7200);
 
     return () => window.clearInterval(wander);
@@ -163,6 +168,48 @@ function PortfolioCat() {
   }, [swatSoundtrack]);
 
   useEffect(() => {
+    const footer = document.querySelector<HTMLElement>(".site-footer");
+    if (!footer) return;
+
+    const checkForHome = () => {
+      const remaining =
+        document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+      const reachedBottom = remaining <= 28;
+
+      if (reachedBottom && !homeRef.current) {
+        homeRef.current = true;
+        footer.classList.add("cat-house-ready");
+        const bounds = footer.getBoundingClientRect();
+        moveTo(bounds.right - 126);
+        setFacing("right");
+        showMessage("home time", 1500);
+
+        later(() => {
+          if (!homeRef.current) return;
+          setMood("home");
+          footer.classList.remove("cat-house-ready");
+          footer.classList.add("cat-is-home");
+          showMessage("zzz", 1200);
+        }, 1750);
+      } else if (!reachedBottom && homeRef.current) {
+        homeRef.current = false;
+        footer.classList.remove("cat-house-ready", "cat-is-home");
+        setMood("sit");
+        setFacing("left");
+        showMessage("back on patrol", 1400);
+      }
+    };
+
+    window.addEventListener("scroll", checkForHome, { passive: true });
+    const initialCheck = window.setTimeout(checkForHome, 0);
+    return () => {
+      window.clearTimeout(initialCheck);
+      window.removeEventListener("scroll", checkForHome);
+      footer.classList.remove("cat-house-ready", "cat-is-home");
+    };
+  }, [later, moveTo, showMessage]);
+
+  useEffect(() => {
     const actionTimers = actionTimersRef.current;
     return () => {
       if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current);
@@ -171,6 +218,10 @@ function PortfolioCat() {
   }, []);
 
   function petCat() {
+    if (homeRef.current) {
+      showMessage("zzz", 1000);
+      return;
+    }
     setMood("pet");
     showMessage("purr  +1", 1500);
     later(() => setMood("sit"), 1200);
@@ -191,6 +242,7 @@ function PortfolioCat() {
         <i className="cat-shadow" />
         <i className="cat-tail" />
         <i className="cat-body" />
+        <i className="cat-chest" />
         <i className="cat-leg cat-leg-back" />
         <i className="cat-leg cat-leg-front" />
         <i className="cat-head">
@@ -198,7 +250,10 @@ function PortfolioCat() {
           <b className="cat-ear cat-ear-right" />
           <b className="cat-eye cat-eye-left" />
           <b className="cat-eye cat-eye-right" />
+          <b className="cat-muzzle" />
           <b className="cat-nose" />
+          <b className="cat-whiskers cat-whiskers-left" />
+          <b className="cat-whiskers cat-whiskers-right" />
         </i>
         <i className="cat-paw" />
         <i className="cat-heart">♥</i>
@@ -476,6 +531,10 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>05</code>
+                    <div><strong>Cat house</strong><p>Scroll all the way to the bottom. The cat walks into its house in the footer and comes back out when you scroll up.</p></div>
+                  </li>
+                  <li>
+                    <code>06</code>
                     <div><strong>Cat patrol</strong><p>Leave the page open. The cat wanders, naps, and occasionally swats the soundtrack without being asked.</p></div>
                   </li>
                 </ol>
