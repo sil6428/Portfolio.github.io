@@ -185,6 +185,7 @@ function PortfolioCat() {
     homeRef.current = false;
     busyRef.current = false;
     document.querySelector(".site-footer")?.classList.remove("cat-house-ready", "cat-is-home");
+    document.body.classList.remove("cat-footer-visible");
     const initial = Math.max(24, Math.min(window.innerWidth * 0.26, window.innerWidth - 96));
     positionRef.current = initial;
     const routeReset = window.setTimeout(() => {
@@ -239,6 +240,8 @@ function PortfolioCat() {
     if (!footer) return;
 
     const updateHomeState = (reachedBottom: boolean) => {
+      document.body.classList.toggle("cat-footer-visible", reachedBottom);
+
       if (reachedBottom && !homeRef.current) {
         homeRef.current = true;
         footer.classList.add("cat-house-ready");
@@ -281,6 +284,7 @@ function PortfolioCat() {
       window.removeEventListener("resize", checkForHome);
       houseObserver.disconnect();
       footer.classList.remove("cat-house-ready", "cat-is-home");
+      document.body.classList.remove("cat-footer-visible");
     };
   }, [later, moveTo, pathname, showMessage]);
 
