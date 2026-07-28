@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const PLAYLIST_STORAGE_KEY = "affan-portfolio-spotify-playlist-v2";
 const DEFAULT_PLAYLIST_ID = "1whuIX2zMB3aYGf5oEdCGs";
@@ -68,6 +69,7 @@ function runTerminalCommand(command: string) {
 type CatMood = "sit" | "walk" | "pet" | "swat" | "nap" | "jump" | "home";
 
 function PortfolioCat() {
+  const pathname = usePathname();
   const [position, setPosition] = useState(280);
   const [facing, setFacing] = useState<"left" | "right">("right");
   const [mood, setMood] = useState<CatMood>("sit");
@@ -128,7 +130,6 @@ function PortfolioCat() {
   const interactWithPage = useCallback(() => {
     if (homeRef.current || busyRef.current) return false;
 
-    const path = window.location.pathname;
     const interactions = [
       { match: "/interests/badminton", selector: ".shuttle", effect: "cat-play-badminton", message: "birdie!" },
       { match: "/interests/3d-printing", selector: ".printer-head", effect: "cat-play-printer", message: "machine goes brrr" },
@@ -141,7 +142,7 @@ function PortfolioCat() {
       { match: "/work/ssik", selector: ".case-facts", effect: "cat-play-case", message: "consulting" },
       { match: "/", selector: ".browser-frame", effect: "cat-play-work", message: "caught a bug" },
     ];
-    const interaction = interactions.find((item) => item.match === path);
+    const interaction = interactions.find((item) => item.match === pathname);
     const target = interaction
       ? document.querySelector<HTMLElement>(interaction.selector)
       : null;
@@ -169,7 +170,7 @@ function PortfolioCat() {
       if (!homeRef.current) setMood("sit");
     }, 2800);
     return true;
-  }, [later, moveTo, showMessage]);
+  }, [later, moveTo, pathname, showMessage]);
 
   useEffect(() => {
     const resetPosition = () => {
@@ -179,17 +180,26 @@ function PortfolioCat() {
       setPosition(next);
     };
 
-    const initialUpdate = window.setTimeout(() => {
-      const initial = Math.max(24, Math.min(window.innerWidth * 0.58, window.innerWidth - 96));
-      positionRef.current = initial;
+    actionTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    actionTimersRef.current = [];
+    homeRef.current = false;
+    busyRef.current = false;
+    document.querySelector(".site-footer")?.classList.remove("cat-house-ready", "cat-is-home");
+    const initial = Math.max(24, Math.min(window.innerWidth * 0.26, window.innerWidth - 96));
+    positionRef.current = initial;
+    const routeReset = window.setTimeout(() => {
       setPosition(initial);
+      setFacing("right");
+      setMood("sit");
+      setMessage("");
     }, 0);
+
     window.addEventListener("resize", resetPosition);
     return () => {
-      window.clearTimeout(initialUpdate);
+      window.clearTimeout(routeReset);
       window.removeEventListener("resize", resetPosition);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     const wander = window.setInterval(() => {
@@ -202,11 +212,14 @@ function PortfolioCat() {
         return;
       }
 
-      const target = 24 + Math.random() * Math.max(40, window.innerWidth - 130);
+      const shouldNap = Math.random() < 0.24;
+      const target = shouldNap
+        ? Math.max(28, Math.min(window.innerWidth * 0.27, window.innerWidth - 130))
+        : 24 + Math.random() * Math.max(40, window.innerWidth - 130);
       moveTo(target);
-      showMessage(Math.random() < 0.5 ? "patrol..." : "mrrp", 1400);
+      showMessage(shouldNap ? "nap spot found" : Math.random() < 0.5 ? "patrol..." : "mrrp", 1400);
       later(() => {
-        if (!homeRef.current) setMood(Math.random() < 0.24 ? "nap" : "sit");
+        if (!homeRef.current) setMood(shouldNap ? "nap" : "sit");
       }, 1900);
     }, 7200);
 
@@ -262,7 +275,7 @@ function PortfolioCat() {
       window.removeEventListener("scroll", checkForHome);
       footer.classList.remove("cat-house-ready", "cat-is-home");
     };
-  }, [later, moveTo, showMessage]);
+  }, [later, moveTo, pathname, showMessage]);
 
   useEffect(() => {
     const actionTimers = actionTimersRef.current;

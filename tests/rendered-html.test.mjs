@@ -149,4 +149,6 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /cat-play-photo/);
   assert.match(source, /cat-play-rack/);
   assert.match(source, /Page-specific tricks/);
+  assert.match(source, /usePathname/);
+  assert.match(source, /nap spot found/);
 });
