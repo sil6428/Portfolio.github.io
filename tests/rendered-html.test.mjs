@@ -137,4 +137,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /window\.localStorage/);
   assert.match(source, /KONAMI_SEQUENCE/);
   assert.match(source, /AFFAN_OS/);
+  assert.match(source, /PortfolioCat/);
+  assert.match(source, /portfolio-cat-swat/);
+  assert.match(source, /Hidden things and how to find them/);
+  assert.match(source, /Double-click it/);
 });

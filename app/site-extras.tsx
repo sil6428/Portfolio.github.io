@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 
 const PLAYLIST_STORAGE_KEY = "affan-portfolio-spotify-playlist-v2";
 const DEFAULT_PLAYLIST_ID = "1whuIX2zMB3aYGf5oEdCGs";
@@ -43,7 +43,7 @@ function runTerminalCommand(command: string) {
   const normalized = command.trim().toLowerCase();
 
   const responses: Record<string, string[]> = {
-    help: ["Available commands: whoami, projects, interests, status, clear"],
+    help: ["Available commands: whoami, projects, interests, status, eggs, cat, clear"],
     whoami: [
       "Affan Shaikh",
       "Cybersecurity student, builder, and regional badminton player.",
@@ -57,10 +57,154 @@ function runTerminalCommand(command: string) {
       "There is a whole Interests page hiding in plain sight.",
     ],
     status: ["ONLINE", "Currently turning old computers into a Proxmox server."],
+    cat: ["Calling the resident cat...", "It has unfinished business with the soundtrack button."],
+    eggs: ["Opening easter-eggs.md..."],
   };
 
   if (!normalized) return [];
   return responses[normalized] ?? [`Command not found: ${normalized}`, "Type help to see the command list."];
+}
+
+type CatMood = "sit" | "walk" | "pet" | "swat" | "nap";
+
+function PortfolioCat() {
+  const [position, setPosition] = useState(280);
+  const [facing, setFacing] = useState<"left" | "right">("right");
+  const [mood, setMood] = useState<CatMood>("sit");
+  const [message, setMessage] = useState("pspsps?");
+  const positionRef = useRef(280);
+  const messageTimerRef = useRef<number | null>(null);
+  const actionTimersRef = useRef<number[]>([]);
+
+  const later = useCallback((callback: () => void, delay: number) => {
+    const timer = window.setTimeout(callback, delay);
+    actionTimersRef.current.push(timer);
+  }, []);
+
+  const showMessage = useCallback((text: string, duration = 1800) => {
+    setMessage(text);
+    if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current);
+    messageTimerRef.current = window.setTimeout(() => setMessage(""), duration);
+  }, []);
+
+  const moveTo = useCallback((target: number) => {
+    const maximum = Math.max(12, window.innerWidth - 92);
+    const next = Math.max(12, Math.min(maximum, target));
+    setFacing(next < positionRef.current ? "left" : "right");
+    positionRef.current = next;
+    setMood("walk");
+    setPosition(next);
+  }, []);
+
+  const swatSoundtrack = useCallback(() => {
+    const soundtrack = document.querySelector<HTMLElement>(".soundtrack-toggle");
+    if (!soundtrack) return;
+
+    const bounds = soundtrack.getBoundingClientRect();
+    const soundtrackOnLeft = bounds.left < window.innerWidth / 2;
+    moveTo(soundtrackOnLeft ? bounds.right + 5 : bounds.left - 78);
+    setFacing(soundtrackOnLeft ? "left" : "right");
+    showMessage("target spotted", 1500);
+
+    later(() => {
+      setMood("swat");
+      soundtrack.classList.add("cat-swatted");
+      showMessage("bonk!", 1300);
+    }, 1250);
+
+    later(() => {
+      soundtrack.classList.remove("cat-swatted");
+      setMood("sit");
+    }, 2350);
+  }, [later, moveTo, showMessage]);
+
+  useEffect(() => {
+    const resetPosition = () => {
+      const maximum = Math.max(12, window.innerWidth - 92);
+      const next = Math.min(positionRef.current, maximum);
+      positionRef.current = next;
+      setPosition(next);
+    };
+
+    const initialUpdate = window.setTimeout(() => {
+      const initial = Math.max(24, Math.min(window.innerWidth * 0.58, window.innerWidth - 96));
+      positionRef.current = initial;
+      setPosition(initial);
+    }, 0);
+    window.addEventListener("resize", resetPosition);
+    return () => {
+      window.clearTimeout(initialUpdate);
+      window.removeEventListener("resize", resetPosition);
+    };
+  }, []);
+
+  useEffect(() => {
+    const wander = window.setInterval(() => {
+      if (document.hidden) return;
+
+      if (Math.random() < 0.3) {
+        swatSoundtrack();
+        return;
+      }
+
+      const target = 24 + Math.random() * Math.max(40, window.innerWidth - 130);
+      moveTo(target);
+      showMessage(Math.random() < 0.5 ? "patrol..." : "mrrp", 1400);
+      later(() => setMood(Math.random() < 0.24 ? "nap" : "sit"), 1900);
+    }, 7200);
+
+    return () => window.clearInterval(wander);
+  }, [later, moveTo, showMessage, swatSoundtrack]);
+
+  useEffect(() => {
+    const callCat = () => swatSoundtrack();
+    window.addEventListener("portfolio-cat-swat", callCat);
+    return () => window.removeEventListener("portfolio-cat-swat", callCat);
+  }, [swatSoundtrack]);
+
+  useEffect(() => {
+    const actionTimers = actionTimersRef.current;
+    return () => {
+      if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current);
+      actionTimers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, []);
+
+  function petCat() {
+    setMood("pet");
+    showMessage("purr  +1", 1500);
+    later(() => setMood("sit"), 1200);
+  }
+
+  return (
+    <button
+      className={`portfolio-cat cat-${mood}`}
+      type="button"
+      style={{ left: position }}
+      aria-label="Pet the roaming portfolio cat. Double-click to send it after the soundtrack."
+      title="Pet me. Double-click to swat the soundtrack."
+      onClick={petCat}
+      onDoubleClick={swatSoundtrack}
+    >
+      <span className="cat-message" aria-live="polite">{message}</span>
+      <span className={`cat-sprite cat-facing-${facing}`} aria-hidden="true">
+        <i className="cat-shadow" />
+        <i className="cat-tail" />
+        <i className="cat-body" />
+        <i className="cat-leg cat-leg-back" />
+        <i className="cat-leg cat-leg-front" />
+        <i className="cat-head">
+          <b className="cat-ear cat-ear-left" />
+          <b className="cat-ear cat-ear-right" />
+          <b className="cat-eye cat-eye-left" />
+          <b className="cat-eye cat-eye-right" />
+          <b className="cat-nose" />
+        </i>
+        <i className="cat-paw" />
+        <i className="cat-heart">♥</i>
+      </span>
+    </button>
+  );
 }
 
 export default function SiteExtras() {
@@ -70,6 +214,7 @@ export default function SiteExtras() {
   const [playlistError, setPlaylistError] = useState("");
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalInput, setTerminalInput] = useState("");
+  const [terminalPage, setTerminalPage] = useState<"console" | "eggs">("console");
   const [terminalLines, setTerminalLines] = useState<string[]>([
     "AFFAN_OS v1.0",
     "A quiet corner of the portfolio.",
@@ -87,8 +232,8 @@ export default function SiteExtras() {
   }, []);
 
   useEffect(() => {
-    if (terminalOpen) terminalInputRef.current?.focus();
-  }, [terminalOpen]);
+    if (terminalOpen && terminalPage === "console") terminalInputRef.current?.focus();
+  }, [terminalOpen, terminalPage]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -161,12 +306,16 @@ export default function SiteExtras() {
     event.preventDefault();
     const command = terminalInput.trim();
     if (!command) return;
+    const normalized = command.toLowerCase();
 
-    if (command.toLowerCase() === "clear") {
+    if (normalized === "clear") {
       setTerminalLines([]);
     } else {
       setTerminalLines((lines) => [...lines, `visitor@affan:~$ ${command}`, ...runTerminalCommand(command)]);
     }
+
+    if (normalized === "eggs") setTerminalPage("eggs");
+    if (normalized === "cat") window.dispatchEvent(new Event("portfolio-cat-swat"));
     setTerminalInput("");
   }
 
@@ -257,30 +406,86 @@ export default function SiteExtras() {
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="secret-terminal-bar">
-              <span>affan@portfolio: ~</span>
-              <button type="button" aria-label="Close terminal" onClick={() => setTerminalOpen(false)}>
+              <span className="terminal-title">affan@portfolio: ~</span>
+              <div className="terminal-tabs" role="tablist" aria-label="Hidden portfolio pages">
+                <button
+                  className={terminalPage === "console" ? "active" : ""}
+                  type="button"
+                  role="tab"
+                  aria-selected={terminalPage === "console"}
+                  onClick={() => setTerminalPage("console")}
+                >
+                  Console
+                </button>
+                <button
+                  className={terminalPage === "eggs" ? "active" : ""}
+                  type="button"
+                  role="tab"
+                  aria-selected={terminalPage === "eggs"}
+                  onClick={() => setTerminalPage("eggs")}
+                >
+                  Easter eggs
+                </button>
+              </div>
+              <button className="terminal-close" type="button" aria-label="Close terminal" onClick={() => setTerminalOpen(false)}>
                 ×
               </button>
             </div>
-            <div className="terminal-history" aria-live="polite">
-              {terminalLines.map((line, index) => (
-                <p key={`${line}-${index}`}>{line}</p>
-              ))}
-            </div>
-            <form className="terminal-form" onSubmit={submitTerminal}>
-              <label htmlFor="terminal-command">visitor@affan:~$</label>
-              <input
-                id="terminal-command"
-                ref={terminalInputRef}
-                value={terminalInput}
-                onChange={(event) => setTerminalInput(event.target.value)}
-                autoComplete="off"
-                spellCheck={false}
-              />
-            </form>
+            {terminalPage === "console" ? (
+              <>
+                <div className="terminal-history" aria-live="polite">
+                  {terminalLines.map((line, index) => (
+                    <p key={`${line}-${index}`}>{line}</p>
+                  ))}
+                </div>
+                <form className="terminal-form" onSubmit={submitTerminal}>
+                  <label htmlFor="terminal-command">visitor@affan:~$</label>
+                  <input
+                    id="terminal-command"
+                    ref={terminalInputRef}
+                    value={terminalInput}
+                    onChange={(event) => setTerminalInput(event.target.value)}
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+                </form>
+              </>
+            ) : (
+              <div className="easter-guide" role="tabpanel">
+                <div className="easter-guide-heading">
+                  <span>easter-eggs.md</span>
+                  <h2>Hidden things and how to find them</h2>
+                  <p>Everything currently tucked into the portfolio is documented here.</p>
+                </div>
+                <ol>
+                  <li>
+                    <code>01</code>
+                    <div><strong>Hidden terminal</strong><p>Press the backtick key anywhere outside a text field. Press Escape to close it.</p></div>
+                  </li>
+                  <li>
+                    <code>02</code>
+                    <div><strong>Terminal commands</strong><p>Try help, whoami, projects, interests, status, cat, eggs, and clear.</p></div>
+                  </li>
+                  <li>
+                    <code>03</code>
+                    <div><strong>Smash mode</strong><p>Press ↑ ↑ ↓ ↓ ← → ← → B A. The site changes for eight seconds.</p></div>
+                  </li>
+                  <li>
+                    <code>04</code>
+                    <div><strong>The resident cat</strong><p>Click or tap the cat to pet it. Double-click it, or type cat in the console, to send it after the soundtrack button.</p></div>
+                  </li>
+                  <li>
+                    <code>05</code>
+                    <div><strong>Cat patrol</strong><p>Leave the page open. The cat wanders, naps, and occasionally swats the soundtrack without being asked.</p></div>
+                  </li>
+                </ol>
+              </div>
+            )}
           </section>
         </div>
       )}
+
+      <PortfolioCat />
 
       {easterMode && (
         <>
