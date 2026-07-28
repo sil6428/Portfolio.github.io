@@ -60,7 +60,7 @@ test("publishes crawler and structured profile metadata", async () => {
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /ProfilePage/);
   assert.match(html, /Ontario Tech University/);
-  assert.match(html, /\/og\.png/);
+  assert.match(html, /\/portfolio-cover\.png/);
   assert.match(html, /\/terminal-favicon\.svg/);
 
   const sitemapResponse = await render("/sitemap.xml");
@@ -131,7 +131,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   const source = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../app/site-extras.tsx", import.meta.url), "utf8"),
   );
-  assert.match(source, /open\.spotify\.com\/embed\/playlist/);
+  assert.match(source, /open\.spotify\.com\/playlist/);
+  assert.doesNotMatch(source, /open\.spotify\.com\/embed\/playlist/);
   assert.match(source, /1whuIX2zMB3aYGf5oEdCGs/);
   assert.match(source, /window\.localStorage/);
   assert.match(source, /KONAMI_SEQUENCE/);

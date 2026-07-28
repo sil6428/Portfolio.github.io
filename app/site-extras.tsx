@@ -191,7 +191,7 @@ export default function SiteExtras() {
         <aside className="soundtrack-panel" id="soundtrack-panel" aria-label="Portfolio soundtrack">
           <div className="soundtrack-heading">
             <div>
-              <span>BACKGROUND PLAYLIST</span>
+              <span>FULL PLAYLIST</span>
               <strong>Your soundtrack</strong>
             </div>
             <button type="button" aria-label="Close soundtrack" onClick={() => setSoundtrackOpen(false)}>
@@ -201,16 +201,18 @@ export default function SiteExtras() {
 
           {playlistId ? (
             <>
-              <iframe
-                className="spotify-frame"
-                title="Spotify playlist player"
-                src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
-                width="100%"
-                height="352"
-                frameBorder="0"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              />
+              <div className="spotify-link-card">
+                <p>Open the full playlist in Spotify and listen through your account.</p>
+                <a
+                  className="spotify-open-link"
+                  href={`https://open.spotify.com/playlist/${playlistId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span>Listen in Spotify</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
               <div className="soundtrack-actions">
                 <span>Saved on this device</span>
                 <button type="button" onClick={removePlaylist}>
@@ -241,7 +243,7 @@ export default function SiteExtras() {
               )}
             </form>
           )}
-          <small>Playback starts after you press play.</small>
+          <small>No embedded preview. The playlist opens directly in Spotify.</small>
         </aside>
       )}
 

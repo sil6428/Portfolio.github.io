@@ -22,13 +22,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "Networks, security, and software built with purpose.",
       type: "website",
       url: origin,
-      images: [{ url: "/og.png", width: 1200, height: 630, alt: "Affan Shaikh portfolio" }],
+      images: [{ url: "/portfolio-cover.png", width: 1200, height: 630, alt: "Affan Shaikh portfolio" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "Affan Shaikh | Networking & Cybersecurity",
       description: "Networks, security, and software built with purpose.",
-      images: ["/og.png"],
+      images: ["/portfolio-cover.png"],
     },
   };
 }

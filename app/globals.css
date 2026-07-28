@@ -274,7 +274,28 @@ a { color: inherit; text-decoration: none; }
   line-height: 1;
   cursor: pointer;
 }
-.spotify-frame { display: block; border: 0; border-radius: 13px; background: #121212; }
+.spotify-link-card {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid rgba(122,240,186,.2);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(122,240,186,.07), rgba(255,255,255,.025));
+}
+.spotify-link-card p { margin: 0; color: #b9bdc4; font-size: 12px; line-height: 1.65; }
+.spotify-open-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 15px;
+  border: 1px solid rgba(122,240,186,.32);
+  border-radius: 9px;
+  color: #bdf6d9;
+  background: rgba(122,240,186,.08);
+  font: 500 10px "DM Mono";
+}
+.spotify-open-link:hover { background: rgba(122,240,186,.14); }
 .spotify-form p { margin: 0 0 18px; color: #9a9ea6; font-size: 12px; line-height: 1.65; }
 .spotify-form label { display: block; margin-bottom: 8px; color: #71767f; font: 8px "DM Mono"; letter-spacing: .11em; text-transform: uppercase; }
 .spotify-form > div { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
@@ -398,7 +419,7 @@ a { color: inherit; text-decoration: none; }
   .nav-pill a { padding: 8px 16px; }
   .interests-hero h1 { font-size: 52px; }.interests-hero > p:not(.section-label) { font-size: 14px; }
   .interest-story-visual { min-height: 340px; }.printer-visual { width: 86%; height: 300px; }.books-visual { width: 90%; transform: scale(.85); }.rack-visual { width: 88%; }.court-visual { width: 84%; }
-  .soundtrack-panel { padding: 14px; }.spotify-frame { height: 290px; }.terminal-overlay { padding: 12px; }.terminal-history { min-height: 250px; padding: 20px 16px 10px; }.terminal-form { grid-template-columns: 1fr; padding: 12px 16px 18px; }
+  .soundtrack-panel { padding: 14px; }.terminal-overlay { padding: 12px; }.terminal-history { min-height: 250px; padding: 20px 16px 10px; }.terminal-form { grid-template-columns: 1fr; padding: 12px 16px 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1584,6 +1605,17 @@ main { min-height: 100vh; padding-left: 248px; }
   color: var(--accent);
   background: rgba(130,169,216,.08);
 }
+.spotify-link-card {
+  border-color: var(--line);
+  background: #1c1c1c;
+}
+.spotify-link-card p { color: var(--muted); }
+.spotify-open-link {
+  border-color: #526b88;
+  color: var(--accent);
+  background: rgba(130,169,216,.08);
+}
+.spotify-open-link:hover { background: rgba(130,169,216,.14); }
 .spotify-error { color: #d58b87; }
 
 .terminal-overlay { background: rgba(10,10,10,.78); backdrop-filter: blur(7px); }
