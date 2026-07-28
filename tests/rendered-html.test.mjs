@@ -143,4 +143,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /Double-click it/);
   assert.match(source, /cat-is-home/);
   assert.match(source, /Scroll all the way to the bottom/);
+  assert.match(source, /cat-play-badminton/);
+  assert.match(source, /cat-play-printer/);
+  assert.match(source, /cat-play-books/);
+  assert.match(source, /cat-play-photo/);
+  assert.match(source, /cat-play-rack/);
+  assert.match(source, /Page-specific tricks/);
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
 const PLAYLIST_STORAGE_KEY = "affan-portfolio-spotify-playlist-v2";
 const DEFAULT_PLAYLIST_ID = "1whuIX2zMB3aYGf5oEdCGs";
@@ -65,15 +65,17 @@ function runTerminalCommand(command: string) {
   return responses[normalized] ?? [`Command not found: ${normalized}`, "Type help to see the command list."];
 }
 
-type CatMood = "sit" | "walk" | "pet" | "swat" | "nap" | "home";
+type CatMood = "sit" | "walk" | "pet" | "swat" | "nap" | "jump" | "home";
 
 function PortfolioCat() {
   const [position, setPosition] = useState(280);
   const [facing, setFacing] = useState<"left" | "right">("right");
   const [mood, setMood] = useState<CatMood>("sit");
   const [message, setMessage] = useState("pspsps?");
+  const [leapHeight, setLeapHeight] = useState(130);
   const positionRef = useRef(280);
   const homeRef = useRef(false);
+  const busyRef = useRef(false);
   const messageTimerRef = useRef<number | null>(null);
   const actionTimersRef = useRef<number[]>([]);
 
@@ -98,9 +100,10 @@ function PortfolioCat() {
   }, []);
 
   const swatSoundtrack = useCallback(() => {
-    if (homeRef.current) return;
+    if (homeRef.current || busyRef.current) return;
     const soundtrack = document.querySelector<HTMLElement>(".soundtrack-toggle");
     if (!soundtrack) return;
+    busyRef.current = true;
 
     const bounds = soundtrack.getBoundingClientRect();
     const soundtrackOnLeft = bounds.left < window.innerWidth / 2;
@@ -117,8 +120,55 @@ function PortfolioCat() {
 
     later(() => {
       soundtrack.classList.remove("cat-swatted");
+      busyRef.current = false;
       if (!homeRef.current) setMood("sit");
     }, 2350);
+  }, [later, moveTo, showMessage]);
+
+  const interactWithPage = useCallback(() => {
+    if (homeRef.current || busyRef.current) return false;
+
+    const path = window.location.pathname;
+    const interactions = [
+      { match: "/interests/badminton", selector: ".shuttle", effect: "cat-play-badminton", message: "birdie!" },
+      { match: "/interests/3d-printing", selector: ".printer-head", effect: "cat-play-printer", message: "machine goes brrr" },
+      { match: "/interests/reading", selector: ".book-two", effect: "cat-play-books", message: "new pillow?" },
+      { match: "/interests/photography", selector: ".photo-b", effect: "cat-play-photo", message: "photobomb!" },
+      { match: "/interests/home-lab", selector: ".rack-unit:nth-child(2)", effect: "cat-play-rack", message: "blinky lights" },
+      { match: "/interests", selector: ".shuttle", effect: "cat-play-badminton", message: "mine!" },
+      { match: "/info", selector: ".profile-facts", effect: "cat-play-info", message: "inspecting..." },
+      { match: "/work/archtech", selector: ".case-facts", effect: "cat-play-case", message: "security audit" },
+      { match: "/work/ssik", selector: ".case-facts", effect: "cat-play-case", message: "consulting" },
+      { match: "/", selector: ".browser-frame", effect: "cat-play-work", message: "caught a bug" },
+    ];
+    const interaction = interactions.find((item) => item.match === path);
+    const target = interaction
+      ? document.querySelector<HTMLElement>(interaction.selector)
+      : null;
+    if (!interaction || !target) return false;
+
+    const bounds = target.getBoundingClientRect();
+    if (bounds.bottom < 20 || bounds.top > window.innerHeight - 20) return false;
+
+    busyRef.current = true;
+    const targetX = bounds.left + bounds.width / 2 - 41;
+    const height = Math.max(85, Math.min(260, window.innerHeight - bounds.top - 62));
+    setLeapHeight(height);
+    moveTo(targetX);
+    showMessage(interaction.message, 1650);
+
+    later(() => {
+      if (homeRef.current) return;
+      setMood("jump");
+      target.classList.add(interaction.effect);
+    }, 1300);
+
+    later(() => {
+      target.classList.remove(interaction.effect);
+      busyRef.current = false;
+      if (!homeRef.current) setMood("sit");
+    }, 2800);
+    return true;
   }, [later, moveTo, showMessage]);
 
   useEffect(() => {
@@ -143,9 +193,11 @@ function PortfolioCat() {
 
   useEffect(() => {
     const wander = window.setInterval(() => {
-      if (document.hidden || homeRef.current) return;
+      if (document.hidden || homeRef.current || busyRef.current) return;
 
-      if (Math.random() < 0.3) {
+      if (Math.random() < 0.42 && interactWithPage()) return;
+
+      if (Math.random() < 0.32) {
         swatSoundtrack();
         return;
       }
@@ -159,13 +211,15 @@ function PortfolioCat() {
     }, 7200);
 
     return () => window.clearInterval(wander);
-  }, [later, moveTo, showMessage, swatSoundtrack]);
+  }, [interactWithPage, later, moveTo, showMessage, swatSoundtrack]);
 
   useEffect(() => {
-    const callCat = () => swatSoundtrack();
+    const callCat = () => {
+      if (!interactWithPage()) swatSoundtrack();
+    };
     window.addEventListener("portfolio-cat-swat", callCat);
     return () => window.removeEventListener("portfolio-cat-swat", callCat);
-  }, [swatSoundtrack]);
+  }, [interactWithPage, swatSoundtrack]);
 
   useEffect(() => {
     const footer = document.querySelector<HTMLElement>(".site-footer");
@@ -193,6 +247,7 @@ function PortfolioCat() {
         }, 1750);
       } else if (!reachedBottom && homeRef.current) {
         homeRef.current = false;
+        busyRef.current = false;
         footer.classList.remove("cat-house-ready", "cat-is-home");
         setMood("sit");
         setFacing("left");
@@ -227,15 +282,19 @@ function PortfolioCat() {
     later(() => setMood("sit"), 1200);
   }
 
+  function startPageInteraction() {
+    if (!interactWithPage()) swatSoundtrack();
+  }
+
   return (
     <button
       className={`portfolio-cat cat-${mood}`}
       type="button"
-      style={{ left: position }}
-      aria-label="Pet the roaming portfolio cat. Double-click to send it after the soundtrack."
-      title="Pet me. Double-click to swat the soundtrack."
+      style={{ left: position, "--cat-leap": `${leapHeight}px` } as CSSProperties}
+      aria-label="Pet the roaming portfolio cat. Double-click to trigger its current page interaction."
+      title="Pet me. Double-click to see what I do on this page."
       onClick={petCat}
-      onDoubleClick={swatSoundtrack}
+      onDoubleClick={startPageInteraction}
     >
       <span className="cat-message" aria-live="polite">{message}</span>
       <span className={`cat-sprite cat-facing-${facing}`} aria-hidden="true">
@@ -527,7 +586,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>04</code>
-                    <div><strong>The resident cat</strong><p>Click or tap the cat to pet it. Double-click it, or type cat in the console, to send it after the soundtrack button.</p></div>
+                    <div><strong>The resident cat</strong><p>Click or tap the cat to pet it. Double-click it, or type cat in the console, to trigger its current page interaction.</p></div>
                   </li>
                   <li>
                     <code>05</code>
@@ -536,6 +595,10 @@ export default function SiteExtras() {
                   <li>
                     <code>06</code>
                     <div><strong>Cat patrol</strong><p>Leave the page open. The cat wanders, naps, and occasionally swats the soundtrack without being asked.</p></div>
+                  </li>
+                  <li>
+                    <code>07</code>
+                    <div><strong>Page-specific tricks</strong><p>The cat chases the badminton birdie, investigates the printer and home lab, knocks books, photobombs, and inspects project details.</p></div>
                   </li>
                 </ol>
               </div>

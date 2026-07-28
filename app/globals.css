@@ -441,12 +441,21 @@ a { color: inherit; text-decoration: none; }
 .cat-pet .cat-heart { animation: catHeart 1.1s ease-out both; }
 .cat-pet .cat-head { transform: rotate(-9deg); }
 .cat-swat .cat-paw { opacity: 1; animation: catSwat .34s ease-in-out 3; }
+.portfolio-cat.cat-jump { animation: catLeap 1.45s cubic-bezier(.28,.75,.35,1) both; }
 .cat-nap .cat-body { height: 19px; border-radius: 18px 18px 8px 8px; }
 .cat-nap .cat-head { bottom: 15px; transform: rotate(8deg); }
 .cat-nap .cat-eye { top: 11px; height: 1px; border-radius: 0; }
 .cat-home .cat-sprite { bottom: 4px; opacity: 0; transform: translateX(19px) scale(.28); }
 .cat-home .cat-message { bottom: 45px; }
 .soundtrack-toggle.cat-swatted { animation: soundtrackSwat .22s ease-in-out 4 !important; }
+.shuttle.cat-play-badminton { animation: catBirdieHit 1.4s cubic-bezier(.2,.75,.25,1) both !important; }
+.printer-head.cat-play-printer { animation: catPrinterBump 1.35s ease both !important; }
+.book-two.cat-play-books { animation: catBookBump 1.35s ease both !important; }
+.photo-b.cat-play-photo { animation: catPhotoFlash 1.3s ease both !important; }
+.rack-unit.cat-play-rack { animation: catRackBlink 1.35s ease both !important; }
+.profile-facts.cat-play-info,
+.case-facts.cat-play-case { animation: catInspect 1.35s ease both !important; }
+.browser-frame.cat-play-work { animation: catWorkGlitch 1.35s ease both !important; }
 
 .easter-toast {
   position: fixed;
@@ -489,6 +498,44 @@ a { color: inherit; text-decoration: none; }
 @keyframes catHeart { 0% { opacity: 0; transform: translateY(4px) scale(.6); } 35% { opacity: 1; } 100% { opacity: 0; transform: translateY(-18px) scale(1.25); } }
 @keyframes catSwat { 50% { transform: rotate(-4deg) translateX(9px); } }
 @keyframes soundtrackSwat { 50% { transform: rotate(4deg) translateX(3px); } }
+@keyframes catLeap {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  42% { transform: translateY(calc(var(--cat-leap) * -1)) rotate(-7deg); }
+  62% { transform: translateY(calc(var(--cat-leap) * -.75)) rotate(5deg); }
+}
+@keyframes catBirdieHit {
+  0%, 100% { transform: translate(0,0) rotate(0); opacity: 1; }
+  45% { transform: translate(-55px,-50px) rotate(140deg); }
+  78% { transform: translate(-170px,45px) rotate(380deg); opacity: .65; }
+}
+@keyframes catPrinterBump {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  35% { transform: translateX(18px) rotate(4deg); }
+  55% { transform: translateX(-10px) rotate(-3deg); }
+}
+@keyframes catBookBump {
+  0%, 100% { transform: rotate(9deg); }
+  40% { transform: translate(22px,-18px) rotate(18deg); }
+  70% { transform: translate(-8px,5px) rotate(5deg); }
+}
+@keyframes catPhotoFlash {
+  0%, 100% { filter: none; transform: translateX(-50%) rotate(3deg); }
+  35% { filter: brightness(2.2); transform: translateX(-50%) rotate(-2deg) scale(1.05); }
+}
+@keyframes catRackBlink {
+  0%, 100% { transform: translateX(0); box-shadow: none; }
+  35% { transform: translateX(5px); box-shadow: 0 0 25px rgba(130,169,216,.45); }
+  60% { transform: translateX(-3px); }
+}
+@keyframes catInspect {
+  0%, 100% { transform: translateY(0); border-color: var(--line); }
+  40% { transform: translateY(-5px) rotate(-.5deg); border-color: #82a9d8; box-shadow: 0 0 28px rgba(130,169,216,.16); }
+}
+@keyframes catWorkGlitch {
+  0%, 100% { transform: translate(0); filter: none; }
+  35% { transform: translate(3px,-2px); filter: hue-rotate(18deg); }
+  55% { transform: translate(-3px,1px); }
+}
 
 .site-header { animation: revealDown .7s cubic-bezier(.2,.75,.25,1) both; }
 .hero .status, .info-hero > .section-label, .interests-hero > .section-label { animation: revealUp .65s .08s cubic-bezier(.2,.75,.25,1) both; }
