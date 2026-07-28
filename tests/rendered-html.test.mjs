@@ -153,10 +153,14 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /nap spot found/);
   assert.match(source, /IntersectionObserver/);
   assert.match(source, /cat-footer-visible/);
+  assert.match(source, /MobileNavigationTransitions/);
+  assert.match(source, /startViewTransition/);
 
   const styles = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   );
   assert.match(styles, /body\.cat-footer-visible \.soundtrack-toggle/);
   assert.match(styles, /body\.cat-footer-visible \.soundtrack-panel/);
+  assert.match(styles, /view-transition-name: mobile-active-tab/);
+  assert.match(styles, /prefers-reduced-motion: reduce/);
 });

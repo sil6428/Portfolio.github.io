@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const PLAYLIST_STORAGE_KEY = "affan-portfolio-spotify-playlist-v2";
 const DEFAULT_PLAYLIST_ID = "1whuIX2zMB3aYGf5oEdCGs";
@@ -67,6 +67,85 @@ function runTerminalCommand(command: string) {
 }
 
 type CatMood = "sit" | "walk" | "pet" | "swat" | "nap" | "jump" | "home";
+
+type TransitionDocument = Document & {
+  startViewTransition?: (update: () => Promise<void> | void) => {
+    finished: Promise<void>;
+  };
+};
+
+function MobileNavigationTransitions() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const pendingRef = useRef<{ resolve: () => void; timeout: number } | null>(null);
+
+  useEffect(() => {
+    const pending = pendingRef.current;
+    if (!pending) return;
+
+    window.requestAnimationFrame(() => {
+      window.clearTimeout(pending.timeout);
+      pending.resolve();
+      pendingRef.current = null;
+    });
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleNavigation = (event: MouseEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        !window.matchMedia("(max-width: 900px)").matches
+      ) {
+        return;
+      }
+
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const link = target.closest<HTMLAnchorElement>(".nav-pill a");
+      if (!link || link.target || link.hasAttribute("download")) return;
+
+      const destination = new URL(link.href, window.location.href);
+      if (destination.origin !== window.location.origin || destination.pathname === pathname) return;
+
+      const transitionDocument = document as TransitionDocument;
+      if (!transitionDocument.startViewTransition) return;
+
+      event.preventDefault();
+      document.documentElement.classList.add("nav-transition-running");
+
+      const transition = transitionDocument.startViewTransition(() => {
+        return new Promise<void>((resolve) => {
+          const timeout = window.setTimeout(resolve, 1200);
+          pendingRef.current = { resolve, timeout };
+          router.push(`${destination.pathname}${destination.search}${destination.hash}`);
+        });
+      });
+
+      transition.finished.finally(() => {
+        document.documentElement.classList.remove("nav-transition-running");
+      });
+    };
+
+    document.addEventListener("click", handleNavigation);
+    return () => {
+      document.removeEventListener("click", handleNavigation);
+      const pending = pendingRef.current;
+      if (pending) {
+        window.clearTimeout(pending.timeout);
+        pending.resolve();
+        pendingRef.current = null;
+      }
+      document.documentElement.classList.remove("nav-transition-running");
+    };
+  }, [pathname, router]);
+
+  return null;
+}
 
 function PortfolioCat() {
   const pathname = usePathname();
@@ -459,6 +538,7 @@ export default function SiteExtras() {
 
   return (
     <div className="site-extras">
+      <MobileNavigationTransitions />
       <button
         className="soundtrack-toggle"
         type="button"

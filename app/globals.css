@@ -1924,6 +1924,41 @@ main { min-height: 100vh; padding-left: 248px; }
   .identity span { display: none; }
 }
 
+/* Mobile header route transition */
+@media (max-width: 900px) {
+  .nav-pill a.active {
+    view-transition-name: mobile-active-tab;
+  }
+}
+
+::view-transition-group(mobile-active-tab) {
+  z-index: 110;
+  animation-duration: .46s;
+  animation-timing-function: cubic-bezier(.22,.8,.24,1);
+}
+::view-transition-old(mobile-active-tab) {
+  animation: mobile-tab-out .2s ease both;
+}
+::view-transition-new(mobile-active-tab) {
+  animation: mobile-tab-in .32s .08s cubic-bezier(.2,.75,.25,1) both;
+}
+
+@keyframes mobile-tab-out {
+  to { opacity: .35; }
+}
+@keyframes mobile-tab-in {
+  from { opacity: .5; filter: blur(2px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(mobile-active-tab),
+  ::view-transition-old(mobile-active-tab),
+  ::view-transition-new(mobile-active-tab) {
+    animation-duration: .01ms;
+  }
+}
+
 /* Project case studies */
 .case-study { padding: 82px 0 120px; }
 .case-breadcrumb {
