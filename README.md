@@ -4,7 +4,7 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 [View the live portfolio](https://affan-shaikh-portfolio.sil6428-archtech.workers.dev)
 
-![Portfolio preview](public/og-zine.png)
+![Affan Shaikh portfolio preview](public/portfolio-cover.png)
 
 ## Overview
 
