@@ -1,31 +1,98 @@
-A Github Pages template for academic websites. This was forked (then detached) by [Stuart Geiger](https://github.com/staeiou) from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/), which is © 2016 Michael Rose and released under the MIT License. See LICENSE.md.
+# Affan Shaikh Portfolio
 
-I think I've got things running smoothly and fixed some major bugs, but feel free to file issues or make pull requests if you want to improve the generic template / theme.
+A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cybersecurity student at Ontario Tech University.
 
-### Note: if you are using this repo and now get a notification about a security vulnerability, delete the Gemfile.lock file. 
+[View the live portfolio](https://affan-shaikh-portfolio.sil6428-archtech.workers.dev)
 
-# Instructions
+![Portfolio preview](public/og-zine.png)
 
-1. Register a GitHub account if you don't have one and confirm your e-mail (required!)
-1. Fork [this repository](https://github.com/academicpages/academicpages.github.io) by clicking the "fork" button in the top right. 
-1. Go to the repository's settings (rightmost item in the tabs that start with "Code", should be below "Unwatch"). Rename the repository "[your GitHub username].github.io", which will also be your website's URL.
-1. Set site-wide configuration and create content & metadata (see below -- also see [this set of diffs](http://archive.is/3TPas) showing what files were changed to set up [an example site](https://getorg-testacct.github.io) for a user with the username "getorg-testacct")
-1. Upload any files (like PDFs, .zip files, etc.) to the files/ directory. They will appear at https://[your GitHub username].github.io/files/example.pdf.  
-1. Check status by going to the repository settings, in the "GitHub pages" section
-1. (Optional) Use the Jupyter notebooks or python scripts in the `markdown_generator` folder to generate markdown files for publications and talks from a TSV file.
+## Overview
 
-See more info at https://academicpages.github.io/
+The site presents my technical work, education, experience, and interests without relying on a profile photo. Its visual direction combines a dark Notion-style workspace with small terminal-inspired details.
 
-## To run locally (not on GitHub Pages, to serve on your own computer)
+The portfolio is designed as a set of focused pages instead of one long landing page. Project and interest cards lead to expanded pages with more context.
 
-1. Clone the repository and made updates as detailed above
-1. Make sure you have ruby-dev, bundler, and nodejs installed: `sudo apt install ruby-dev ruby-bundler nodejs`
-1. Run `bundle clean` to clean up the directory (no need to run `--force`)
-1. Run `bundle install` to install ruby dependencies. If you get errors, delete Gemfile.lock and try again.
-1. Run `bundle exec jekyll liveserve` to generate the HTML and serve it from `localhost:4000` the local server will automatically rebuild and refresh the pages on change.
+## Pages
 
-# Changelog -- bugfixes and enhancements
+| Route | Purpose |
+| --- | --- |
+| `/` | Selected work and project overview |
+| `/info` | Education, skills, experience, volunteer work, resume, and contact links |
+| `/interests` | Personal interests and interactive visual cards |
+| `/work/archtech` | Archtech case study and current work-in-progress status |
+| `/work/ssik` | SSIK consulting website case study |
+| `/interests/badminton` | Regional badminton experience |
+| `/interests/3d-printing` | 3D printing and design projects |
+| `/interests/reading` | Current reading interests |
+| `/interests/photography` | Photography and VSCO link |
+| `/interests/home-lab` | Proxmox home-lab plans |
 
-There is one logistical issue with a ready-to-fork template theme like academic pages that makes it a little tricky to get bug fixes and updates to the core theme. If you fork this repository, customize it, then pull again, you'll probably get merge conflicts. If you want to save your various .yml configuration files and markdown files, you can delete the repository and fork it again. Or you can manually patch. 
+## Features
 
-To support this, all changes to the underlying code appear as a closed issue with the tag 'code change' -- get the list [here](https://github.com/academicpages/academicpages.github.io/issues?q=is%3Aclosed%20is%3Aissue%20label%3A%22code%20change%22%20). Each issue thread includes a comment linking to the single commit or a diff across multiple commits, so those with forked repositories can easily identify what they need to patch.
+- Responsive navigation for desktop, tablet, and mobile layouts
+- Expandable project and interest pages
+- Custom CSS illustrations for badminton and 3D printing
+- Spotify playlist integration
+- GitHub, LinkedIn, VSCO, email, phone, and resume links
+- Metadata, Open Graph images, robots rules, and a generated sitemap
+- Motion with reduced-motion support
+- Rendered HTML tests for important routes, links, metadata, and private-content checks
+- Cloudflare Workers deployment
+
+## Technology
+
+- React 19
+- TypeScript 5
+- Next.js-compatible routing through Vinext
+- Vite 8
+- HTML and custom CSS
+- Cloudflare Workers and the Cloudflare Vite plugin
+- ESLint
+- Node.js test runner
+
+## Local development
+
+Requirements:
+
+- Node.js 22.13 or newer
+- npm
+
+```bash
+git clone https://github.com/sil6428/Portfolio.github.io.git
+cd Portfolio.github.io
+npm install
+npm run dev
+```
+
+The development server prints its local address after startup.
+
+## Quality checks
+
+```bash
+npm run lint
+npm test
+```
+
+`npm test` creates a production build and checks the rendered output for the main pages and project routes.
+
+## Production build
+
+```bash
+npm run build
+```
+
+The production site is deployed to Cloudflare Workers:
+
+<https://affan-shaikh-portfolio.sil6428-archtech.workers.dev>
+
+## Project notes
+
+- Archtech remains unreleased and in development. This portfolio only includes information suitable for public viewing.
+- The SSIK case study describes my work building the consulting team’s public service website.
+- Generated build output, local Cloudflare state, environment files, and deployment metadata are excluded from version control.
+
+## License
+
+Copyright © 2026 Archtech. All rights reserved.
+
+The source is public for portfolio review. Reuse, redistribution, modification, or publication requires prior written permission. See [LICENSE](LICENSE).
