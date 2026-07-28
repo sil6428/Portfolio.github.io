@@ -61,6 +61,7 @@ test("publishes crawler and structured profile metadata", async () => {
   assert.match(html, /ProfilePage/);
   assert.match(html, /Ontario Tech University/);
   assert.match(html, /\/og\.png/);
+  assert.match(html, /\/terminal-favicon\.svg/);
 
   const sitemapResponse = await render("/sitemap.xml");
   assert.equal(sitemapResponse.status, 200);

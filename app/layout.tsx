@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Affan Shaikh | Networking & Cybersecurity",
     description:
       "Portfolio of Affan Shaikh, a networking and cybersecurity student building secure systems and useful software.",
-    icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+    icons: { icon: "/terminal-favicon.svg", shortcut: "/terminal-favicon.svg" },
     openGraph: {
       title: "Affan Shaikh | Networking & Cybersecurity",
       description: "Networks, security, and software built with purpose.",
