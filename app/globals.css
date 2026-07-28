@@ -399,7 +399,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .cat-message:empty { display: none; }
-.cat-sprite { position: absolute; left: 3px; bottom: 0; width: 76px; height: 48px; transform-origin: center bottom; }
+.cat-sprite { position: absolute; left: 3px; bottom: 0; width: 76px; height: 48px; transform-origin: center bottom; filter: drop-shadow(0 1px rgba(255,255,255,.07)); }
 .cat-facing-left { transform: scaleX(-1); }
 .cat-sprite i, .cat-sprite b { position: absolute; display: block; }
 .cat-shadow { left: 12px; bottom: 1px; width: 58px; height: 7px; border-radius: 50%; background: rgba(0,0,0,.34); filter: blur(2px); }
@@ -408,26 +408,26 @@ a { color: inherit; text-decoration: none; }
   bottom: 13px;
   width: 28px;
   height: 23px;
-  border: 5px solid #777976;
+  border: 5px solid #1e1f1f;
   border-right: 0;
   border-bottom-color: transparent;
   border-radius: 50% 0 0 50%;
   transform: rotate(-12deg);
   transform-origin: right bottom;
 }
-.cat-body { left: 21px; bottom: 10px; width: 39px; height: 25px; border-radius: 17px 15px 9px 11px; background: #8b8d89; box-shadow: inset 0 -5px rgba(0,0,0,.12); }
-.cat-head { left: 49px; bottom: 23px; width: 25px; height: 23px; border-radius: 45% 45% 48% 48%; background: #969894; box-shadow: inset 0 -3px rgba(0,0,0,.1); }
-.cat-ear { top: -6px; width: 0; height: 0; border-right: 6px solid transparent; border-bottom: 10px solid #969894; border-left: 6px solid transparent; }
+.cat-body { left: 21px; bottom: 10px; width: 39px; height: 25px; border-radius: 17px 15px 9px 11px; background: #242525; box-shadow: inset 0 1px rgba(255,255,255,.11), inset 0 -5px rgba(0,0,0,.22); }
+.cat-head { left: 49px; bottom: 23px; width: 25px; height: 23px; border-radius: 45% 45% 48% 48%; background: #292a2a; box-shadow: inset 0 1px rgba(255,255,255,.12), inset 0 -3px rgba(0,0,0,.18); }
+.cat-ear { top: -6px; width: 0; height: 0; border-right: 6px solid transparent; border-bottom: 10px solid #292a2a; border-left: 6px solid transparent; }
 .cat-ear-left { left: 0; transform: rotate(-17deg); }
 .cat-ear-right { right: 0; transform: rotate(17deg); }
-.cat-eye { top: 9px; width: 3px; height: 4px; border-radius: 50%; background: #202220; }
+.cat-eye { top: 9px; width: 3px; height: 4px; border-radius: 50%; background: #d5c46b; box-shadow: 0 0 4px rgba(213,196,107,.35); }
 .cat-eye-left { left: 6px; }
 .cat-eye-right { right: 6px; }
-.cat-nose { left: 11px; top: 14px; width: 3px; height: 2px; border-radius: 50%; background: #d5a0a0; }
-.cat-leg { bottom: 4px; width: 8px; height: 13px; border-radius: 0 0 5px 5px; background: #858783; transform-origin: top; }
+.cat-nose { left: 11px; top: 14px; width: 3px; height: 2px; border-radius: 50%; background: #8f686d; }
+.cat-leg { bottom: 4px; width: 8px; height: 13px; border-radius: 0 0 5px 5px; background: #202121; transform-origin: top; }
 .cat-leg-back { left: 28px; }
 .cat-leg-front { left: 51px; }
-.cat-paw { right: -2px; bottom: 14px; width: 26px; height: 6px; border-radius: 999px; background: #929490; opacity: 0; transform: rotate(-20deg); transform-origin: left center; }
+.cat-paw { right: -2px; bottom: 14px; width: 26px; height: 6px; border-radius: 999px; background: #272828; opacity: 0; transform: rotate(-20deg); transform-origin: left center; }
 .cat-heart { left: 54px; top: -3px; color: #d9898f; font: 12px Georgia, serif; opacity: 0; }
 .cat-walk .cat-body, .cat-walk .cat-head { animation: catBob .34s ease-in-out infinite alternate; }
 .cat-walk .cat-leg-back { animation: catStep .34s ease-in-out infinite alternate; }
