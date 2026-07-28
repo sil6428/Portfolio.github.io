@@ -238,11 +238,7 @@ function PortfolioCat() {
     const footer = document.querySelector<HTMLElement>(".site-footer");
     if (!footer) return;
 
-    const checkForHome = () => {
-      const remaining =
-        document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
-      const reachedBottom = remaining <= 28;
-
+    const updateHomeState = (reachedBottom: boolean) => {
       if (reachedBottom && !homeRef.current) {
         homeRef.current = true;
         footer.classList.add("cat-house-ready");
@@ -268,11 +264,22 @@ function PortfolioCat() {
       }
     };
 
-    window.addEventListener("scroll", checkForHome, { passive: true });
-    const initialCheck = window.setTimeout(checkForHome, 0);
+    const checkForHome = () => {
+      const bounds = footer.getBoundingClientRect();
+      updateHomeState(bounds.top < window.innerHeight - 8 && bounds.bottom > 8);
+    };
+    const houseObserver = new IntersectionObserver(
+      ([entry]) => updateHomeState(entry.isIntersecting && entry.intersectionRatio > 0.08),
+      { threshold: [0, 0.08, 0.35] },
+    );
+
+    houseObserver.observe(footer);
+    window.addEventListener("resize", checkForHome);
+    const initialCheck = window.setTimeout(checkForHome, 150);
     return () => {
       window.clearTimeout(initialCheck);
-      window.removeEventListener("scroll", checkForHome);
+      window.removeEventListener("resize", checkForHome);
+      houseObserver.disconnect();
       footer.classList.remove("cat-house-ready", "cat-is-home");
     };
   }, [later, moveTo, pathname, showMessage]);
