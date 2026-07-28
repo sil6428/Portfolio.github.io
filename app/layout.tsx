@@ -56,7 +56,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           sameAs: [
             "https://github.com/sil6428",
             "https://www.linkedin.com/in/sil6428",
-            "https://vsco.co/sy1len/gallery",
+            "https://sy1len.vsco.site",
           ],
           alumniOf: {
             "@type": "CollegeOrUniversity",

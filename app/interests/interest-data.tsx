@@ -168,7 +168,7 @@ export const photographyData: InterestDetailData = {
     ["Gallery", "VSCO"],
     ["Status", "Ongoing"],
   ],
-  links: [{ label: "View my VSCO", href: "https://vsco.co/sy1len/gallery" }],
+  links: [{ label: "View my VSCO", href: "https://sy1len.vsco.site" }],
   sections: [
     {
       title: "What I look for",

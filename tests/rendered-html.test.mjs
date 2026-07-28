@@ -100,7 +100,7 @@ test("renders the expanded interests page", async () => {
   assert.match(html, /Reverend Insanity/);
   assert.match(html, /Proxmox home lab/);
   assert.match(html, /Photography/);
-  assert.match(html, /https:\/\/vsco\.co\/sy1len\/gallery/);
+  assert.match(html, /https:\/\/sy1len\.vsco\.site/);
   assert.match(html, /court-visual/);
   assert.match(html, /printer-visual/);
   assert.match(html, /books-visual/);

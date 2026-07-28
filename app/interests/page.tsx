@@ -62,7 +62,7 @@ const interests = [
     title: "Photography",
     lead: "I like ordinary scenes with good light, strong colour, or a detail that makes me stop walking.",
     body:
-      "Photography gives me a reason to pay closer attention. I enjoy finding frames in everyday places, keeping the edit simple, and building a visual record of what caught my eye. My VSCO will live here once I finish organizing it.",
+      "Photography gives me a reason to pay closer attention. I enjoy finding frames in everyday places, keeping the edit simple, and building a visual record of what caught my eye. My VSCO site is where I keep the frames and edits I want to share.",
     detail: "Street details · Light · Colour · Everyday moments",
     visual: (
       <div className="photo-visual" aria-hidden="true">
@@ -133,7 +133,7 @@ export default function Interests() {
               {interest.title === "Photography" && (
                 <a
                   className="interest-link"
-                  href="https://vsco.co/sy1len/gallery"
+                  href="https://sy1len.vsco.site"
                   target="_blank"
                   rel="noreferrer"
                 >
