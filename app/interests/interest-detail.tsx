@@ -30,14 +30,17 @@ export default function InterestDetail({ data }: { data: InterestDetailData }) {
           <strong>Affan Shaikh</strong>
           <span>Student studying cybersecurity</span>
         </Link>
+        <p className="sidebar-location"><span>Location</span>Oshawa, Ontario</p>
         <nav className="nav-pill" aria-label="Primary navigation">
           <Link href="/">Work</Link>
           <Link href="/info">Info</Link>
           <Link className="active" href="/interests">Interests</Link>
         </nav>
         <div className="header-links">
-          <a href="https://github.com/sil6428" target="_blank" rel="noreferrer">GitHub <Arrow /></a>
+          <a href="mailto:ffaanshake@gmail.com">Email <Arrow /></a>
           <a href="https://www.linkedin.com/in/sil6428" target="_blank" rel="noreferrer">LinkedIn <Arrow /></a>
+          <a href="https://github.com/sil6428" target="_blank" rel="noreferrer">GitHub <Arrow /></a>
+          <a href="tel:+16473091927">Phone <Arrow /></a>
         </div>
       </header>
 

@@ -1295,6 +1295,20 @@ main { min-height: 100vh; padding-left: 248px; }
 .identity::before { display: none; }
 .identity strong { color: var(--text); font: 600 15px "Manrope", sans-serif; }
 .identity span { color: var(--muted); font: 10px "Manrope", sans-serif; line-height: 1.4; }
+.sidebar-location {
+  margin: 18px 10px 0;
+  color: var(--soft);
+  font: 11px "Manrope", sans-serif;
+  line-height: 1.45;
+}
+.sidebar-location span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6f6f6b;
+  font: 9px "DM Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
 .nav-pill {
   width: 100%;
   margin-top: 38px;
@@ -1317,7 +1331,7 @@ main { min-height: 100vh; padding-left: 248px; }
 .nav-pill a:hover { color: var(--text); background: #222; }
 .nav-pill a.active { color: var(--text); border: 0; background: #2a2a2a; }
 .header-links { margin-top: auto; padding: 0 10px; flex-direction: column; align-items: flex-start; gap: 10px; font: 10px "Manrope", sans-serif; }
-.header-links::before { content: "Elsewhere"; margin-bottom: 5px; color: #6f6f6b; font: 9px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .08em; }
+.header-links::before { content: "Contact"; margin-bottom: 5px; color: #6f6f6b; font: 9px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .08em; }
 .header-links a { color: var(--muted); }
 .header-links a:hover { color: var(--text); }
 
@@ -1583,6 +1597,7 @@ main { min-height: 100vh; padding-left: 248px; }
 /* Match global controls to the workspace theme */
 @media (min-width: 901px) {
   .header-links { margin-bottom: 76px; }
+  .site-footer { display: none; }
 }
 
 .soundtrack-bars i { background: var(--accent); }
@@ -1650,6 +1665,8 @@ main { min-height: 100vh; padding-left: 248px; }
 
 @media (max-width: 900px) {
   .header-links { margin-bottom: 0; }
+  .sidebar-location { display: none; }
+  .site-footer { display: grid; }
   .site-header { min-height: auto; }
   .identity span { display: block; }
   .nav-pill {
