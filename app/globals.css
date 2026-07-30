@@ -3169,7 +3169,19 @@ body:has(.room-has-popup) .soundtrack-toggle {
 @media (max-width: 560px) {
   .immersive-header nav a { padding-inline: 6px; font-size: 7px; }
   .immersive-header nav a:last-child { display: none; }
-  .immersive-intro > span { max-width: 270px; }
+  .immersive-intro {
+    left: 16px;
+    top: 112px;
+    width: min(270px, calc(100vw - 32px));
+  }
+  .immersive-intro p { margin-bottom: 9px; font-size: 7px; }
+  .immersive-intro h1 { font-size: clamp(42px,15vw,58px); }
+  .immersive-intro > span {
+    max-width: 235px;
+    margin-top: 12px;
+    font-size: 10px;
+    line-height: 1.5;
+  }
   .immersive-home .room-stage-bar { top: 70px; max-width: calc(100vw - 24px); }
   .room-fluid-hint {
     left: 12px;
@@ -3179,11 +3191,66 @@ body:has(.room-has-popup) .soundtrack-toggle {
   }
   .room-fluid-hint > span:not(:first-child) { display: none; }
   .room-has-popup .room-fluid-hint { display: none; }
-  .room-popup { bottom: 12px; padding: 24px 20px 20px; max-height: 62vh; }
+  .room-popup { bottom: 12px; padding: 52px 20px 20px; max-height: 62vh; }
+  .room-popup-close {
+    top: 8px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
+  }
   .room-popup h2 { font-size: 40px; }
   .room-secret-toast { bottom: 74px; }
   .immersive-footer a { display: none; }
-  body:has(.immersive-home) .soundtrack-toggle { bottom: 12px; }
+  body:has(.immersive-home) .soundtrack-toggle {
+    min-height: 44px;
+    bottom: 12px;
+    padding-block: 10px;
+  }
+  body:has(.immersive-home) .soundtrack-panel {
+    max-height: calc(100svh - 92px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .immersive-home > .room-stage {
+    min-height: 100svh;
+    height: 100svh;
+  }
+  .immersive-intro {
+    left: 18px;
+    top: 76px;
+    width: min(330px, 48vw);
+  }
+  .immersive-intro p { margin-bottom: 7px; font-size: 6px; }
+  .immersive-intro h1 { font-size: clamp(38px, 9vw, 58px); }
+  .immersive-intro > span {
+    max-width: 260px;
+    margin-top: 9px;
+    font-size: 9px;
+    line-height: 1.45;
+  }
+  .room-fluid-hint {
+    left: 12px;
+    bottom: 12px;
+    width: 146px;
+    padding: 8px;
+  }
+  .room-fluid-hint > span:not(:first-child) { display: none; }
+  .room-popup {
+    top: 66px;
+    right: 12px;
+    bottom: 12px;
+    max-height: none;
+    padding-top: 48px;
+  }
+  body:has(.immersive-home) .soundtrack-panel {
+    top: 12px;
+    bottom: 66px;
+    max-height: none;
+    overflow-y: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

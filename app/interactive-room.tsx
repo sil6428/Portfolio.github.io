@@ -1580,11 +1580,36 @@ export default function InteractiveRoom() {
 
     const pick = (event: PointerEvent) => {
       const bounds = renderer.domElement.getBoundingClientRect();
-      pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
-      pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
-      raycaster.setFromCamera(pointer, camera);
-      const hit = raycaster.intersectObjects(clickable, true)[0];
-      return findHotspot(hit?.object ?? null);
+      const sample = (clientX: number, clientY: number) => {
+        pointer.x = ((clientX - bounds.left) / bounds.width) * 2 - 1;
+        pointer.y = -((clientY - bounds.top) / bounds.height) * 2 + 1;
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObjects(clickable, true)[0];
+        return findHotspot(hit?.object ?? null);
+      };
+      const directHit = sample(event.clientX, event.clientY);
+      if (directHit || (event.pointerType !== "touch" && !window.matchMedia("(pointer: coarse)").matches)) {
+        return directHit;
+      }
+      const touchOffsets = [
+        [-16, 0],
+        [16, 0],
+        [0, -16],
+        [0, 16],
+        [-12, -12],
+        [12, -12],
+        [-12, 12],
+        [12, 12],
+      ];
+      for (const [offsetX, offsetY] of touchOffsets) {
+        const expandedHit = sample(event.clientX + offsetX, event.clientY + offsetY);
+        if (expandedHit) {
+          sample(event.clientX, event.clientY);
+          return expandedHit;
+        }
+      }
+      sample(event.clientX, event.clientY);
+      return null;
     };
 
     const handlePointerMove = (event: PointerEvent) => {
@@ -1626,9 +1651,29 @@ export default function InteractiveRoom() {
     const resize = () => {
       const width = host.clientWidth;
       const height = host.clientHeight;
+      const phonePortrait = width <= 600 && height > width;
+      const phoneLandscape = height <= 520 && width > height;
+      if (phonePortrait) {
+        overviewPosition.set(4.55, 4.05, 7.7);
+        overviewTarget.set(-0.72, 1.5, -0.62);
+        camera.fov = 52;
+      } else if (phoneLandscape) {
+        overviewPosition.set(5.2, 4.3, 7.35);
+        overviewTarget.set(-0.2, 1.55, -0.68);
+        camera.fov = 43;
+      } else {
+        overviewPosition.set(5.2, 4.3, 6.5);
+        overviewTarget.set(0, 1.55, -0.7);
+        camera.fov = 40;
+      }
       camera.aspect = width / Math.max(height, 1);
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
+      if (!cameraMove && focusedKey === null && document.body.classList.contains("room-default-view")) {
+        camera.position.copy(overviewPosition);
+        controls.target.copy(overviewTarget);
+        controls.update();
+      }
     };
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(host);

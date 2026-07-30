@@ -176,6 +176,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.doesNotMatch(styles, /cat-footer-visible/);
   assert.doesNotMatch(styles, /cat-house-ready/);
   assert.match(styles, /view-transition-name: mobile-active-tab/);
+  assert.match(styles, /max-height: calc\(100svh - 92px\)/);
+  assert.match(styles, /max-height: 520px/);
+  assert.match(styles, /width: 44px/);
   assert.match(styles, /prefers-reduced-motion: reduce/);
 
   const topology = await import("node:fs/promises").then(({ readFile }) =>
@@ -254,6 +257,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /cat-rug-water-bowl/);
   assert.match(room, /TubeGeometry/);
   assert.match(room, /raycaster\.intersectObjects/);
+  assert.match(room, /touchOffsets/);
+  assert.match(room, /phonePortrait/);
+  assert.match(room, /phoneLandscape/);
   assert.match(room, /beginCameraMove/);
   assert.match(room, /RETURNING TO DEFAULT VIEW/);
   assert.match(room, /dismissObjectFile/);
