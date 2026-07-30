@@ -62,7 +62,7 @@ function runTerminalCommand(command: string) {
     cat: ["Sending three approved pets to the room cat..."],
     relic: ["Charging the printed katana on the bottom shelf..."],
     signal: ["Starting the hidden server beacon sequence..."],
-    print: ["The dagger print takes exactly 03:00.", "Watch the printer display for live progress."],
+    print: ["The dagger print takes exactly 05:00.", "Watch the printer display for live progress."],
     eggs: ["Opening easter-eggs.md..."],
   };
 
@@ -465,7 +465,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>05</code>
-                    <div><strong>Three-minute print</strong><p>The printer starts when the room loads. Watch its display and the traditional double-edged dagger grow from pommel to blade tip until it finishes at 03:00.</p></div>
+                    <div><strong>Five-minute print</strong><p>The printer starts when the room loads. Watch its display and the traditional double-edged dagger grow from pommel to blade tip until it finishes at 05:00.</p></div>
                   </li>
                   <li>
                     <code>06</code>

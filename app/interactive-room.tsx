@@ -93,8 +93,8 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "3D printer",
     label: "MAKING / DESIGN",
     title: "3D printing",
-    summary: "From digital models to finished props. In the room, a traditional double-edged dagger prints from pommel to blade tip over three minutes.",
-    details: ["Live 03:00 print", "Slicing", "Assembly", "Sanding + finishing"],
+    summary: "From digital models to finished props. In the room, a traditional double-edged dagger prints from pommel to blade tip over five minutes.",
+    details: ["Live 05:00 print", "Slicing", "Assembly", "Sanding + finishing"],
     sections: [
       {
         heading: "From file to object",
@@ -241,7 +241,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
 };
 
 const DIRECTORY = Object.entries(ROOM_ENTRIES);
-const PRINT_DURATION_MS = 180_000;
+const PRINT_DURATION_MS = 300_000;
 
 function findHotspot(object: THREE.Object3D | null): THREE.Object3D | null {
   let current = object;
@@ -1710,7 +1710,7 @@ export default function InteractiveRoom() {
       }
       if (printProgress >= 1 && printCompletedAt === 0) {
         printCompletedAt = timestamp;
-        showRoomSecret("THREE-MINUTE PRINT COMPLETE / DAGGER READY");
+        showRoomSecret("FIVE-MINUTE PRINT COMPLETE / DAGGER READY");
       }
       printCompletionLight.intensity =
         printCompletedAt > 0 && timestamp - printCompletedAt < 8000

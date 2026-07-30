@@ -150,7 +150,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /AFFAN_OS/);
   assert.match(source, /Hidden things and how to find them/);
   assert.match(source, /Laptop files/);
-  assert.match(source, /Three-minute print/);
+  assert.match(source, /Five-minute print/);
   assert.match(source, /Cat trust/);
   assert.match(source, /Printed relic/);
   assert.match(source, /Server beacon/);
@@ -230,9 +230,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /racket\.position\.set\(-4\.35, 3\.52, -4\.08\)/);
   assert.match(room, /ceilingPanelColors/);
   assert.doesNotMatch(room, /let brace/);
-  assert.match(room, /PRINT_DURATION_MS = 180_000/);
+  assert.match(room, /PRINT_DURATION_MS = 300_000/);
   assert.match(room, /drawPrinterDisplay/);
-  assert.match(room, /THREE-MINUTE PRINT COMPLETE/);
+  assert.match(room, /FIVE-MINUTE PRINT COMPLETE/);
   assert.doesNotMatch(room, /cat\.jpg/i);
   assert.match(room, /bottom-shelf-printed-katana/);
   assert.match(room, /shelf-katana-unified-curved-blade/);

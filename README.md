@@ -40,7 +40,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, animated yarn ball, pulsing lights, and responsive interaction markers
-- A real three-minute printer sequence with a traditional double-edged dagger, solid-black handle and hilt, white blade, removable hilt supports, a height-tracking print head, live percentage, ETA, completion message, and finish glow
+- A real five-minute printer sequence with a traditional double-edged dagger, solid-black handle and hilt, white blade, removable hilt supports, a height-tracking print head, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
 - Closer room framing plus a shorter wall bookshelf, camera on its top surface, and a mounted badminton racket on the back wall
 - A completed katana displayed on the bottom shelf with one continuous white curved blade, a fitted black base collar, compact black fittings and handle, and an interactive relic effect
