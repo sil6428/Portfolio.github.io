@@ -33,20 +33,20 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
-- Interactive laptop desktop with separate Archtech, SSIK, About, Contact, Resume, and Inspiration files
+- Compact desktop PC setup with separate Archtech, SSIK, About, Contact, Resume, and Inspiration files
 - An Inspiration file that credits Bruno Simon, Ida's Gameboy, and Jesse Zhou, with direct links and notes on what each site influenced
-- Dark retro laptop interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
+- Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, animated yarn ball, pulsing lights, and responsive interaction markers
-- A real five-minute printer sequence with a traditional double-edged dagger, solid-black handle and hilt, white blade, removable hilt supports, a height-tracking print head, live percentage, ETA, completion message, and finish glow
+- A real three-minute printer sequence with a complete miniature black-and-white chess set, printed board, all 32 pieces, a height-tracking print head, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
 - Closer room framing plus a shorter wall bookshelf, camera on its top surface, and a mounted badminton racket on the back wall
 - A completed katana displayed on the bottom shelf with one continuous white curved blade, a fitted black base collar, compact black fittings and handle, and an interactive relic effect
 - A simplified server rack without decorative fans or loose wiring
-- A traditional dagger print with a compact round pommel, wrapped grip, straight crossguard, long parallel-sided blade, defined taper, central fuller, and symmetrical white edges
+- Layer-built pawns, rooks, knights, bishops, queens, and kings with distinct silhouettes, checkerboard tiles, and two contrasting armies
 - Four separated printer spools in black, orange, purple, and white
 - Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
 - Two distinct popup exits: click outside to keep the close-up camera, or use X and Escape to return to the default room angle
@@ -55,7 +55,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Tighter room boundaries, a more centered overview, and reduced close-up camera offset
 - Brighter ambient lighting with cyan, violet, amber, and mint accents across the desk, rug, shelf, and wall
 - Removed the front shelf braces that crossed through the book models
-- Refined procedural models for the laptop, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat with a bandana, tag, yarn ball, toy mouse, and water bowl
+- Refined procedural models for the desktop PC, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat with a bandana, tag, yarn ball, toy mouse, and water bowl
 - Wall decor built directly into the Three.js room, including a framed network-topology display and a three-piece photography-inspired gallery above the bookshelf
 - Eleven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, the resume, and design inspiration
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat

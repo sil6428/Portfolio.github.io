@@ -63,7 +63,7 @@ function runTerminalCommand(command: string) {
     cat: ["Sending three approved pets to the room cat..."],
     relic: ["Charging the printed katana on the bottom shelf..."],
     signal: ["Starting the hidden server beacon sequence..."],
-    print: ["The dagger print takes exactly 05:00.", "Watch the printer display for live progress."],
+    print: ["The miniature chess set takes exactly 03:00.", "Watch the printer display for live progress."],
     eggs: ["Opening easter-eggs.md..."],
   };
 
@@ -513,11 +513,11 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>04</code>
-                    <div><strong>Laptop files</strong><p>Archtech, SSIK, About, Contact, Resume, and Inspiration are separate selectable desktop objects.</p></div>
+                    <div><strong>Desktop files</strong><p>Archtech, SSIK, About, Contact, Resume, and Inspiration are separate selectable files on the room&apos;s PC.</p></div>
                   </li>
                   <li>
                     <code>05</code>
-                    <div><strong>Five-minute print</strong><p>The printer starts when the room loads. Watch its display and the traditional double-edged dagger grow from pommel to blade tip until it finishes at 05:00.</p></div>
+                    <div><strong>Three-minute print</strong><p>The printer starts when the room loads. Watch the board and all 32 black-and-white chess pieces build upward layer by layer until the set finishes at 03:00.</p></div>
                   </li>
                   <li>
                     <code>06</code>

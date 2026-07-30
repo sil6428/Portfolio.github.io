@@ -10,7 +10,7 @@ The effects cover:
 - Opening and closing object files
 - Easter-egg discoveries
 - Cat interactions
-- The five-minute print completion
+- The three-minute chess-set print completion
 
 Visitors can turn interface sound effects off from the Soundtrack panel. The preference stays on their device.
 

@@ -94,8 +94,8 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "3D printer",
     label: "MAKING / DESIGN",
     title: "3D printing",
-    summary: "From digital models to finished props. In the room, a traditional double-edged dagger prints from pommel to blade tip over five minutes.",
-    details: ["Live 05:00 print", "Slicing", "Assembly", "Sanding + finishing"],
+    summary: "From digital models to finished props. In the room, a complete miniature black-and-white chess set prints layer by layer over three minutes.",
+    details: ["Live 03:00 print", "32 pieces", "Printed board", "Layer by layer"],
     sections: [
       {
         heading: "From file to object",
@@ -244,7 +244,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "Inspiration file",
     label: "CREDITS / WEB INSPIRATION",
     title: "Sites that shaped the lab",
-    summary: "Three interactive portfolios helped set the standard for the room, its camera movement, and the laptop interface.",
+    summary: "Three interactive portfolios helped set the standard for the room, its camera movement, and the desktop computer interface.",
     details: ["Interactive 3D", "Fluid camera work", "Desktop interface", "Original implementation"],
     sections: [
       {
@@ -253,7 +253,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
       {
         heading: "Ida's Gameboy",
-        body: "Ida's Gameboy inspired the laptop desktop, selectable files, and the idea of revealing portfolio content through a playful device interface.",
+        body: "Ida's Gameboy inspired the computer desktop, selectable files, and the idea of revealing portfolio content through a playful device interface.",
       },
       {
         heading: "Jesse Zhou",
@@ -271,7 +271,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
 };
 
 const DIRECTORY = Object.entries(ROOM_ENTRIES);
-const PRINT_DURATION_MS = 300_000;
+const PRINT_DURATION_MS = 180_000;
 
 function findHotspot(object: THREE.Object3D | null): THREE.Object3D | null {
   let current = object;
@@ -533,15 +533,17 @@ export default function InteractiveRoom() {
     deskAmberEdge.name = "desk-amber-edge";
 
     const workstation = new THREE.Group();
+    workstation.name = "compact-desktop-pc-setup";
     workstation.position.set(-1.75, 1.46, -3.12);
     room.add(workstation);
-    box(workstation, [3.45, 0.12, 1.86], [0, 0.02, 0.05], "#151e24", { metalness: 0.55, roughness: 0.38 });
-    box(workstation, [1.02, 0.035, 0.72], [0, 0.095, 0.35], "#222d34", { metalness: 0.42, roughness: 0.32 });
-    const laptopLid = new THREE.Group();
-    laptopLid.position.set(0, 0.11, -0.82);
-    laptopLid.rotation.x = -0.08;
-    workstation.add(laptopLid);
-    box(laptopLid, [3.42, 2.04, 0.13], [0, 1.03, 0], "#10171d", { metalness: 0.68, roughness: 0.32 });
+    box(workstation, [2.72, 0.08, 0.78], [-0.2, 0.07, 0.4], "#151e24", { metalness: 0.55, roughness: 0.38 });
+    box(workstation, [0.92, 0.06, 0.5], [-0.2, 0.09, -0.52], "#222d34", { metalness: 0.58, roughness: 0.3 });
+    box(workstation, [0.14, 0.74, 0.14], [-0.2, 0.43, -0.72], "#29363d", { metalness: 0.78, roughness: 0.28 });
+    const desktopMonitor = new THREE.Group();
+    desktopMonitor.name = "desktop-monitor";
+    desktopMonitor.position.set(-0.2, 0.39, -0.82);
+    workstation.add(desktopMonitor);
+    box(desktopMonitor, [3.16, 1.86, 0.13], [0, 0.97, 0], "#10171d", { metalness: 0.68, roughness: 0.32 });
 
     const desktopCanvas = document.createElement("canvas");
     desktopCanvas.width = 1024;
@@ -628,12 +630,12 @@ export default function InteractiveRoom() {
     const desktopTexture = new THREE.CanvasTexture(desktopCanvas);
     desktopTexture.colorSpace = THREE.SRGBColorSpace;
     desktopTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-    const laptopScreen = new THREE.Mesh(
-      new THREE.PlaneGeometry(3.18, 1.78),
+    const desktopScreen = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.92, 1.62),
       new THREE.MeshBasicMaterial({ map: desktopTexture, toneMapped: false }),
     );
-    laptopScreen.position.set(0, 1.03, 0.071);
-    laptopLid.add(laptopScreen);
+    desktopScreen.position.set(0, 0.97, 0.071);
+    desktopMonitor.add(desktopScreen);
 
     const addDesktopFile = (
       key: "archtech" | "ssik" | "profile" | "contact" | "resume" | "inspiration",
@@ -644,7 +646,7 @@ export default function InteractiveRoom() {
       height: number,
       color: THREE.ColorRepresentation,
     ) => {
-      const file = hotspot(key, label, laptopLid);
+      const file = hotspot(key, label, desktopMonitor);
       file.position.set(x, y, 0.09);
       const hitArea = new THREE.Mesh(
         new THREE.PlaneGeometry(width, height),
@@ -665,19 +667,35 @@ export default function InteractiveRoom() {
         box(
           workstation,
           [0.15, 0.028, 0.12],
-          [-1.18 + key * 0.19, 0.105, -0.08 + row * 0.18],
+          [-1.35 + key * 0.19, 0.125, 0.16 + row * 0.16],
           row === 0 && key > 9 ? "#3c4c54" : "#27353c",
           { metalness: 0.24 },
         );
       }
     }
-    box(workstation, [0.92, 0.02, 0.52], [0, 0.11, 0.73], "#1a242a", { metalness: 0.35, roughness: 0.34 });
-    const laptopPower = new THREE.Mesh(
+    box(workstation, [0.72, 0.02, 0.58], [1.28, 0.11, 0.45], "#1a242a", { metalness: 0.35, roughness: 0.34 });
+    const desktopMouse = new THREE.Mesh(
+      new THREE.SphereGeometry(0.16, 18, 12),
+      material("#252f35", { metalness: 0.48, roughness: 0.35 }),
+    );
+    desktopMouse.name = "desktop-mouse";
+    desktopMouse.scale.set(0.72, 0.35, 1);
+    desktopMouse.position.set(1.28, 0.15, 0.43);
+    workstation.add(desktopMouse);
+    box(workstation, [0.48, 1.18, 0.85], [1.48, 0.6, -0.32], "#121a20", { metalness: 0.62, roughness: 0.34 });
+    box(workstation, [0.035, 1.02, 0.7], [1.23, 0.6, -0.32], "#263640", { metalness: 0.38, roughness: 0.24 });
+    box(workstation, [0.03, 0.88, 0.055], [1.225, 0.62, -0.34], "#77e7ff", {
+      emissive: "#255765",
+      emissiveIntensity: 0.86,
+      roughness: 0.24,
+    });
+    const pcPower = new THREE.Mesh(
       new THREE.SphereGeometry(0.025, 10, 8),
       material(cyan, { emissive: cyan, emissiveIntensity: 2.2 }),
     );
-    laptopPower.position.set(1.5, 0.12, -0.7);
-    workstation.add(laptopPower);
+    pcPower.name = "desktop-pc-power";
+    pcPower.position.set(1.49, 1.02, 0.115);
+    workstation.add(pcPower);
 
     const rack = hotspot("rack", "PROXMOX SERVER RACK");
     rack.position.set(4.45, 0, -3.35);
@@ -742,176 +760,165 @@ export default function InteractiveRoom() {
     printBedAssembly.name = "printer-y-bed";
     printer.add(printBedAssembly);
     box(printBedAssembly, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", { metalness: 0.38 });
-    const printedPiece = new THREE.Group();
-    printedPiece.name = "printer-traditional-dagger";
-    printedPiece.position.set(0, 0.28, 0);
-    printedPiece.rotation.y = 0.18;
-    printBedAssembly.add(printedPiece);
+    const printedChessSet = new THREE.Group();
+    printedChessSet.name = "printer-miniature-chess-set";
+    printedChessSet.position.set(0, 0.28, 0);
+    printBedAssembly.add(printedChessSet);
     const printableParts: THREE.Object3D[] = [];
-    const daggerHeight = 1.42;
-    const daggerLayerHeight = 0.022;
-    const bladeMaterial = material("#f1f2ed", {
-      emissive: "#34383b",
-      emissiveIntensity: 0.14,
-      metalness: 0.72,
-      roughness: 0.22,
-    });
-    const bladeEdgeMaterial = material("#fafaf7", {
-      emissive: "#4b4e50",
-      emissiveIntensity: 0.15,
-      metalness: 0.82,
-      roughness: 0.16,
-    });
-    const fullerMaterial = material("#d9dbd7", {
-      emissive: "#343638",
-      emissiveIntensity: 0.1,
-      metalness: 0.6,
-      roughness: 0.28,
-    });
-    const gripMaterial = material("#090b0e", {
+    const chessSetHeight = 0.5;
+    const chessLayerHeight = 0.024;
+    const blackChessMaterial = material("#080a0d", {
       emissive: "#020304",
-      emissiveIntensity: 0.1,
-      roughness: 0.52,
+      emissiveIntensity: 0.12,
+      metalness: 0.18,
+      roughness: 0.48,
     });
-    const gripWrapMaterial = material("#171b20", {
-      emissive: "#030405",
-      emissiveIntensity: 0.08,
-      roughness: 0.68,
+    const whiteChessMaterial = material("#f1f2ed", {
+      emissive: "#34383b",
+      emissiveIntensity: 0.12,
+      metalness: 0.16,
+      roughness: 0.42,
     });
-    const darkMetalMaterial = material("#07090c", { metalness: 0.78, roughness: 0.26 });
-    const supportMaterial = material("#eceeea", { metalness: 0.08, roughness: 0.62 });
+    const darkBoardMaterial = material("#11161b", { metalness: 0.3, roughness: 0.48 });
+    const lightBoardMaterial = material("#d9dbd7", { metalness: 0.12, roughness: 0.52 });
     const addPrintablePart = (part: THREE.Object3D, printHeight: number) => {
       part.visible = false;
       part.userData.printHeight = printHeight;
       printableParts.push(part);
-      printedPiece.add(part);
+      printedChessSet.add(part);
     };
-    const daggerBladeSliceGeometry = (halfWidth: number, halfDepth: number) => {
-      const profile = new THREE.Shape();
-      profile.moveTo(0, halfDepth);
-      profile.lineTo(halfWidth, 0);
-      profile.lineTo(0, -halfDepth);
-      profile.lineTo(-halfWidth, 0);
-      profile.closePath();
-      const geometry = new THREE.ExtrudeGeometry(profile, {
-        depth: daggerLayerHeight,
-        bevelEnabled: false,
-        curveSegments: 1,
-        steps: 1,
-      });
-      geometry.rotateX(Math.PI / 2);
-      geometry.translate(0, daggerLayerHeight / 2, 0);
-      return geometry;
-    };
-    const daggerLayerCount = Math.ceil(daggerHeight / daggerLayerHeight);
-    for (let layer = 0; layer < daggerLayerCount; layer += 1) {
-      const y = 0.011 + layer * daggerLayerHeight;
-      if (y < 0.52) {
-        for (const side of [-1, 1]) {
-          const supportLayer = new THREE.Mesh(
-            new THREE.BoxGeometry(0.042, daggerLayerHeight * 0.72, 0.042),
-            layer % 5 === 0 ? darkMetalMaterial : supportMaterial,
-          );
-          supportLayer.name = "dagger-hilt-support";
-          supportLayer.position.set(side * 0.27, y, 0);
-          addPrintablePart(supportLayer, y);
-        }
-      }
-      if (y < 0.12) {
-        const pommelProgress = y / 0.12;
-        const radius = 0.075 + Math.sin(pommelProgress * Math.PI) * 0.025;
-        const pommelLayer = new THREE.Mesh(
-          new THREE.CylinderGeometry(radius, radius, daggerLayerHeight * 0.86, 18),
-          darkMetalMaterial,
-        );
-        pommelLayer.name = "dagger-pommel-layer";
-        pommelLayer.position.y = y;
-        addPrintablePart(pommelLayer, y);
-        continue;
-      }
 
-      if (y < 0.44) {
-        const gripProgress = (y - 0.12) / 0.32;
-        const gripRadius = 0.073 + Math.sin(gripProgress * Math.PI) * 0.006;
-        const gripLayer = new THREE.Mesh(
-          new THREE.CylinderGeometry(gripRadius, gripRadius, daggerLayerHeight * 0.88, 16),
-          gripMaterial,
-        );
-        gripLayer.name = "dagger-wrapped-grip";
-        gripLayer.position.y = y;
-        addPrintablePart(gripLayer, y);
-        if (layer % 5 === 0) {
-          const gripRing = new THREE.Mesh(
-            new THREE.TorusGeometry(gripRadius + 0.002, 0.008, 6, 18),
-            gripWrapMaterial,
-          );
-          gripRing.name = "dagger-grip-ring";
-          gripRing.rotation.x = Math.PI / 2;
-          gripRing.position.y = y;
-          addPrintablePart(gripRing, y);
-        }
-        continue;
-      }
-
-      if (y < 0.52) {
-        const guardProgress = (y - 0.44) / 0.08;
-        const guardHalfWidth = 0.245 + Math.sin(guardProgress * Math.PI) * 0.015;
-        const guardLayer = new THREE.Mesh(
-          new THREE.BoxGeometry(guardHalfWidth * 2, daggerLayerHeight * 0.86, 0.16),
-          darkMetalMaterial,
-        );
-        guardLayer.name = "dagger-straight-crossguard";
-        guardLayer.position.y = y;
-        addPrintablePart(guardLayer, y);
-        for (const side of [-1, 1]) {
-          const guardTip = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.045, 0.045, daggerLayerHeight * 0.86, 12),
-            darkMetalMaterial,
-          );
-          guardTip.name = "dagger-guard-tip";
-          guardTip.position.set(side * guardHalfWidth, y, 0);
-          addPrintablePart(guardTip, y);
-        }
-        continue;
-      }
-
-      const bladeProgress = Math.min(1, (y - 0.52) / (daggerHeight - 0.52));
-      const pointStartsAt = 0.76;
-      const bladeShoulderWidth = 0.19;
-      const shoulderWidth = bladeShoulderWidth - bladeProgress * 0.025;
-      const pointTaper = bladeProgress <= pointStartsAt
-        ? 1
-        : Math.max(0.05, 1 - (bladeProgress - pointStartsAt) / (1 - pointStartsAt));
-      const halfWidth = Math.max(0.01, shoulderWidth * pointTaper);
-      const halfDepth = Math.max(0.012, 0.082 * (1 - bladeProgress * 0.12) * pointTaper);
-      const bladeLayer = new THREE.Mesh(
-        daggerBladeSliceGeometry(halfWidth, halfDepth),
-        bladeMaterial,
+    for (let layer = 0; layer < 3; layer += 1) {
+      const y = 0.01 + layer * 0.018;
+      const boardLayer = new THREE.Mesh(
+        new THREE.BoxGeometry(1.22, 0.016, 1.22),
+        layer === 2 ? lightBoardMaterial : darkBoardMaterial,
       );
-      bladeLayer.name = "dagger-double-edged-blade";
-      bladeLayer.position.y = y;
-      addPrintablePart(bladeLayer, y);
-
-      if (bladeProgress < 0.72) {
-        const fuller = new THREE.Mesh(
-          new THREE.BoxGeometry(Math.max(0.025, halfWidth * 0.56), daggerLayerHeight * 0.64, 0.016),
-          fullerMaterial,
+      boardLayer.name = "chess-board-layer";
+      boardLayer.position.y = y;
+      addPrintablePart(boardLayer, y);
+    }
+    const squareSize = 0.142;
+    for (let row = 0; row < 8; row += 1) {
+      for (let column = 0; column < 8; column += 1) {
+        const square = new THREE.Mesh(
+          new THREE.BoxGeometry(squareSize * 0.94, 0.012, squareSize * 0.94),
+          (row + column) % 2 === 0 ? whiteChessMaterial : blackChessMaterial,
         );
-        fuller.name = "dagger-blade-fuller";
-        fuller.position.set(0, y, halfDepth * 0.72);
-        addPrintablePart(fuller, y);
+        square.name = "chess-board-square";
+        square.position.set(
+          (column - 3.5) * squareSize,
+          0.064,
+          (row - 3.5) * squareSize,
+        );
+        addPrintablePart(square, 0.064);
+      }
+    }
+
+    type ChessPieceType = "pawn" | "rook" | "knight" | "bishop" | "queen" | "king";
+    const pieceHeights: Record<ChessPieceType, number> = {
+      pawn: 0.22,
+      rook: 0.29,
+      knight: 0.32,
+      bishop: 0.35,
+      queen: 0.39,
+      king: 0.43,
+    };
+    const backRank: ChessPieceType[] = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"];
+    const pieceRadius = (kind: ChessPieceType, progress: number) => {
+      if (progress < 0.2) return 0.053 - progress * 0.04;
+      if (progress < 0.55) return 0.031 + Math.sin((progress - 0.2) * Math.PI * 2.2) * 0.004;
+      if (kind === "pawn") return 0.024 + Math.sin(((progress - 0.55) / 0.45) * Math.PI) * 0.025;
+      if (kind === "rook") return progress > 0.76 ? 0.052 : 0.035;
+      if (kind === "knight") return 0.034 + (progress - 0.55) * 0.018;
+      if (kind === "bishop") return 0.026 + Math.sin(((progress - 0.55) / 0.45) * Math.PI) * 0.022;
+      if (kind === "queen") return progress > 0.78 ? 0.052 : 0.034;
+      return progress > 0.78 ? 0.044 : 0.034;
+    };
+    const addChessPiece = (
+      kind: ChessPieceType,
+      column: number,
+      row: number,
+      side: "black" | "white",
+    ) => {
+      const pieceMaterial = side === "white" ? whiteChessMaterial : blackChessMaterial;
+      const x = (column - 3.5) * squareSize;
+      const z = (row - 3.5) * squareSize;
+      const pieceHeight = pieceHeights[kind];
+      const pieceLayerCount = Math.ceil(pieceHeight / chessLayerHeight);
+      for (let layer = 0; layer < pieceLayerCount; layer += 1) {
+        const relativeY = Math.min(pieceHeight, (layer + 0.5) * chessLayerHeight);
+        const progress = relativeY / pieceHeight;
+        const radius = pieceRadius(kind, progress);
+        const pieceLayer = new THREE.Mesh(
+          new THREE.CylinderGeometry(radius, radius, chessLayerHeight * 0.82, 14),
+          pieceMaterial,
+        );
+        pieceLayer.name = `chess-${kind}-layer`;
+        pieceLayer.position.set(x, 0.072 + relativeY, z);
+        addPrintablePart(pieceLayer, 0.072 + relativeY);
       }
 
-      for (const side of [-1, 1]) {
-        const edge = new THREE.Mesh(
-          new THREE.BoxGeometry(0.014, daggerLayerHeight * 0.68, Math.max(0.022, halfDepth * 1.05)),
-          bladeEdgeMaterial,
+      const topY = 0.072 + pieceHeight;
+      if (kind === "rook") {
+        for (let turret = 0; turret < 4; turret += 1) {
+          const battlement = new THREE.Mesh(
+            new THREE.BoxGeometry(0.032, 0.035, 0.032),
+            pieceMaterial,
+          );
+          battlement.name = "chess-rook-battlement";
+          battlement.position.set(
+            x + (turret < 2 ? -0.032 : 0.032),
+            topY + 0.014,
+            z + (turret % 2 === 0 ? -0.032 : 0.032),
+          );
+          addPrintablePart(battlement, topY + 0.014);
+        }
+      } else if (kind === "knight") {
+        const knightHead = new THREE.Mesh(
+          new THREE.BoxGeometry(0.06, 0.09, 0.052),
+          pieceMaterial,
         );
-        edge.name = "dagger-blade-edge";
-        edge.position.set(side * halfWidth * 0.82, y, 0);
-        edge.rotation.y = side * 0.34;
-        addPrintablePart(edge, y);
+        knightHead.name = "chess-knight-head";
+        knightHead.position.set(x + (side === "white" ? -0.012 : 0.012), topY - 0.018, z);
+        knightHead.rotation.z = side === "white" ? -0.38 : 0.38;
+        addPrintablePart(knightHead, topY);
+      } else if (kind === "bishop") {
+        const bishopTip = new THREE.Mesh(
+          new THREE.ConeGeometry(0.035, 0.07, 14),
+          pieceMaterial,
+        );
+        bishopTip.name = "chess-bishop-tip";
+        bishopTip.position.set(x, topY + 0.024, z);
+        addPrintablePart(bishopTip, topY + 0.024);
+      } else if (kind === "queen") {
+        for (let crown = 0; crown < 5; crown += 1) {
+          const angle = (crown / 5) * Math.PI * 2;
+          const crownPoint = new THREE.Mesh(
+            new THREE.SphereGeometry(0.014, 8, 6),
+            pieceMaterial,
+          );
+          crownPoint.name = "chess-queen-crown";
+          crownPoint.position.set(x + Math.cos(angle) * 0.04, topY + 0.02, z + Math.sin(angle) * 0.04);
+          addPrintablePart(crownPoint, topY + 0.02);
+        }
+      } else if (kind === "king") {
+        const crossStem = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.075, 0.018), pieceMaterial);
+        crossStem.name = "chess-king-cross";
+        crossStem.position.set(x, topY + 0.035, z);
+        addPrintablePart(crossStem, topY + 0.035);
+        const crossBar = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.018, 0.018), pieceMaterial);
+        crossBar.name = "chess-king-cross";
+        crossBar.position.set(x, topY + 0.05, z);
+        addPrintablePart(crossBar, topY + 0.05);
       }
+    };
+
+    for (let column = 0; column < 8; column += 1) {
+      addChessPiece(backRank[column], column, 0, "black");
+      addChessPiece("pawn", column, 1, "black");
+      addChessPiece("pawn", column, 6, "white");
+      addChessPiece(backRank[column], column, 7, "white");
     }
     printableParts.sort((a, b) => Number(a.userData.printHeight) - Number(b.userData.printHeight));
 
@@ -991,7 +998,7 @@ export default function InteractiveRoom() {
       printerDisplayContext.fillText(progress >= 1 ? "COMPLETE" : `PRINT ${`${percent}`.padStart(3, "0")}%`, 12, 35);
       printerDisplayContext.fillStyle = "#dcece5";
       printerDisplayContext.font = "19px monospace";
-      printerDisplayContext.fillText(progress >= 1 ? "DAGGER READY" : `ETA ${minutes}:${seconds}`, 12, 70);
+      printerDisplayContext.fillText(progress >= 1 ? "CHESS SET READY" : `ETA ${minutes}:${seconds}`, 12, 70);
       printerDisplayTexture.needsUpdate = true;
     };
     drawPrinterDisplay(0);
@@ -1827,7 +1834,7 @@ export default function InteractiveRoom() {
       const printProgress = Math.min(1, Math.max(0, (timestamp - printStartedAt) / PRINT_DURATION_MS));
       const printPercent = Math.round(printProgress * 100);
       previousTimestamp = timestamp;
-      const currentPrintHeight = printProgress * daggerHeight;
+      const currentPrintHeight = printProgress * chessSetHeight;
       for (const part of printableParts) {
         part.visible = Number(part.userData.printHeight) <= currentPrintHeight;
       }
@@ -1838,7 +1845,7 @@ export default function InteractiveRoom() {
       if (printProgress >= 1 && printCompletedAt === 0) {
         printCompletedAt = timestamp;
         playSiteSfx("complete");
-        showRoomSecret("FIVE-MINUTE PRINT COMPLETE / DAGGER READY");
+        showRoomSecret("THREE-MINUTE PRINT COMPLETE / CHESS SET READY");
       }
       printCompletionLight.intensity =
         printCompletedAt > 0 && timestamp - printCompletedAt < 8000
@@ -1900,7 +1907,7 @@ export default function InteractiveRoom() {
           });
         }
         printBedAssembly.position.z = printProgress < 1 ? Math.sin(elapsed * 1.35) * 0.24 : 0;
-        printerGantry.position.y = 0.84 + printProgress * daggerHeight;
+        printerGantry.position.y = 0.84 + printProgress * chessSetHeight;
         const smashActive = document.body.classList.contains("easter-mode");
         racket.rotation.z = THREE.MathUtils.lerp(
           racket.rotation.z,
