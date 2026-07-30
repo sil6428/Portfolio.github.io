@@ -19,7 +19,8 @@ test("renders the full-screen interactive portfolio", async () => {
   const html = await response.text();
   assert.match(html, /Affan Shaikh/);
   assert.match(html, /AFFAN_OS \/ INTERACTIVE PORTFOLIO/);
-  assert.match(html, /Enter the lab/);
+  assert.match(html, /Drive the lab/);
+  assert.match(html, /Pilot the cyber rover/);
   assert.match(html, /Room controls/);
   assert.match(html, /Interactive 3D portfolio/);
   assert.match(html, /3D room directory/);
@@ -197,7 +198,20 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /cameraOffset/);
   assert.match(room, /targetOffset/);
   assert.match(room, /room-popup-sections/);
+  assert.match(room, /CYBER ROVER/);
+  assert.match(room, /driveState/);
+  assert.match(room, /findNearestObject/);
+  assert.match(room, /getChasePose/);
+  assert.match(room, /movementBlockers/);
+  assert.match(room, /Drive forward/);
+  assert.match(room, /Inspect/);
+  assert.match(room, /affan-lab-discoveries/);
+  assert.match(room, /stations logged/);
   assert.doesNotMatch(room, /from "next\/link"/);
   assert.doesNotMatch(room, /href: "\/work\//);
   assert.doesNotMatch(room, /href: "\/interests\//);
+
+  assert.match(styles, /room-drive-hud/);
+  assert.match(styles, /rover-pad/);
+  assert.match(styles, /room-nearby-pulse/);
 });

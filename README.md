@@ -10,7 +10,7 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 The site presents my technical work, education, experience, and interests without relying on a profile photo. The homepage is a full-screen Three.js cyber lab where each object represents part of my work or personality.
 
-Visitors can drag to look around, select an object, watch the camera move toward it, and read its complete file in an on-screen panel. The room does not send visitors to separate internal pages. Earlier focused routes remain available as unlisted fallbacks.
+Visitors pilot a small cyber rover through the room with WASD, arrow keys, or touch controls. Driving into a glowing station reveals an interaction prompt. Selecting it moves the camera into a composed close-up and opens the complete file without leaving the scene. Earlier focused routes remain available as unlisted fallbacks.
 
 ## Pages
 
@@ -32,7 +32,11 @@ Visitors can drag to look around, select an object, watch the camera move toward
 - Responsive navigation for desktop, tablet, and mobile layouts
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
-- Full-screen Three.js cyber lab with draggable camera controls and selectable objects
+- Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
+- Controllable cyber rover with acceleration, steering, collision boundaries, animated wheels, headlights, and a damped chase camera
+- Proximity-based stations, pulsing floor markers, keyboard interaction, reset controls, and a mobile directional pad
+- Device-local discovery progress that marks each inspected station without creating an account
+- Ambient systems including moving printer parts, rotating rack fans, pulsing lights, and responsive interaction markers
 - Animated camera pans with object-relative positions and centered, upright framing
 - More detailed workstation, server rack, 3D printer, books, camera, badminton, profile-board, room, and cat models
 - Seven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, experience, and contact details
@@ -58,6 +62,10 @@ Visitors can drag to look around, select an object, watch the camera move toward
 - Cloudflare Workers and the Cloudflare Vite plugin
 - ESLint
 - Node.js test runner
+
+## Interaction reference
+
+The game-like navigation direction was informed by [Bruno Simon's portfolio](https://bruno-simon.com/) and the architecture documented in the [MIT-licensed Folio 2025 source](https://github.com/brunosimon/folio-2025). This portfolio uses its own cyber-lab concept, code, models, copy, interface, and controls. No models, textures, music, or other visual assets from Folio 2025 are included.
 
 ## Local development
 

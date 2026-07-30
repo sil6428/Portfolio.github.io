@@ -16,9 +16,9 @@ export default function Home() {
 
       <section className="immersive-intro" aria-labelledby="lab-title">
         <p>AFFAN_OS / INTERACTIVE PORTFOLIO</p>
-        <h1 id="lab-title">Enter the lab.</h1>
+        <h1 id="lab-title">Drive the lab.</h1>
         <span>
-          Drag to look around. Select an object to move closer. Every detail stays inside the room.
+          Pilot the cyber rover with WASD or the arrow keys. Approach a glowing station, then press Enter to inspect it.
         </span>
       </section>
 
