@@ -4,7 +4,7 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 [View the live portfolio](https://affan-shaikh-portfolio.sil6428-archtech.workers.dev)
 
-![Affan Shaikh portfolio preview](public/og-topology.png)
+![Affan Shaikh portfolio preview](public/og-lab.png)
 
 ## Overview
 
@@ -33,7 +33,8 @@ The portfolio is designed as a set of focused pages instead of one long landing 
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Interactive Three.js topology with section-specific visual states
-- Clickable topology nodes for spatial navigation on desktop
+- Interactive Three.js cyber-lab with draggable camera controls and clickable objects
+- Accessible room directory linking the workstation, server rack, printer, racket, books, camera, and wall board
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns
 - GitHub, LinkedIn, VSCO, email, phone, and resume links

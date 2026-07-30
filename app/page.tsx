@@ -1,4 +1,5 @@
 import Link from "next/link";
+import InteractiveRoom from "./interactive-room";
 
 const projects = [
   {
@@ -149,6 +150,7 @@ export default function Home() {
             <div><span>LAB</span><strong>Proxmox</strong></div>
           </div>
         </div>
+        <InteractiveRoom />
       </section>
 
       <section className="work wrap" id="work">

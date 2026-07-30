@@ -21,6 +21,8 @@ test("renders the work portfolio", async () => {
   assert.match(html, /I learn systems by taking them apart/);
   assert.match(html, /Selected systems/);
   assert.match(html, /Work I can explain from the inside out/);
+  assert.match(html, /AFFAN_LAB \/ ROOM_01/);
+  assert.match(html, /3D room directory/);
   assert.match(html, /Archtech/);
   assert.match(html, /SSIK Website/);
   assert.match(html, /independently designed and built the public website for SSIK/);
@@ -62,7 +64,7 @@ test("publishes crawler and structured profile metadata", async () => {
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /ProfilePage/);
   assert.match(html, /Ontario Tech University/);
-  assert.match(html, /\/og-topology\.png/);
+  assert.match(html, /\/og-lab\.png/);
   assert.match(html, /\/terminal-favicon\.svg/);
 
   const sitemapResponse = await render("/sitemap.xml");
@@ -174,7 +176,16 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(topology, /from "three"/);
   assert.match(topology, /WebGLRenderer/);
   assert.match(topology, /LIVE TOPOLOGY/);
-  assert.match(topology, /Explore highlighted portfolio nodes/);
-  assert.match(topology, /01 \/ ARCHTECH/);
-  assert.match(topology, /03 \/ HOME LAB/);
+
+  const room = await import("node:fs/promises").then(({ readFile }) =>
+    readFile(new URL("../app/interactive-room.tsx", import.meta.url), "utf8"),
+  );
+  assert.match(room, /OrbitControls/);
+  assert.match(room, /ARCHTECH WORKSTATION/);
+  assert.match(room, /PROXMOX SERVER RACK/);
+  assert.match(room, /3D PRINTER/);
+  assert.match(room, /BADMINTON/);
+  assert.match(room, /PHOTOGRAPHY/);
+  assert.match(room, /ABOUT AFFAN/);
+  assert.match(room, /raycaster\.intersectObjects/);
 });
