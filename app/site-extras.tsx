@@ -44,7 +44,7 @@ function runTerminalCommand(command: string) {
   const normalized = command.trim().toLowerCase();
 
   const responses: Record<string, string[]> = {
-    help: ["Available commands: whoami, projects, interests, status, lights, cat, print, eggs, clear"],
+    help: ["Available commands: whoami, projects, interests, status, lights, cat, relic, signal, print, eggs, clear"],
     whoami: [
       "Affan Shaikh",
       "Cybersecurity student, builder, and regional badminton player.",
@@ -60,6 +60,8 @@ function runTerminalCommand(command: string) {
     status: ["ONLINE", "Currently turning old computers into a Proxmox server."],
     lights: ["Sending a colour override to the 3D room..."],
     cat: ["Sending three approved pets to the room cat..."],
+    relic: ["Charging the printed sword on the bottom shelf..."],
+    signal: ["Starting the hidden server beacon sequence..."],
     print: ["The dagger print takes exactly 03:00.", "Watch the printer display for live progress."],
     eggs: ["Opening easter-eggs.md..."],
   };
@@ -281,6 +283,8 @@ export default function SiteExtras() {
 
     if (normalized === "lights") window.dispatchEvent(new Event("affan-room-palette"));
     if (normalized === "cat") window.dispatchEvent(new Event("affan-room-cat"));
+    if (normalized === "relic") window.dispatchEvent(new Event("affan-room-relic"));
+    if (normalized === "signal") window.dispatchEvent(new Event("affan-room-signal"));
     if (normalized === "eggs") setTerminalPage("eggs");
     setTerminalInput("");
   }
@@ -449,7 +453,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>02</code>
-                    <div><strong>Terminal commands</strong><p>Try help, whoami, projects, interests, status, lights, cat, print, eggs, and clear.</p></div>
+                    <div><strong>Terminal commands</strong><p>Try help, whoami, projects, interests, status, lights, cat, relic, signal, print, eggs, and clear.</p></div>
                   </li>
                   <li>
                     <code>03</code>
@@ -469,11 +473,15 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>07</code>
-                    <div><strong>Do not open cat.jpg</strong><p>The laptop desktop contains one suspicious photo. Opening it changes the room palette.</p></div>
+                    <div><strong>Printed relic</strong><p>Find the completed sword on the bottom shelf and touch it. The terminal command relic also works.</p></div>
                   </li>
                   <li>
                     <code>08</code>
-                    <div><strong>Terminal room controls</strong><p>Try lights, cat, and print in the hidden terminal.</p></div>
+                    <div><strong>Server beacon</strong><p>A small button is hidden near the top of the server rack. Press it or use the terminal command signal.</p></div>
+                  </li>
+                  <li>
+                    <code>09</code>
+                    <div><strong>Terminal room controls</strong><p>Try lights, cat, relic, signal, and print in the hidden terminal.</p></div>
                   </li>
                 </ol>
               </div>

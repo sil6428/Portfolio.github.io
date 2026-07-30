@@ -34,7 +34,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
 - Interactive laptop desktop with separate Archtech, SSIK, About, Contact, and Resume files
-- Dark retro laptop interface with the reference-inspired desktop layout, cyan grid, outlined folders, taskbar, and hidden `cat.jpg`
+- Dark retro laptop interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
@@ -43,6 +43,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A real three-minute printer sequence with a bottom-up fantasy dagger, height-tracking print head, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
 - Closer room framing plus a shorter wall bookshelf, camera on its top surface, and a mounted badminton racket on the back wall
+- A completed printed sword displayed on the bottom shelf with an interactive relic effect
 - A simplified server rack without decorative fans or loose wiring
 - A detailed fantasy-dagger print with an ornamental pommel, wrapped grip, wide crossguard, faceted blade, fuller, and bright blade edges
 - Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
@@ -60,7 +61,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Section-specific Three.js network topology on the supporting pages
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns
-- Hidden interactions for petting the cat, changing the room palette, animating the racket, and controlling room secrets from the terminal
+- Hidden interactions for petting the cat, charging the shelf sword, activating a server beacon, changing the room palette, animating the racket, and controlling room secrets from the terminal
 - GitHub, LinkedIn, VSCO, email, phone, and resume links
 - Metadata, Open Graph images, robots rules, and a generated sitemap
 - Motion with reduced-motion support

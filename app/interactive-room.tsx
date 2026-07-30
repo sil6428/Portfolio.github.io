@@ -6,7 +6,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 type HotspotData = {
   key?: string;
-  easterEgg?: "cat" | "palette";
+  easterEgg?: "cat" | "palette" | "relic" | "signal";
   label: string;
 };
 
@@ -502,26 +502,6 @@ export default function InteractiveRoom() {
         desktopContext.font = "14px monospace";
         desktopContext.fillText(file.note, file.x, file.y + file.height - 22);
       }
-      desktopContext.fillStyle = "rgba(12,18,28,.9)";
-      desktopContext.fillRect(790, 315, 168, 170);
-      desktopContext.strokeStyle = "#40536b";
-      desktopContext.lineWidth = 4;
-      desktopContext.strokeRect(790, 315, 168, 170);
-      desktopContext.fillStyle = "#05080d";
-      desktopContext.fillRect(820, 340, 108, 76);
-      desktopContext.fillStyle = "#ef7d4d";
-      desktopContext.beginPath();
-      desktopContext.arc(851, 375, 7, 0, Math.PI * 2);
-      desktopContext.arc(896, 375, 7, 0, Math.PI * 2);
-      desktopContext.fill();
-      desktopContext.fillStyle = "#e3edf0";
-      desktopContext.font = "bold 20px monospace";
-      desktopContext.textAlign = "center";
-      desktopContext.fillText("cat.jpg", 874, 452);
-      desktopContext.fillStyle = "#91a3ae";
-      desktopContext.font = "13px monospace";
-      desktopContext.fillText("do not open", 874, 474);
-      desktopContext.textAlign = "left";
     }
     const desktopTexture = new THREE.CanvasTexture(desktopCanvas);
     desktopTexture.colorSpace = THREE.SRGBColorSpace;
@@ -556,14 +536,6 @@ export default function InteractiveRoom() {
     addDesktopFile("profile", "OPEN ABOUT FILE", 0.22, 1.46, 0.53, 0.48, amber);
     addDesktopFile("contact", "OPEN CONTACT FILE", -0.81, 0.84, 0.57, 0.47, "#68e0ae");
     addDesktopFile("resume", "OPEN RESUME PDF", 0, 0.84, 0.57, 0.47, "#e7eceb");
-    const mysteryFile = easterHotspot("palette", "OPEN CAT.JPG", laptopLid);
-    mysteryFile.position.set(1.12, 0.78, 0.09);
-    mysteryFile.add(
-      new THREE.Mesh(
-        new THREE.PlaneGeometry(0.46, 0.48),
-        new THREE.MeshBasicMaterial({ color: "#d8c75e", transparent: true, opacity: 0.035, depthWrite: false }),
-      ),
-    );
 
     for (let row = 0; row < 4; row += 1) {
       for (let key = 0; key < 13; key += 1) {
@@ -618,6 +590,24 @@ export default function InteractiveRoom() {
     for (let vent = 0; vent < 10; vent += 1) {
       box(rack, [0.82, 0.025, 0.025], [0, 3.27 + vent * 0.035, 0.79], "#415158", { metalness: 0.72, roughness: 0.34 });
     }
+    const serverBeacon = easterHotspot("signal", "PRESS SERVER BEACON", rack);
+    serverBeacon.position.set(0.69, 3.38, 0.81);
+    const serverBeaconMaterial = material("#68e0ae", {
+      emissive: "#68e0ae",
+      emissiveIntensity: 2.4,
+      metalness: 0.42,
+      roughness: 0.22,
+    });
+    const serverBeaconButton = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.075, 0.075, 0.055, 18),
+      serverBeaconMaterial,
+    );
+    serverBeaconButton.name = "hidden-server-beacon";
+    serverBeaconButton.rotation.x = Math.PI / 2;
+    serverBeacon.add(serverBeaconButton);
+    const serverBeaconLight = new THREE.PointLight(0x68e0ae, 0, 2.8, 2);
+    serverBeaconLight.position.set(0, 0, 0.22);
+    serverBeacon.add(serverBeaconLight);
 
     const printer = hotspot("printer", "3D PRINTER");
     printer.position.set(1.28, 1.45, -3.18);
@@ -861,6 +851,79 @@ export default function InteractiveRoom() {
         roughness: 0.54,
       });
     }
+    const shelfSwordBaseY = 0.39;
+    const shelfSword = easterHotspot("relic", "TOUCH THE PRINTED SWORD");
+    shelfSword.name = "bottom-shelf-printed-sword";
+    shelfSword.position.set(-4.98, shelfSwordBaseY, 0.85);
+    const shelfSwordBladeMaterial = material("#9eb9c2", {
+      emissive: "#1d3d48",
+      emissiveIntensity: 0.24,
+      metalness: 0.76,
+      roughness: 0.2,
+    });
+    const shelfSwordAccentMaterial = material("#7d62d9", {
+      emissive: "#342270",
+      emissiveIntensity: 0.42,
+      metalness: 0.36,
+      roughness: 0.34,
+    });
+    const shelfSwordDarkMaterial = material("#171f28", { metalness: 0.7, roughness: 0.3 });
+    const shelfBlade = new THREE.Mesh(
+      new THREE.BoxGeometry(0.13, 0.09, 1.58),
+      shelfSwordBladeMaterial,
+    );
+    shelfBlade.name = "shelf-sword-blade";
+    shelfBlade.position.set(0, 0.02, 0.2);
+    shelfSword.add(shelfBlade);
+    const shelfBladeTip = new THREE.Mesh(
+      new THREE.ConeGeometry(0.095, 0.3, 4),
+      shelfSwordBladeMaterial,
+    );
+    shelfBladeTip.name = "shelf-sword-tip";
+    shelfBladeTip.rotation.x = Math.PI / 2;
+    shelfBladeTip.rotation.y = Math.PI / 4;
+    shelfBladeTip.position.set(0, 0.02, 1.14);
+    shelfSword.add(shelfBladeTip);
+    const shelfGuard = new THREE.Mesh(
+      new THREE.BoxGeometry(0.62, 0.11, 0.13),
+      shelfSwordAccentMaterial,
+    );
+    shelfGuard.name = "shelf-sword-crossguard";
+    shelfGuard.position.set(0, 0.02, -0.64);
+    shelfSword.add(shelfGuard);
+    const shelfGrip = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.075, 0.075, 0.52, 14),
+      shelfSwordDarkMaterial,
+    );
+    shelfGrip.name = "shelf-sword-grip";
+    shelfGrip.rotation.x = Math.PI / 2;
+    shelfGrip.position.set(0, 0.02, -0.95);
+    shelfSword.add(shelfGrip);
+    for (let wrap = 0; wrap < 5; wrap += 1) {
+      const gripWrap = new THREE.Mesh(
+        new THREE.TorusGeometry(0.078, 0.012, 6, 16),
+        shelfSwordAccentMaterial,
+      );
+      gripWrap.rotation.x = Math.PI / 2;
+      gripWrap.position.set(0, 0.02, -0.78 - wrap * 0.09);
+      shelfSword.add(gripWrap);
+    }
+    const shelfPommel = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.12, 0),
+      shelfSwordAccentMaterial,
+    );
+    shelfPommel.name = "shelf-sword-pommel";
+    shelfPommel.position.set(0, 0.02, -1.27);
+    shelfSword.add(shelfPommel);
+    for (const z of [-0.42, 0.6]) {
+      box(room, [0.32, 0.08, 0.12], [-5.02, 0.27, 0.85 + z], "#1b252d", {
+        metalness: 0.58,
+        roughness: 0.38,
+      });
+    }
+    const shelfSwordLight = new THREE.PointLight(0x9f91ff, 0, 3.4, 2);
+    shelfSwordLight.position.set(0, 0.35, 0);
+    shelfSword.add(shelfSwordLight);
 
     const books = hotspot("books", "READING SHELF");
     books.position.set(-4.99, 1.3, 1.08);
@@ -1279,6 +1342,8 @@ export default function InteractiveRoom() {
     let catSecretUntil = 0;
     let paletteSecretUntil = 0;
     let paletteWasActive = false;
+    let relicSecretUntil = 0;
+    let signalSecretUntil = 0;
     const showRoomSecret = (message: string) => {
       window.clearTimeout(roomSecretTimeout);
       setRoomSecret(message);
@@ -1287,7 +1352,17 @@ export default function InteractiveRoom() {
     const activateRoomSecret = (easterEgg: HotspotData["easterEgg"]) => {
       if (easterEgg === "palette") {
         paletteSecretUntil = performance.now() + 12_000;
-        showRoomSecret("CAT.JPG OPENED / SUNROOM PALETTE UNLOCKED");
+        showRoomSecret("LIGHT OVERRIDE / SUNROOM PALETTE UNLOCKED");
+        return;
+      }
+      if (easterEgg === "relic") {
+        relicSecretUntil = performance.now() + 7_000;
+        showRoomSecret("PRINTED RELIC AWAKENED / SWORD CHARGED");
+        return;
+      }
+      if (easterEgg === "signal") {
+        signalSecretUntil = performance.now() + 8_000;
+        showRoomSecret("SERVER BEACON ONLINE / SIGNAL FOUND");
         return;
       }
       if (easterEgg === "cat") {
@@ -1302,11 +1377,15 @@ export default function InteractiveRoom() {
       }
     };
     const handlePaletteCommand = () => activateRoomSecret("palette");
+    const handleRelicCommand = () => activateRoomSecret("relic");
+    const handleSignalCommand = () => activateRoomSecret("signal");
     const handleCatCommand = () => {
       catTapCount = 2;
       activateRoomSecret("cat");
     };
     window.addEventListener("affan-room-palette", handlePaletteCommand);
+    window.addEventListener("affan-room-relic", handleRelicCommand);
+    window.addEventListener("affan-room-signal", handleSignalCommand);
     window.addEventListener("affan-room-cat", handleCatCommand);
 
     const raycaster = new THREE.Raycaster();
@@ -1410,9 +1489,28 @@ export default function InteractiveRoom() {
         renderer.setClearColor(paletteActive ? 0x162217 : 0x080a0f, paletteActive ? 0.9 : 0.82);
         if (scene.fog) scene.fog.color.set(paletteActive ? "#162217" : "#080a0f");
       }
+      const relicActive = timestamp < relicSecretUntil;
+      const signalActive = timestamp < signalSecretUntil;
+      shelfSwordLight.intensity = relicActive ? 4.5 + Math.sin(elapsed * 7) * 1.4 : 0;
+      shelfSwordBladeMaterial.emissiveIntensity = relicActive ? 1.1 : 0.24;
+      shelfSwordAccentMaterial.emissiveIntensity = relicActive ? 1.35 : 0.42;
+      serverBeaconLight.intensity = signalActive ? 5 + Math.sin(elapsed * 11) * 2 : 0;
+      serverBeaconMaterial.emissiveIntensity = signalActive ? 5.5 : 2.4;
 
       if (!reducedMotion) {
-        cyanLight.intensity = 27 + Math.sin(elapsed * 1.4) * 2;
+        cyanLight.intensity = signalActive
+          ? 24 + Math.abs(Math.sin(elapsed * 5.2)) * 25
+          : 27 + Math.sin(elapsed * 1.4) * 2;
+        violetLight.intensity = signalActive
+          ? 16 + Math.abs(Math.sin(elapsed * 5.2 + 1.1)) * 25
+          : 22;
+        warmLight.intensity = signalActive
+          ? 10 + Math.abs(Math.sin(elapsed * 5.2 + 2.2)) * 22
+          : 14;
+        shelfSword.position.y = relicActive
+          ? shelfSwordBaseY + 0.1 + Math.sin(elapsed * 3.2) * 0.045
+          : shelfSwordBaseY;
+        shelfSword.rotation.y = relicActive ? Math.sin(elapsed * 1.4) * 0.22 : 0;
         const catSecretActive = timestamp < catSecretUntil;
         cat.position.y = catSecretActive
           ? 0.24 + Math.abs(Math.sin(elapsed * 7)) * 0.55
@@ -1506,6 +1604,8 @@ export default function InteractiveRoom() {
       renderer.domElement.removeEventListener("pointerleave", handlePointerLeave);
       renderer.domElement.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("affan-room-palette", handlePaletteCommand);
+      window.removeEventListener("affan-room-relic", handleRelicCommand);
+      window.removeEventListener("affan-room-signal", handleSignalCommand);
       window.removeEventListener("affan-room-cat", handleCatCommand);
       window.clearTimeout(roomSecretTimeout);
       focusRef.current = () => undefined;
