@@ -633,13 +633,15 @@ export default function InteractiveRoom() {
       metalness: 0.72,
       roughness: 0.22,
     });
-    const bladeEdgeMaterial = material("#090b0e", {
+    const bladeEdgeMaterial = material("#fafaf7", {
+      emissive: "#4b4e50",
+      emissiveIntensity: 0.15,
       metalness: 0.82,
       roughness: 0.16,
     });
-    const fullerMaterial = material("#171a20", {
-      emissive: "#050608",
-      emissiveIntensity: 0.12,
+    const fullerMaterial = material("#d9dbd7", {
+      emissive: "#343638",
+      emissiveIntensity: 0.1,
       metalness: 0.6,
       roughness: 0.28,
     });
@@ -647,12 +649,6 @@ export default function InteractiveRoom() {
       emissive: "#020304",
       emissiveIntensity: 0.1,
       roughness: 0.52,
-    });
-    const accentMaterial = material("#f4f4ef", {
-      emissive: "#4a4d50",
-      emissiveIntensity: 0.2,
-      metalness: 0.28,
-      roughness: 0.32,
     });
     const darkMetalMaterial = material("#07090c", { metalness: 0.78, roughness: 0.26 });
     const supportMaterial = material("#eceeea", { metalness: 0.08, roughness: 0.62 });
@@ -698,7 +694,7 @@ export default function InteractiveRoom() {
         const radius = 0.075 + Math.sin(pommelProgress * Math.PI) * 0.065;
         const pommelLayer = new THREE.Mesh(
           new THREE.CylinderGeometry(radius, radius, daggerLayerHeight * 0.86, 18),
-          layer % 3 === 0 ? accentMaterial : darkMetalMaterial,
+          darkMetalMaterial,
         );
         pommelLayer.name = "dagger-pommel-layer";
         pommelLayer.position.y = y;
@@ -709,7 +705,7 @@ export default function InteractiveRoom() {
       if (y < 0.46) {
         const gripLayer = new THREE.Mesh(
           new THREE.CylinderGeometry(0.078, 0.078, daggerLayerHeight * 0.88, 16),
-          layer % 4 === 0 ? accentMaterial : gripMaterial,
+          gripMaterial,
         );
         gripLayer.name = "dagger-wrapped-grip";
         gripLayer.position.y = y;
@@ -732,7 +728,7 @@ export default function InteractiveRoom() {
         const guardHalfWidth = 0.22 + Math.sin(guardProgress * Math.PI) * 0.14;
         const guardLayer = new THREE.Mesh(
           new THREE.BoxGeometry(guardHalfWidth * 2, daggerLayerHeight * 0.86, 0.16),
-          guardProgress > 0.34 && guardProgress < 0.68 ? accentMaterial : darkMetalMaterial,
+          darkMetalMaterial,
         );
         guardLayer.name = "dagger-crossguard";
         guardLayer.position.y = y;
@@ -740,7 +736,7 @@ export default function InteractiveRoom() {
         for (const side of [-1, 1]) {
           const guardTip = new THREE.Mesh(
             new THREE.CylinderGeometry(0.065, 0.065, daggerLayerHeight * 0.86, 12),
-            accentMaterial,
+            darkMetalMaterial,
           );
           guardTip.name = "dagger-guard-tip";
           guardTip.position.set(side * guardHalfWidth, y, 0);
@@ -801,46 +797,38 @@ export default function InteractiveRoom() {
     nozzle.position.set(0, -0.34, 0.12);
     printHead.add(nozzle);
     box(printHead, [0.14, 0.12, 0.18], [0, -0.2, 0.1], "#c28b4d", { metalness: 0.86, roughness: 0.26 });
-    const spool = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.38, 0.38, 0.26, 28),
-      material("#080a0d", { metalness: 0.18, roughness: 0.58 }),
-    );
-    spool.name = "printer-spool";
-    spool.rotation.z = Math.PI / 2;
-    spool.position.set(0.48, 2.86, -0.63);
-    printer.add(spool);
-    const spoolCore = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.12, 0.12, 0.3, 20),
-      material("#56636a", { metalness: 0.58, roughness: 0.34 }),
-    );
-    spoolCore.rotation.z = Math.PI / 2;
-    spoolCore.position.copy(spool.position);
-    printer.add(spoolCore);
-    const secondarySpool = new THREE.Group();
-    secondarySpool.name = "printer-spool-secondary";
-    secondarySpool.position.set(-0.43, 2.86, -0.63);
-    printer.add(secondarySpool);
-    const secondarySpoolColors = ["#ef7d4d", "#7d62d9", "#f4f4ef"];
-    secondarySpoolColors.forEach((color, index) => {
-      const section = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.35, 0.35, 0.09, 28),
+    const createPrinterSpool = (name: string, color: string, emissive: string, x: number) => {
+      const spoolGroup = new THREE.Group();
+      spoolGroup.name = name;
+      spoolGroup.position.set(x, 2.86, -0.63);
+      printer.add(spoolGroup);
+
+      const filament = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.29, 0.29, 0.15, 28),
         material(color, {
-          emissive: index === 2 ? "#34383b" : color,
-          emissiveIntensity: index === 2 ? 0.08 : 0.18,
-          roughness: 0.46,
+          emissive,
+          emissiveIntensity: color === "#f4f4ef" ? 0.08 : 0.18,
+          metalness: color === "#080a0d" ? 0.18 : 0.08,
+          roughness: 0.5,
         }),
       );
-      section.name = `secondary-spool-${index}`;
-      section.rotation.z = Math.PI / 2;
-      section.position.x = -0.09 + index * 0.09;
-      secondarySpool.add(section);
-    });
-    const secondarySpoolCore = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.11, 0.11, 0.31, 20),
-      material("#11161b", { metalness: 0.48, roughness: 0.36 }),
-    );
-    secondarySpoolCore.rotation.z = Math.PI / 2;
-    secondarySpool.add(secondarySpoolCore);
+      filament.name = `${name}-filament`;
+      filament.rotation.z = Math.PI / 2;
+      spoolGroup.add(filament);
+
+      const core = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.105, 0.105, 0.19, 20),
+        material("#56636a", { metalness: 0.58, roughness: 0.34 }),
+      );
+      core.name = `${name}-core`;
+      core.rotation.z = Math.PI / 2;
+      spoolGroup.add(core);
+      return spoolGroup;
+    };
+    createPrinterSpool("printer-spool-black", "#080a0d", "#010203", -0.66);
+    createPrinterSpool("printer-spool-orange", "#ef7d4d", "#7b2f1d", -0.22);
+    createPrinterSpool("printer-spool-purple", "#7d62d9", "#332568", 0.22);
+    createPrinterSpool("printer-spool-white", "#f4f4ef", "#34383b", 0.66);
     box(printer, [0.52, 0.32, 0.08], [0.62, 0.28, 0.88], "#162028", { metalness: 0.55 });
     const printerDisplayCanvas = document.createElement("canvas");
     printerDisplayCanvas.width = 256;
@@ -898,11 +886,11 @@ export default function InteractiveRoom() {
       metalness: 0.82,
       roughness: 0.16,
     });
-    const shelfSwordAccentMaterial = material("#f4f4ef", {
-      emissive: "#3b3450",
-      emissiveIntensity: 0.32,
-      metalness: 0.28,
-      roughness: 0.3,
+    const shelfSwordHiltMaterial = material("#111317", {
+      emissive: "#241c3b",
+      emissiveIntensity: 0.22,
+      metalness: 0.42,
+      roughness: 0.36,
     });
     const shelfSwordDarkMaterial = material("#080a0d", { metalness: 0.72, roughness: 0.28 });
     const katanaProfile = new THREE.Shape();
@@ -928,9 +916,9 @@ export default function InteractiveRoom() {
     shelfSword.add(shelfBlade);
     const katanaSpine = new THREE.Mesh(
       new THREE.BoxGeometry(0.025, 0.045, 1.68),
-      shelfSwordDarkMaterial,
+      shelfSwordBladeMaterial,
     );
-    katanaSpine.name = "shelf-katana-black-spine";
+    katanaSpine.name = "shelf-katana-white-spine";
     katanaSpine.position.set(-0.025, 0.06, 0.38);
     katanaSpine.rotation.y = -0.055;
     shelfSword.add(katanaSpine);
@@ -953,7 +941,7 @@ export default function InteractiveRoom() {
     for (let wrap = 0; wrap < 5; wrap += 1) {
       const gripWrap = new THREE.Mesh(
         new THREE.TorusGeometry(0.058, 0.008, 6, 16),
-        shelfSwordAccentMaterial,
+        shelfSwordHiltMaterial,
       );
       gripWrap.rotation.x = Math.PI / 2;
       gripWrap.position.set(0, 0.025, -0.59 - wrap * 0.09);
@@ -961,7 +949,7 @@ export default function InteractiveRoom() {
     }
     const shelfPommel = new THREE.Mesh(
       new THREE.CylinderGeometry(0.07, 0.06, 0.07, 14),
-      shelfSwordAccentMaterial,
+      shelfSwordHiltMaterial,
     );
     shelfPommel.name = "shelf-katana-kashira";
     shelfPommel.rotation.x = Math.PI / 2;
@@ -1634,8 +1622,12 @@ export default function InteractiveRoom() {
     resize();
 
     const printerCarriage = room.getObjectByName("printer-head-carriage");
-    const printerSpool = room.getObjectByName("printer-spool");
-    const printerSecondarySpool = room.getObjectByName("printer-spool-secondary");
+    const printerSpools = [
+      "printer-spool-black",
+      "printer-spool-orange",
+      "printer-spool-purple",
+      "printer-spool-white",
+    ].map((name) => room.getObjectByName(name));
     const animatedCatTail = room.getObjectByName("cat-tail-3d");
     const catYarnBall = room.getObjectByName("cat-rug-yarn-ball");
     const catToyMouse = room.getObjectByName("cat-rug-toy-mouse");
@@ -1680,7 +1672,7 @@ export default function InteractiveRoom() {
       const signalActive = timestamp < signalSecretUntil;
       shelfSwordLight.intensity = relicActive ? 4.5 + Math.sin(elapsed * 7) * 1.4 : 0;
       shelfSwordBladeMaterial.emissiveIntensity = relicActive ? 1.1 : 0.24;
-      shelfSwordAccentMaterial.emissiveIntensity = relicActive ? 1.35 : 0.42;
+      shelfSwordHiltMaterial.emissiveIntensity = relicActive ? 1.1 : 0.22;
       serverBeaconLight.intensity = signalActive ? 5 + Math.sin(elapsed * 11) * 2 : 0;
       serverBeaconMaterial.emissiveIntensity = signalActive ? 5.5 : 2.4;
 
@@ -1716,8 +1708,11 @@ export default function InteractiveRoom() {
             : -0.35;
         }
         if (printerCarriage) printerCarriage.position.x = printProgress < 1 ? Math.sin(elapsed * 1.9) * 0.55 : 0;
-        if (printerSpool && printProgress < 1) printerSpool.rotation.x += delta * 0.34;
-        if (printerSecondarySpool && printProgress < 1) printerSecondarySpool.rotation.x -= delta * 0.28;
+        if (printProgress < 1) {
+          printerSpools.forEach((spoolObject, index) => {
+            if (spoolObject) spoolObject.rotation.x += delta * (0.26 + index * 0.04) * (index % 2 === 0 ? 1 : -1);
+          });
+        }
         printBedAssembly.position.z = printProgress < 1 ? Math.sin(elapsed * 1.35) * 0.24 : 0;
         printerGantry.position.y = 0.84 + printProgress * daggerHeight;
         const smashActive = document.body.classList.contains("easter-mode");

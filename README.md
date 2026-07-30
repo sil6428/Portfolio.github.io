@@ -40,13 +40,13 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, animated yarn ball, pulsing lights, and responsive interaction markers
-- A real three-minute printer sequence with a slimmer black-and-white dagger, removable hilt supports, a height-tracking print head, live percentage, ETA, completion message, and finish glow
+- A real three-minute printer sequence with a solid-black handle and hilt, white dagger blade, removable hilt supports, a height-tracking print head, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
 - Closer room framing plus a shorter wall bookshelf, camera on its top surface, and a mounted badminton racket on the back wall
-- A completed black-and-white katana displayed on the bottom shelf with a long curved blade, compact fittings, and an interactive relic effect
+- A completed katana displayed on the bottom shelf with a long white curved blade, compact black fittings and handle, and an interactive relic effect
 - A simplified server rack without decorative fans or loose wiring
-- A detailed fantasy-dagger print with a compact pommel, wrapped grip, supported crossguard, longer faceted blade, fuller, and contrasting edges
-- Dual printer spools: one black and one striped orange, purple, and white
+- A detailed fantasy-dagger print with a compact black pommel, wrapped black grip, supported black crossguard, longer white faceted blade, fuller, and white edges
+- Four separated printer spools in black, orange, purple, and white
 - Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
 - Two distinct popup exits: click outside to keep the close-up camera, or use X and Escape to return to the default room angle
 - Introduction and camera-help text that appears only at the true default room angle

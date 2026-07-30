@@ -216,9 +216,11 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /0\.84 \+ printProgress \* daggerHeight/);
   assert.match(room, /printer-y-bed/);
   assert.match(room, /printer-z-gantry/);
-  assert.match(room, /printer-spool-secondary/);
-  assert.match(room, /secondarySpoolColors = \["#ef7d4d", "#7d62d9", "#f4f4ef"\]/);
-  assert.match(room, /section\.name = `secondary-spool-\$\{index\}`/);
+  assert.match(room, /printer-spool-black/);
+  assert.match(room, /printer-spool-orange/);
+  assert.match(room, /printer-spool-purple/);
+  assert.match(room, /printer-spool-white/);
+  assert.match(room, /createPrinterSpool/);
   assert.match(room, /printableParts/);
   assert.match(room, /desk-cyan-edge/);
   assert.match(room, /racketMount/);
@@ -231,7 +233,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.doesNotMatch(room, /cat\.jpg/i);
   assert.match(room, /bottom-shelf-printed-katana/);
   assert.match(room, /shelf-katana-curved-blade/);
-  assert.match(room, /shelf-katana-black-spine/);
+  assert.match(room, /shelf-katana-white-spine/);
   assert.match(room, /shelf-katana-tsuba/);
   assert.match(room, /shelf-katana-kashira/);
   assert.match(room, /hidden-server-beacon/);
