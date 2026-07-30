@@ -465,7 +465,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>05</code>
-                    <div><strong>Three-minute print</strong><p>The printer starts when the room loads. Watch its display and the fantasy dagger grow from pommel to blade tip until it finishes at 03:00.</p></div>
+                    <div><strong>Three-minute print</strong><p>The printer starts when the room loads. Watch its display and the traditional double-edged dagger grow from pommel to blade tip until it finishes at 03:00.</p></div>
                   </li>
                   <li>
                     <code>06</code>

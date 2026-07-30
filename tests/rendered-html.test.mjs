@@ -204,11 +204,11 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /PROXMOX SERVER RACK/);
   assert.match(room, /3D PRINTER/);
   assert.match(room, /printer-head-carriage/);
-  assert.match(room, /printer-fantasy-dagger/);
+  assert.match(room, /printer-traditional-dagger/);
   assert.match(room, /dagger-pommel-layer/);
   assert.match(room, /dagger-wrapped-grip/);
-  assert.match(room, /dagger-crossguard/);
-  assert.match(room, /dagger-faceted-blade/);
+  assert.match(room, /dagger-straight-crossguard/);
+  assert.match(room, /dagger-double-edged-blade/);
   assert.match(room, /dagger-blade-fuller/);
   assert.match(room, /dagger-blade-edge/);
   assert.match(room, /dagger-hilt-support/);

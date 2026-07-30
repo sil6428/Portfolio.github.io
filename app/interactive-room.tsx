@@ -93,7 +93,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "3D printer",
     label: "MAKING / DESIGN",
     title: "3D printing",
-    summary: "From digital models to finished props. In the room, a stylized fantasy dagger prints from pommel to blade tip over three minutes.",
+    summary: "From digital models to finished props. In the room, a traditional double-edged dagger prints from pommel to blade tip over three minutes.",
     details: ["Live 03:00 print", "Slicing", "Assembly", "Sanding + finishing"],
     sections: [
       {
@@ -620,7 +620,7 @@ export default function InteractiveRoom() {
     printer.add(printBedAssembly);
     box(printBedAssembly, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", { metalness: 0.38 });
     const printedPiece = new THREE.Group();
-    printedPiece.name = "printer-fantasy-dagger";
+    printedPiece.name = "printer-traditional-dagger";
     printedPiece.position.set(0, 0.28, 0);
     printedPiece.rotation.y = 0.18;
     printBedAssembly.add(printedPiece);
@@ -650,6 +650,11 @@ export default function InteractiveRoom() {
       emissiveIntensity: 0.1,
       roughness: 0.52,
     });
+    const gripWrapMaterial = material("#171b20", {
+      emissive: "#030405",
+      emissiveIntensity: 0.08,
+      roughness: 0.68,
+    });
     const darkMetalMaterial = material("#07090c", { metalness: 0.78, roughness: 0.26 });
     const supportMaterial = material("#eceeea", { metalness: 0.08, roughness: 0.62 });
     const addPrintablePart = (part: THREE.Object3D, printHeight: number) => {
@@ -678,20 +683,20 @@ export default function InteractiveRoom() {
     const daggerLayerCount = Math.ceil(daggerHeight / daggerLayerHeight);
     for (let layer = 0; layer < daggerLayerCount; layer += 1) {
       const y = 0.011 + layer * daggerLayerHeight;
-      if (y < 0.5) {
+      if (y < 0.52) {
         for (const side of [-1, 1]) {
           const supportLayer = new THREE.Mesh(
             new THREE.BoxGeometry(0.042, daggerLayerHeight * 0.72, 0.042),
             layer % 5 === 0 ? darkMetalMaterial : supportMaterial,
           );
           supportLayer.name = "dagger-hilt-support";
-          supportLayer.position.set(side * 0.31, y, 0);
+          supportLayer.position.set(side * 0.27, y, 0);
           addPrintablePart(supportLayer, y);
         }
       }
-      if (y < 0.14) {
-        const pommelProgress = y / 0.14;
-        const radius = 0.075 + Math.sin(pommelProgress * Math.PI) * 0.065;
+      if (y < 0.12) {
+        const pommelProgress = y / 0.12;
+        const radius = 0.075 + Math.sin(pommelProgress * Math.PI) * 0.025;
         const pommelLayer = new THREE.Mesh(
           new THREE.CylinderGeometry(radius, radius, daggerLayerHeight * 0.86, 18),
           darkMetalMaterial,
@@ -702,9 +707,11 @@ export default function InteractiveRoom() {
         continue;
       }
 
-      if (y < 0.46) {
+      if (y < 0.44) {
+        const gripProgress = (y - 0.12) / 0.32;
+        const gripRadius = 0.073 + Math.sin(gripProgress * Math.PI) * 0.006;
         const gripLayer = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.078, 0.078, daggerLayerHeight * 0.88, 16),
+          new THREE.CylinderGeometry(gripRadius, gripRadius, daggerLayerHeight * 0.88, 16),
           gripMaterial,
         );
         gripLayer.name = "dagger-wrapped-grip";
@@ -712,8 +719,8 @@ export default function InteractiveRoom() {
         addPrintablePart(gripLayer, y);
         if (layer % 5 === 0) {
           const gripRing = new THREE.Mesh(
-            new THREE.TorusGeometry(0.08, 0.01, 6, 18),
-            darkMetalMaterial,
+            new THREE.TorusGeometry(gripRadius + 0.002, 0.008, 6, 18),
+            gripWrapMaterial,
           );
           gripRing.name = "dagger-grip-ring";
           gripRing.rotation.x = Math.PI / 2;
@@ -723,19 +730,19 @@ export default function InteractiveRoom() {
         continue;
       }
 
-      if (y < 0.57) {
-        const guardProgress = (y - 0.46) / 0.11;
-        const guardHalfWidth = 0.22 + Math.sin(guardProgress * Math.PI) * 0.14;
+      if (y < 0.52) {
+        const guardProgress = (y - 0.44) / 0.08;
+        const guardHalfWidth = 0.245 + Math.sin(guardProgress * Math.PI) * 0.015;
         const guardLayer = new THREE.Mesh(
           new THREE.BoxGeometry(guardHalfWidth * 2, daggerLayerHeight * 0.86, 0.16),
           darkMetalMaterial,
         );
-        guardLayer.name = "dagger-crossguard";
+        guardLayer.name = "dagger-straight-crossguard";
         guardLayer.position.y = y;
         addPrintablePart(guardLayer, y);
         for (const side of [-1, 1]) {
           const guardTip = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.065, 0.065, daggerLayerHeight * 0.86, 12),
+            new THREE.CylinderGeometry(0.045, 0.045, daggerLayerHeight * 0.86, 12),
             darkMetalMaterial,
           );
           guardTip.name = "dagger-guard-tip";
@@ -745,18 +752,24 @@ export default function InteractiveRoom() {
         continue;
       }
 
-      const bladeProgress = Math.min(1, (y - 0.57) / (daggerHeight - 0.57));
-      const halfWidth = Math.max(0.012, 0.23 * (1 - Math.pow(bladeProgress, 1.15)));
-      const halfDepth = Math.max(0.018, 0.105 * (1 - bladeProgress * 0.58));
+      const bladeProgress = Math.min(1, (y - 0.52) / (daggerHeight - 0.52));
+      const pointStartsAt = 0.76;
+      const bladeShoulderWidth = 0.19;
+      const shoulderWidth = bladeShoulderWidth - bladeProgress * 0.025;
+      const pointTaper = bladeProgress <= pointStartsAt
+        ? 1
+        : Math.max(0.05, 1 - (bladeProgress - pointStartsAt) / (1 - pointStartsAt));
+      const halfWidth = Math.max(0.01, shoulderWidth * pointTaper);
+      const halfDepth = Math.max(0.012, 0.082 * (1 - bladeProgress * 0.12) * pointTaper);
       const bladeLayer = new THREE.Mesh(
         daggerBladeSliceGeometry(halfWidth, halfDepth),
-        bladeProgress > 0.94 ? bladeEdgeMaterial : bladeMaterial,
+        bladeMaterial,
       );
-      bladeLayer.name = "dagger-faceted-blade";
+      bladeLayer.name = "dagger-double-edged-blade";
       bladeLayer.position.y = y;
       addPrintablePart(bladeLayer, y);
 
-      if (bladeProgress < 0.86) {
+      if (bladeProgress < 0.72) {
         const fuller = new THREE.Mesh(
           new THREE.BoxGeometry(Math.max(0.025, halfWidth * 0.56), daggerLayerHeight * 0.64, 0.016),
           fullerMaterial,
