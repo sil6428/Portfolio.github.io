@@ -633,7 +633,19 @@ export default function InteractiveRoom() {
       roughness: 0.3,
     });
     monitorBase.name = "desktop-monitor-beveled-base";
-    box(workstation, [0.14, 0.74, 0.14], [-0.2, 0.43, -0.72], "#29363d", { metalness: 0.78, roughness: 0.28 });
+    const monitorStand = roundedBox(workstation, [0.12, 0.34, 0.1], [-0.2, 0.28, -0.91], "#29363d", 0.025, {
+      metalness: 0.78,
+      roughness: 0.28,
+    });
+    monitorStand.name = "desktop-monitor-rear-stand";
+    const monitorHinge = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.07, 0.07, 0.16, 18),
+      material("#3b484e", { metalness: 0.82, roughness: 0.24 }),
+    );
+    monitorHinge.name = "desktop-monitor-rear-hinge";
+    monitorHinge.rotation.z = Math.PI / 2;
+    monitorHinge.position.set(-0.2, 0.44, -0.88);
+    workstation.add(monitorHinge);
     const desktopMonitor = new THREE.Group();
     desktopMonitor.name = "desktop-monitor";
     desktopMonitor.position.set(-0.2, 0.39, -0.82);

@@ -58,6 +58,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Refined procedural models for the desktop PC, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat with a bandana, tag, yarn ball, toy mouse, and water bowl
 - High-detail geometry pass with softened edges, improved materials, modeled hardware, and object-specific details while retaining a performance-conscious procedural scene
 - Beveled monitor, keyboard, mouse, and glass-sided PC tower with visible motherboard traces, internal lighting, cooling rings, webcam, and individual rounded keycaps
+- Rear-mounted monitor support with a shortened stand and hinge that stop at the lower bezel without crossing the display
 - Detailed printer mechanics including twin threaded Z screws, gantry wheels, bed clips, separated rimmed spools, and a beveled chessboard with ringed piece bases
 - Refined server faceplates, network ports, rack screws and status badge without restoring the removed wires or decorative server fans
 - Camera focus rings, coated lens glass, viewfinder, rear display and controls, plus book covers, page blocks, page lines, shelf fasteners, racket grommets, and denser strings
