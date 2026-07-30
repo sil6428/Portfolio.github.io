@@ -60,7 +60,7 @@ function runTerminalCommand(command: string) {
     status: ["ONLINE", "Currently turning old computers into a Proxmox server."],
     lights: ["Sending a colour override to the 3D room..."],
     cat: ["Sending three approved pets to the room cat..."],
-    relic: ["Charging the printed sword on the bottom shelf..."],
+    relic: ["Charging the printed katana on the bottom shelf..."],
     signal: ["Starting the hidden server beacon sequence..."],
     print: ["The dagger print takes exactly 03:00.", "Watch the printer display for live progress."],
     eggs: ["Opening easter-eggs.md..."],
@@ -473,7 +473,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>07</code>
-                    <div><strong>Printed relic</strong><p>Find the completed sword on the bottom shelf and touch it. The terminal command relic also works.</p></div>
+                    <div><strong>Printed relic</strong><p>Find the completed katana on the bottom shelf and touch it. The terminal command relic also works.</p></div>
                   </li>
                   <li>
                     <code>08</code>
