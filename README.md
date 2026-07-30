@@ -46,6 +46,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A simplified server rack without decorative fans or loose wiring
 - A layered biker-helmet print replacing the original printer cube
 - Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
+- Left-drag orbit and right-drag camera panning with the browser menu suppressed over the room
 - Tighter room boundaries, a more centered overview, and reduced close-up camera offset
 - Brighter ambient lighting with cyan, violet, amber, and mint accents across the desk, rug, shelf, and wall
 - Removed the front shelf braces that crossed through the book models

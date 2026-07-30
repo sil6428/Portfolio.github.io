@@ -301,7 +301,12 @@ export default function InteractiveRoom() {
     controls.target.set(0, 1.55, -0.7);
     controls.enableDamping = true;
     controls.dampingFactor = 0.055;
-    controls.enablePan = false;
+    controls.enablePan = true;
+    controls.screenSpacePanning = true;
+    controls.panSpeed = 0.72;
+    controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
+    controls.mouseButtons.MIDDLE = THREE.MOUSE.DOLLY;
+    controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
     controls.enableZoom = true;
     controls.minDistance = 2.1;
     controls.maxDistance = 13;
@@ -1207,10 +1212,12 @@ export default function InteractiveRoom() {
       renderer.domElement.style.cursor = "grab";
       setHoverLabel("");
     };
+    const handleContextMenu = (event: MouseEvent) => event.preventDefault();
     renderer.domElement.addEventListener("pointermove", handlePointerMove);
     renderer.domElement.addEventListener("pointerdown", handlePointerDown);
     renderer.domElement.addEventListener("pointerup", handlePointerUp);
     renderer.domElement.addEventListener("pointerleave", handlePointerLeave);
+    renderer.domElement.addEventListener("contextmenu", handleContextMenu);
 
     const resize = () => {
       const width = host.clientWidth;
@@ -1354,6 +1361,7 @@ export default function InteractiveRoom() {
       renderer.domElement.removeEventListener("pointerdown", handlePointerDown);
       renderer.domElement.removeEventListener("pointerup", handlePointerUp);
       renderer.domElement.removeEventListener("pointerleave", handlePointerLeave);
+      renderer.domElement.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("affan-room-palette", handlePaletteCommand);
       window.removeEventListener("affan-room-cat", handleCatCommand);
       window.clearTimeout(roomSecretTimeout);
@@ -1393,7 +1401,8 @@ export default function InteractiveRoom() {
       <div className="room-fluid-hint" aria-hidden="true">
         <span><i /> SCENE RESPONSIVE</span>
         <span>Move pointer / shift perspective</span>
-        <span>Drag / orbit gently</span>
+        <span>Left drag / orbit</span>
+        <span>Right drag / move camera</span>
         <span>Select an object / inspect</span>
         <strong>{visitedKeys.length} / {DIRECTORY.length} viewed</strong>
       </div>

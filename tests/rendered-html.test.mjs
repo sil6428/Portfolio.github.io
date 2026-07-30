@@ -223,6 +223,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /CLOSE FILE \/ SCROLL TO ZOOM/);
   assert.match(room, /controls\.enableZoom = true/);
   assert.match(room, /controls\.minDistance = 2\.1/);
+  assert.match(room, /controls\.mouseButtons\.RIGHT = THREE\.MOUSE\.PAN/);
+  assert.match(room, /Right drag \/ move camera/);
+  assert.match(room, /contextmenu/);
   assert.match(room, /cameraOffset/);
   assert.match(room, /compositionShift/);
   assert.match(room, /room-focus-active/);
