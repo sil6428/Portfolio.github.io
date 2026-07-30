@@ -197,7 +197,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /PROXMOX SERVER RACK/);
   assert.match(room, /3D PRINTER/);
   assert.match(room, /printer-head-carriage/);
-  assert.match(room, /printer-cyber-helmet/);
+  assert.match(room, /printer-biker-helmet/);
+  assert.match(room, /printer-y-bed/);
+  assert.match(room, /printer-z-gantry/);
+  assert.match(room, /printableParts/);
   assert.match(room, /PRINT_DURATION_MS = 180_000/);
   assert.match(room, /drawPrinterDisplay/);
   assert.match(room, /THREE-MINUTE PRINT COMPLETE/);
@@ -214,7 +217,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /focusObject/);
   assert.match(room, /room-popup/);
   assert.match(room, /setActiveKey/);
-  assert.match(room, /RETURN TO ROOM/);
+  assert.match(room, /CLOSE FILE \/ SCROLL TO ZOOM/);
+  assert.match(room, /controls\.enableZoom = true/);
+  assert.match(room, /controls\.minDistance = 2\.1/);
   assert.match(room, /cameraOffset/);
   assert.match(room, /compositionShift/);
   assert.match(room, /room-focus-active/);

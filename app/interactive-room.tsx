@@ -93,7 +93,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "3D printer",
     label: "MAKING / DESIGN",
     title: "3D printing",
-    summary: "From digital models to finished props. In the room, a cyber-helmet prints from zero to complete over three minutes.",
+    summary: "From digital models to finished props. In the room, a biker helmet prints from the build plate upward over three minutes.",
     details: ["Live 03:00 print", "Slicing", "Assembly", "Sanding + finishing"],
     sections: [
       {
@@ -286,8 +286,8 @@ export default function InteractiveRoom() {
     scene.fog = new THREE.Fog(0x080a0f, 9, 19);
 
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
-    camera.position.set(6.15, 4.6, 7.15);
-    camera.lookAt(0, 1.55, -0.55);
+    camera.position.set(5.2, 4.3, 6.5);
+    camera.lookAt(0, 1.55, -0.7);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.65));
@@ -298,11 +298,13 @@ export default function InteractiveRoom() {
     host.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 1.55, -0.55);
+    controls.target.set(0, 1.55, -0.7);
     controls.enableDamping = true;
     controls.dampingFactor = 0.055;
     controls.enablePan = false;
-    controls.enableZoom = false;
+    controls.enableZoom = true;
+    controls.minDistance = 2.1;
+    controls.maxDistance = 13;
     controls.minPolarAngle = 0.72;
     controls.maxPolarAngle = 1.38;
     controls.minAzimuthAngle = -0.82;
@@ -367,16 +369,16 @@ export default function InteractiveRoom() {
     };
 
     const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(13, 9),
+      new THREE.PlaneGeometry(12, 8.5),
       material("#0d1319", { metalness: 0.05, roughness: 0.95 }),
     );
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     room.add(floor);
-    box(room, [13, 4.8, 0.12], [0, 2.4, -4.45], "#0b1016");
-    box(room, [0.12, 4.8, 9], [-6.45, 2.4, 0], "#090e14");
+    box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#0b1016");
+    box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#090e14");
 
-    const grid = new THREE.GridHelper(13, 26, 0x254a57, 0x15232b);
+    const grid = new THREE.GridHelper(12, 24, 0x254a57, 0x15232b);
     grid.position.y = 0.012;
     room.add(grid);
 
@@ -554,7 +556,7 @@ export default function InteractiveRoom() {
     workstation.add(laptopPower);
 
     const rack = hotspot("rack", "PROXMOX SERVER RACK");
-    rack.position.set(4.72, 0, -3.48);
+    rack.position.set(4.45, 0, -3.35);
     box(rack, [1.9, 0.16, 1.46], [0, 0.1, 0], "#151d24", { metalness: 0.7, roughness: 0.36 });
     box(rack, [1.9, 0.16, 1.46], [0, 3.7, 0], "#151d24", { metalness: 0.7, roughness: 0.36 });
     for (const x of [-0.86, 0.86]) {
@@ -594,45 +596,77 @@ export default function InteractiveRoom() {
     box(printer, [0.14, 2.5, 0.14], [-0.9, 1.3, -0.68], "#202a31", { metalness: 0.62 });
     box(printer, [0.14, 2.5, 0.14], [0.9, 1.3, -0.68], "#202a31", { metalness: 0.62 });
     box(printer, [1.95, 0.14, 0.14], [0, 2.52, -0.68], "#202a31", { metalness: 0.62 });
-    box(printer, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", { metalness: 0.38 });
+    const printBedAssembly = new THREE.Group();
+    printBedAssembly.name = "printer-y-bed";
+    printer.add(printBedAssembly);
+    box(printBedAssembly, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", { metalness: 0.38 });
     const printedPiece = new THREE.Group();
-    printedPiece.name = "printer-cyber-helmet";
+    printedPiece.name = "printer-biker-helmet";
     printedPiece.position.set(0, 0.28, 0);
-    printer.add(printedPiece);
-    const printMaterial = material("#252331", { roughness: 0.68 });
-    const printAccent = material("#7b65d1", { emissive: "#342768", emissiveIntensity: 0.28, roughness: 0.56 });
-    const printBase = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.42, 0.12, 8), printMaterial);
-    printBase.position.y = 0.06;
-    printedPiece.add(printBase);
-    const helmetDome = new THREE.Mesh(new THREE.SphereGeometry(0.29, 18, 12), printMaterial);
-    helmetDome.scale.set(1, 0.92, 0.88);
-    helmetDome.position.y = 0.36;
-    printedPiece.add(helmetDome);
-    box(printedPiece, [0.4, 0.22, 0.18], [0, 0.3, 0.23], "#171720", { roughness: 0.7 });
-    box(printedPiece, [0.09, 0.3, 0.05], [0, 0.55, 0.28], "#7b65d1", {
-      emissive: "#342768",
-      emissiveIntensity: 0.28,
-      roughness: 0.56,
-    });
+    printBedAssembly.add(printedPiece);
+    const printableParts: THREE.Object3D[] = [];
+    const helmetHeight = 0.82;
+    const shellMaterial = material("#242a31", { metalness: 0.34, roughness: 0.46 });
+    const stripeMaterial = material("#d96942", { emissive: "#5a2417", emissiveIntensity: 0.24, roughness: 0.4 });
+    const visorMaterial = material("#101820", { metalness: 0.72, roughness: 0.16 });
+    const addPrintablePart = (part: THREE.Object3D, printHeight: number) => {
+      part.visible = false;
+      part.userData.printHeight = printHeight;
+      printableParts.push(part);
+      printedPiece.add(part);
+    };
+    for (let layer = 0; layer < 33; layer += 1) {
+      const y = 0.012 + layer * 0.024;
+      const normalized = y / helmetHeight;
+      const radius =
+        normalized < 0.22
+          ? 0.36 + normalized * 0.1
+          : Math.max(0.13, 0.42 * Math.sqrt(Math.max(0, 1 - Math.pow((normalized - 0.48) / 0.58, 2))));
+      const shellLayer = new THREE.Mesh(
+        new THREE.CylinderGeometry(radius * 0.98, radius, 0.021, 28),
+        layer >= 9 && layer <= 12 ? stripeMaterial : shellMaterial,
+      );
+      shellLayer.position.set(0, y, -0.025);
+      shellLayer.scale.z = 0.9;
+      addPrintablePart(shellLayer, y);
+
+      if (layer >= 6 && layer <= 13) {
+        const chinLayer = new THREE.Mesh(
+          new THREE.BoxGeometry(0.58 - Math.abs(layer - 9.5) * 0.018, 0.021, 0.19),
+          layer >= 9 && layer <= 12 ? stripeMaterial : shellMaterial,
+        );
+        chinLayer.position.set(0, y, 0.31);
+        addPrintablePart(chinLayer, y);
+      }
+      if (layer >= 15 && layer <= 22) {
+        const visorLayer = new THREE.Mesh(
+          new THREE.BoxGeometry(0.58 - Math.abs(layer - 18.5) * 0.014, 0.018, 0.075),
+          visorMaterial,
+        );
+        visorLayer.position.set(0, y, 0.29);
+        addPrintablePart(visorLayer, y);
+      }
+    }
     for (const side of [-1, 1]) {
-      const horn = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.48, 6), printAccent);
-      horn.position.set(side * 0.24, 0.67, 0);
-      horn.rotation.z = side * -0.48;
-      printedPiece.add(horn);
-      const cheek = box(printedPiece, [0.12, 0.28, 0.12], [side * 0.22, 0.25, 0.22], "#302d42", { roughness: 0.66 });
-      cheek.rotation.z = side * 0.18;
+      const visorPivot = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.055, 0.055, 0.035, 16),
+        stripeMaterial,
+      );
+      visorPivot.rotation.z = Math.PI / 2;
+      visorPivot.position.set(side * 0.35, 0.47, 0.12);
+      addPrintablePart(visorPivot, 0.47);
     }
-    for (let printLayer = 0; printLayer < 5; printLayer += 1) {
-      box(printedPiece, [0.78 - printLayer * 0.035, 0.012, 0.7 - printLayer * 0.035], [0, -0.01 + printLayer * 0.024, 0], "#51448a", {
-        roughness: 0.74,
-      });
-    }
-    printedPiece.scale.y = 0.015;
-    box(printer, [1.72, 0.08, 0.08], [0, 2.18, -0.28], "#68777d", { metalness: 0.9 });
+    printableParts.sort((a, b) => Number(a.userData.printHeight) - Number(b.userData.printHeight));
+
+    const printerGantry = new THREE.Group();
+    printerGantry.name = "printer-z-gantry";
+    printerGantry.position.y = 0.88;
+    printer.add(printerGantry);
+    box(printerGantry, [1.72, 0.08, 0.08], [0, 0, -0.28], "#68777d", { metalness: 0.9 });
     const printHead = new THREE.Group();
     printHead.name = "printer-head-carriage";
-    printHead.position.set(0, 2.18, -0.28);
-    printer.add(printHead);
+    printHead.position.set(0, 0, -0.28);
+    printerGantry.add(printHead);
     box(printHead, [0.5, 0.34, 0.44], [0, -0.08, 0.02], "#151d23", { metalness: 0.72, roughness: 0.32 });
     box(printHead, [0.32, 0.11, 0.455], [0, 0.11, 0.025], "#303e44", { metalness: 0.78, roughness: 0.26 });
     const nozzle = new THREE.Mesh(
@@ -692,7 +726,7 @@ export default function InteractiveRoom() {
     printer.add(printCompletionLight);
 
     const bookshelf = new THREE.Group();
-    bookshelf.position.set(-6.08, 0, 1.05);
+    bookshelf.position.set(-5.4, 0, 0.85);
     room.add(bookshelf);
     box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#121a20", { metalness: 0.34, roughness: 0.62 });
     for (const z of [-1.5, 1.5]) {
@@ -706,7 +740,7 @@ export default function InteractiveRoom() {
     }
 
     const books = hotspot("books", "READING SHELF");
-    books.position.set(-5.67, 1.3, 1.28);
+    books.position.set(-4.99, 1.3, 1.08);
     const bookColors = ["#4d6170", "#7965be", "#9a6c45", "#355968", "#a86a65", "#65518e"];
     const bookWidths = [0.21, 0.24, 0.19, 0.28, 0.22, 0.25];
     let bookZ = -1.04;
@@ -727,7 +761,7 @@ export default function InteractiveRoom() {
     box(books, [0.02, 0.11, 0.72], [0.23, 0.08, 0.9], "#d8d1bb", { roughness: 1 });
 
     const cameraGroup = hotspot("camera", "PHOTOGRAPHY");
-    cameraGroup.position.set(-5.62, 2.8, 0.02);
+    cameraGroup.position.set(-4.94, 2.8, 0.34);
     box(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", { metalness: 0.7, roughness: 0.34 });
     const lens = new THREE.Mesh(
       new THREE.CylinderGeometry(0.27, 0.34, 0.46, 24),
@@ -778,7 +812,7 @@ export default function InteractiveRoom() {
     cameraGroup.add(strap);
 
     const racket = hotspot("racket", "BADMINTON");
-    racket.position.set(-5.56, 2.02, 2.92);
+    racket.position.set(-4.66, 1.96, 3.02);
     racket.rotation.y = Math.PI / 2;
     racket.rotation.z = -0.14;
     const racketHead = new THREE.Mesh(
@@ -994,8 +1028,8 @@ export default function InteractiveRoom() {
 
     room.updateMatrixWorld(true);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const overviewPosition = new THREE.Vector3(6.15, 4.6, 7.15);
-    const overviewTarget = new THREE.Vector3(0, 1.55, -0.55);
+    const overviewPosition = new THREE.Vector3(5.2, 4.3, 6.5);
+    const overviewTarget = new THREE.Vector3(0, 1.55, -0.7);
     const roomBaseRotation = -0.08;
     const pointerParallax = new THREE.Vector2();
     const pointerParallaxTarget = new THREE.Vector2();
@@ -1034,9 +1068,12 @@ export default function InteractiveRoom() {
 
     const focusObject = (key: string) => {
       if (key === "__overview") {
+        cameraMove = null;
         focusedKey = null;
+        setActiveKey(null);
+        setTransitionLabel("");
+        controls.enabled = true;
         document.body.classList.remove("room-focus-active");
-        beginCameraMove(overviewPosition.clone(), overviewTarget.clone(), null, "RETURNING TO ROOM OVERVIEW");
         return;
       }
 
@@ -1052,7 +1089,7 @@ export default function InteractiveRoom() {
       const cameraRight = new THREE.Vector3()
         .crossVectors(viewDirection, new THREE.Vector3(0, 1, 0))
         .normalize();
-      const compositionShift = cameraRight.multiplyScalar(window.innerWidth < 720 ? 0.3 : 0.78);
+      const compositionShift = cameraRight.multiplyScalar(window.innerWidth < 720 ? 0.12 : 0.28);
       const composedTarget = target.clone().add(compositionShift);
       document.body.classList.add("room-focus-active");
       beginCameraMove(
@@ -1175,7 +1212,10 @@ export default function InteractiveRoom() {
       const printProgress = Math.min(1, Math.max(0, (timestamp - printStartedAt) / PRINT_DURATION_MS));
       const printPercent = Math.round(printProgress * 100);
       previousTimestamp = timestamp;
-      printedPiece.scale.y = Math.max(0.015, printProgress);
+      const currentPrintHeight = printProgress * helmetHeight;
+      for (const part of printableParts) {
+        part.visible = Number(part.userData.printHeight) <= currentPrintHeight;
+      }
       if (printPercent !== lastPrintPercent) {
         lastPrintPercent = printPercent;
         drawPrinterDisplay(printProgress);
@@ -1209,6 +1249,8 @@ export default function InteractiveRoom() {
         if (animatedCatTail) animatedCatTail.rotation.y = Math.sin(elapsed * 0.72) * 0.11;
         if (printerCarriage) printerCarriage.position.x = printProgress < 1 ? Math.sin(elapsed * 1.9) * 0.55 : 0;
         if (printerSpool && printProgress < 1) printerSpool.rotation.x += delta * 0.34;
+        printBedAssembly.position.z = printProgress < 1 ? Math.sin(elapsed * 1.35) * 0.24 : 0;
+        printerGantry.position.y = 0.88 + printProgress * 0.78;
         const smashActive = document.body.classList.contains("easter-mode");
         racket.rotation.z = THREE.MathUtils.lerp(
           racket.rotation.z,
@@ -1347,7 +1389,7 @@ export default function InteractiveRoom() {
           <button
             className="room-popup-close"
             type="button"
-            aria-label="Return to room overview"
+            aria-label="Close object file and enable camera controls"
             onClick={() => focusRef.current("__overview")}
           >
             X
@@ -1376,7 +1418,7 @@ export default function InteractiveRoom() {
               ))}
             </div>
           )}
-          <small>ESC / RETURN TO ROOM</small>
+          <small>ESC / CLOSE FILE / SCROLL TO ZOOM</small>
         </aside>
       )}
     </section>

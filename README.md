@@ -40,11 +40,13 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, pulsing lights, and responsive interaction markers
-- A real three-minute printer sequence with a growing cyber helmet, live percentage, ETA, completion message, and finish glow
+- A real three-minute printer sequence with a bottom-up biker helmet, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
-- Closer room framing plus a shorter wall bookshelf, camera on its top surface, and racket leaning clear of the shelf
+- Closer room framing plus a shorter wall bookshelf, camera on its top surface, and an easier-to-reach racket leaning clear of the shelf
 - A simplified server rack without decorative fans or loose wiring
-- A layered cyber-helmet print replacing the original printer cube
+- A layered biker-helmet print replacing the original printer cube
+- Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
+- Tighter room boundaries, a more centered overview, and reduced close-up camera offset
 - Refined procedural models for the laptop, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat
 - Ten expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, and the resume
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat
