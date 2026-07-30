@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import * as THREE from "three";
 
 const SECTION_COLORS = {
@@ -187,14 +188,32 @@ export default function TopologyScene() {
   }, [section]);
 
   return (
-    <div className={`topology-scene topology-scene-${section}`} ref={hostRef} aria-hidden="true">
-      <div className="topology-hud">
-        <span>LIVE TOPOLOGY</span>
-        <strong>{section.toUpperCase()}_SPACE</strong>
+    <>
+      <div className={`topology-scene topology-scene-${section}`} ref={hostRef} aria-hidden="true">
+        <div className="topology-hud">
+          <span>LIVE TOPOLOGY</span>
+          <strong>{section.toUpperCase()}_SPACE</strong>
+        </div>
+        <div className="topology-axis topology-axis-x">X / 06</div>
+        <div className="topology-axis topology-axis-y">Y / 28</div>
+        <div className="topology-signal"><i /> SIGNAL STABLE</div>
       </div>
-      <div className="topology-axis topology-axis-x">X / 06</div>
-      <div className="topology-axis topology-axis-y">Y / 28</div>
-      <div className="topology-signal"><i /> SIGNAL STABLE</div>
-    </div>
+      {pathname === "/" && (
+        <nav className="topology-links" aria-label="Explore highlighted portfolio nodes">
+          <Link className="topology-link topology-link-a" href="/work/archtech">
+            <i /><span>01 / ARCHTECH</span><small>PRIVATE PLATFORM</small>
+          </Link>
+          <Link className="topology-link topology-link-b" href="/work/ssik">
+            <i /><span>02 / SSIK</span><small>CONSULTING SITE</small>
+          </Link>
+          <Link className="topology-link topology-link-c" href="/interests/home-lab">
+            <i /><span>03 / HOME LAB</span><small>PROXMOX BUILD</small>
+          </Link>
+          <Link className="topology-link topology-link-d" href="/info">
+            <i /><span>04 / PROFILE</span><small>ABOUT AFFAN</small>
+          </Link>
+        </nav>
+      )}
+    </>
   );
 }

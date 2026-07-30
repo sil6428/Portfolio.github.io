@@ -143,29 +143,25 @@ export default function Home() {
             <a href="#work">Projects ↓</a>
             <Link href="/info">More about me</Link>
           </div>
+          <div className="system-readout" aria-label="Current focus">
+            <div><span>BUILD</span><strong>Archtech</strong></div>
+            <div><span>STUDY</span><strong>Security+</strong></div>
+            <div><span>LAB</span><strong>Proxmox</strong></div>
+          </div>
         </div>
-        <aside className="now-list" aria-label="What Affan is currently doing">
-          <h2>Active nodes</h2>
-          <div>
-            <span>Building</span>
-            <p>Archtech and a home server</p>
-          </div>
-          <div>
-            <span>Studying</span>
-            <p>Security+ and network security</p>
-          </div>
-          <div>
-            <span>Reading</span>
-            <p>Lord of the Mysteries</p>
-          </div>
-        </aside>
       </section>
 
       <section className="work wrap" id="work">
-        <div className="section-heading">
-          <p><span /> Selected work</p>
-          <span>4 projects</span>
-        </div>
+        <header className="work-map-heading">
+          <div>
+            <p><span /> Selected systems / 04</p>
+            <h2>Work I can explain from the inside out.</h2>
+          </div>
+          <p>
+            Each project started as something I wanted to understand better: privacy,
+            networks, secure storage, or how a technical service presents itself.
+          </p>
+        </header>
         <div className="project-list">
           {projects.map((project) => (
             <article className={`project-card ${project.accent}`} key={project.title}>

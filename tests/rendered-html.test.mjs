@@ -19,6 +19,8 @@ test("renders the work portfolio", async () => {
   const html = await response.text();
   assert.match(html, /Affan Shaikh/);
   assert.match(html, /I learn systems by taking them apart/);
+  assert.match(html, /Selected systems/);
+  assert.match(html, /Work I can explain from the inside out/);
   assert.match(html, /Archtech/);
   assert.match(html, /SSIK Website/);
   assert.match(html, /independently designed and built the public website for SSIK/);
@@ -172,4 +174,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(topology, /from "three"/);
   assert.match(topology, /WebGLRenderer/);
   assert.match(topology, /LIVE TOPOLOGY/);
+  assert.match(topology, /Explore highlighted portfolio nodes/);
+  assert.match(topology, /01 \/ ARCHTECH/);
+  assert.match(topology, /03 \/ HOME LAB/);
 });

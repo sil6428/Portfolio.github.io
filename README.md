@@ -33,6 +33,8 @@ The portfolio is designed as a set of focused pages instead of one long landing 
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Interactive Three.js topology with section-specific visual states
+- Clickable topology nodes for spatial navigation on desktop
+- Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns
 - GitHub, LinkedIn, VSCO, email, phone, and resume links
 - Metadata, Open Graph images, robots rules, and a generated sitemap
