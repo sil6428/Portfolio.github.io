@@ -252,7 +252,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /desk-cyan-edge/);
   assert.match(room, /racketMount/);
   assert.match(room, /racket\.position\.set\(-4\.35, 3\.52, -4\.08\)/);
-  assert.match(room, /cameraGroup\.position\.set\(-5\.12, 2\.8, 0\.34\)/);
+  assert.match(room, /cameraGroup\.position\.set\(-5\.4, 2\.8, 0\.34\)/);
   assert.match(room, /ceilingPanelColors/);
   assert.doesNotMatch(room, /let brace/);
   assert.match(room, /PRINT_DURATION_MS = 180_000/);

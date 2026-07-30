@@ -1130,7 +1130,7 @@ export default function InteractiveRoom() {
     box(books, [0.02, 0.11, 0.72], [0.23, 0.08, 0.9], "#d8d1bb", { roughness: 1 });
 
     const cameraGroup = hotspot("camera", "PHOTOGRAPHY");
-    cameraGroup.position.set(-5.12, 2.8, 0.34);
+    cameraGroup.position.set(-5.4, 2.8, 0.34);
     box(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", { metalness: 0.7, roughness: 0.34 });
     const lens = new THREE.Mesh(
       new THREE.CylinderGeometry(0.27, 0.34, 0.46, 24),
