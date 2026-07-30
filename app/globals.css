@@ -2845,11 +2845,13 @@ main {
   width: min(390px, calc(100vw - 44px));
   pointer-events: none;
   text-shadow: 0 3px 28px rgba(0,0,0,.95);
-  transition: opacity .4s ease, transform .52s cubic-bezier(.2,.75,.25,1);
-}
-body.room-focus-active .immersive-intro {
   opacity: 0;
   transform: translate(-22px,-8px);
+  transition: opacity .4s ease, transform .52s cubic-bezier(.2,.75,.25,1);
+}
+body.room-default-view .immersive-intro {
+  opacity: 1;
+  transform: translate(0,0);
 }
 .immersive-intro p {
   margin: 0 0 12px;
@@ -2912,10 +2914,11 @@ body.room-focus-active .immersive-intro {
   font: 7px "DM Mono", monospace;
   letter-spacing: .08em;
   pointer-events: none;
+  opacity: 0;
   transition: opacity .3s ease;
 }
-body.room-focus-active .room-fluid-hint {
-  opacity: 0;
+body.room-default-view .room-fluid-hint {
+  opacity: 1;
 }
 .room-fluid-hint > span:first-child {
   color: #9bb2b7;

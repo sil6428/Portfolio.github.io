@@ -106,7 +106,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
     ],
     cameraOffset: [0, 0.28, 3.05],
-    targetOffset: [0, 1.12, 0.2],
+    targetOffset: [0, 1.28, 0.2],
   },
   racket: {
     number: "05",
@@ -634,8 +634,8 @@ export default function InteractiveRoom() {
     printedPiece.position.set(0, 0.28, 0);
     printBedAssembly.add(printedPiece);
     const printableParts: THREE.Object3D[] = [];
-    const helmetHeight = 0.96;
-    const helmetLayerHeight = 0.022;
+    const helmetHeight = 1.18;
+    const helmetLayerHeight = 0.024;
     const shellMaterial = material("#557d8d", {
       emissive: "#142c36",
       emissiveIntensity: 0.2,
@@ -707,7 +707,7 @@ export default function InteractiveRoom() {
       geometry.translate(0, helmetLayerHeight / 2, 0);
       return geometry;
     };
-    for (let layer = 0; layer < 42; layer += 1) {
+    for (let layer = 0; layer < 49; layer += 1) {
       const y = 0.012 + layer * helmetLayerHeight;
       const normalized = y / helmetHeight;
       const dome = Math.sqrt(Math.max(0.08, 1 - Math.pow((normalized - 0.48) / 0.62, 2)));
@@ -803,7 +803,7 @@ export default function InteractiveRoom() {
 
     const printerGantry = new THREE.Group();
     printerGantry.name = "printer-z-gantry";
-    printerGantry.position.y = 0.88;
+    printerGantry.position.y = 0.84;
     printer.add(printerGantry);
     box(printerGantry, [1.72, 0.08, 0.08], [0, 0, -0.28], "#68777d", { metalness: 0.9 });
     const printHead = new THREE.Group();
@@ -1237,6 +1237,7 @@ export default function InteractiveRoom() {
       if (key === "__overview") {
         focusedKey = null;
         document.body.classList.remove("room-focus-active");
+        document.body.classList.remove("room-default-view");
         pointerParallaxTarget.set(0, 0);
         beginCameraMove(
           overviewPosition,
@@ -1251,6 +1252,7 @@ export default function InteractiveRoom() {
       const object = objectByKey.get(key);
       if (!entry || !object) return;
       focusedKey = key;
+      document.body.classList.remove("room-default-view");
       object.updateWorldMatrix(true, true);
       const target = object.localToWorld(new THREE.Vector3(...entry.targetOffset));
       const roomRotation = room.getWorldQuaternion(new THREE.Quaternion());
@@ -1276,12 +1278,21 @@ export default function InteractiveRoom() {
       setTransitionLabel("");
       controls.enabled = true;
       document.body.classList.remove("room-focus-active");
+      document.body.classList.remove("room-default-view");
     };
     focusRef.current = focusObject;
     dismissRef.current = dismissObjectFile;
     camera.position.copy(overviewPosition);
     controls.target.copy(overviewTarget);
     controls.enabled = true;
+    document.body.classList.add("room-default-view");
+
+    const markCameraExploring = () => {
+      if (!cameraMove && focusedKey === null) {
+        document.body.classList.remove("room-default-view");
+      }
+    };
+    controls.addEventListener("start", markCameraExploring);
 
     let roomSecretTimeout = 0;
     let catTapCount = 0;
@@ -1431,7 +1442,7 @@ export default function InteractiveRoom() {
         if (printerCarriage) printerCarriage.position.x = printProgress < 1 ? Math.sin(elapsed * 1.9) * 0.55 : 0;
         if (printerSpool && printProgress < 1) printerSpool.rotation.x += delta * 0.34;
         printBedAssembly.position.z = printProgress < 1 ? Math.sin(elapsed * 1.35) * 0.24 : 0;
-        printerGantry.position.y = 0.88 + printProgress * 0.78;
+        printerGantry.position.y = 0.84 + printProgress * helmetHeight;
         const smashActive = document.body.classList.contains("easter-mode");
         racket.rotation.z = THREE.MathUtils.lerp(
           racket.rotation.z,
@@ -1482,6 +1493,8 @@ export default function InteractiveRoom() {
           controls.enabled = revealKey === null;
           setTransitionLabel("");
           setActiveKey(revealKey);
+          if (revealKey === null) document.body.classList.add("room-default-view");
+          else document.body.classList.remove("room-default-view");
           if (revealKey) {
             setVisitedKeys((current) => {
               if (current.includes(revealKey)) return current;
@@ -1505,6 +1518,7 @@ export default function InteractiveRoom() {
     return () => {
       window.cancelAnimationFrame(frame);
       resizeObserver.disconnect();
+      controls.removeEventListener("start", markCameraExploring);
       controls.dispose();
       renderer.domElement.removeEventListener("pointermove", handlePointerMove);
       renderer.domElement.removeEventListener("pointerdown", handlePointerDown);
@@ -1517,6 +1531,7 @@ export default function InteractiveRoom() {
       focusRef.current = () => undefined;
       dismissRef.current = () => undefined;
       document.body.classList.remove("room-focus-active");
+      document.body.classList.remove("room-default-view");
       room.traverse((object) => {
         if (!(object instanceof THREE.Mesh)) return;
         object.geometry.dispose();

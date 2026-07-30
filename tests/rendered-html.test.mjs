@@ -207,6 +207,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /helmet-chin-vent/);
   assert.match(room, /helmet-crown-ridge/);
   assert.match(room, /helmet-visor-pivot/);
+  assert.match(room, /helmetHeight = 1\.18/);
+  assert.match(room, /0\.84 \+ printProgress \* helmetHeight/);
   assert.match(room, /printer-y-bed/);
   assert.match(room, /printer-z-gantry/);
   assert.match(room, /printableParts/);
@@ -244,6 +246,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /cameraOffset/);
   assert.match(room, /compositionShift/);
   assert.match(room, /room-focus-active/);
+  assert.match(room, /room-default-view/);
+  assert.match(room, /markCameraExploring/);
   assert.match(room, /targetOffset/);
   assert.match(room, /room-popup-sections/);
   assert.match(room, /pointerParallax/);
@@ -266,7 +270,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(styles, /room-fluid-hint/);
   assert.match(styles, /room-directory-accessible/);
   assert.match(styles, /room-secret-toast/);
-  assert.match(styles, /body\.room-focus-active \.immersive-intro/);
+  assert.match(styles, /body\.room-default-view \.immersive-intro/);
+  assert.match(styles, /body\.room-default-view \.room-fluid-hint/);
   assert.doesNotMatch(styles, /room-drive-hud/);
   assert.doesNotMatch(styles, /rover-pad/);
 });
