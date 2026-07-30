@@ -427,13 +427,23 @@ export default function InteractiveRoom() {
     const desktopContext = desktopCanvas.getContext("2d");
     if (desktopContext) {
       const background = desktopContext.createLinearGradient(0, 0, 1024, 640);
-      background.addColorStop(0, "#a9edcf");
-      background.addColorStop(0.5, "#f6e6a8");
-      background.addColorStop(1, "#9ee16b");
+      background.addColorStop(0, "#080d15");
+      background.addColorStop(0.52, "#101827");
+      background.addColorStop(1, "#18152b");
       desktopContext.fillStyle = background;
       desktopContext.fillRect(0, 0, 1024, 640);
-      desktopContext.strokeStyle = "rgba(255,255,255,.72)";
-      desktopContext.lineWidth = 2;
+      const cyanGlow = desktopContext.createRadialGradient(150, 110, 0, 150, 110, 390);
+      cyanGlow.addColorStop(0, "rgba(75,180,214,.18)");
+      cyanGlow.addColorStop(1, "rgba(75,180,214,0)");
+      desktopContext.fillStyle = cyanGlow;
+      desktopContext.fillRect(0, 0, 1024, 570);
+      const violetGlow = desktopContext.createRadialGradient(850, 420, 0, 850, 420, 350);
+      violetGlow.addColorStop(0, "rgba(122,98,190,.17)");
+      violetGlow.addColorStop(1, "rgba(122,98,190,0)");
+      desktopContext.fillStyle = violetGlow;
+      desktopContext.fillRect(0, 0, 1024, 570);
+      desktopContext.strokeStyle = "rgba(119,231,255,.12)";
+      desktopContext.lineWidth = 1.5;
       for (let x = 0; x <= 1024; x += 52) {
         desktopContext.beginPath();
         desktopContext.moveTo(x, 0);
@@ -446,67 +456,68 @@ export default function InteractiveRoom() {
         desktopContext.lineTo(1024, y);
         desktopContext.stroke();
       }
-      desktopContext.fillStyle = "#16271f";
+      desktopContext.fillStyle = "#05080d";
       desktopContext.fillRect(0, 0, 1024, 12);
-      desktopContext.fillStyle = "rgba(235,255,225,.94)";
+      desktopContext.fillStyle = "rgba(7,11,18,.96)";
       desktopContext.fillRect(0, 570, 1024, 70);
-      desktopContext.strokeStyle = "#17221d";
+      desktopContext.strokeStyle = "#40536b";
       desktopContext.lineWidth = 5;
       desktopContext.strokeRect(2, 2, 1020, 636);
       desktopContext.beginPath();
       desktopContext.moveTo(0, 570);
       desktopContext.lineTo(1024, 570);
       desktopContext.stroke();
-      desktopContext.fillStyle = "#1d3127";
+      desktopContext.fillStyle = "#d8e7ec";
       desktopContext.font = "bold 20px monospace";
       desktopContext.fillText("AFFAN_OS", 24, 614);
       desktopContext.textAlign = "right";
+      desktopContext.fillStyle = "#68e0ae";
       desktopContext.fillText("LAB ONLINE  •  08:28", 996, 614);
       desktopContext.textAlign = "left";
       const files = [
-        { x: 138, y: 78, width: 170, height: 172, color: "#83d9ff", title: "ARCHTECH", note: "projects/" },
-        { x: 360, y: 78, width: 170, height: 172, color: "#b99aff", title: "SSIK", note: "consulting/" },
-        { x: 582, y: 78, width: 170, height: 172, color: "#ffc982", title: "ABOUT", note: "profile.doc" },
-        { x: 250, y: 306, width: 184, height: 168, color: "#83e6b3", title: "CONTACT", note: "links.file" },
-        { x: 512, y: 306, width: 184, height: 168, color: "#f4f2e9", title: "RESUME", note: "resume.pdf" },
+        { x: 138, y: 78, width: 170, height: 172, color: "#4ea7c8", title: "ARCHTECH", note: "projects/" },
+        { x: 360, y: 78, width: 170, height: 172, color: "#7869bc", title: "SSIK", note: "consulting/" },
+        { x: 582, y: 78, width: 170, height: 172, color: "#c4865d", title: "ABOUT", note: "profile.doc" },
+        { x: 250, y: 306, width: 184, height: 168, color: "#4f9d7d", title: "CONTACT", note: "links.file" },
+        { x: 512, y: 306, width: 184, height: 168, color: "#8da2ac", title: "RESUME", note: "resume.pdf" },
       ];
       for (const file of files) {
-        desktopContext.fillStyle = "rgba(255,255,245,.84)";
+        desktopContext.fillStyle = "rgba(12,18,28,.9)";
         desktopContext.fillRect(file.x - file.width / 2, file.y, file.width, file.height);
-        desktopContext.strokeStyle = "#21312a";
+        desktopContext.strokeStyle = "#40536b";
         desktopContext.lineWidth = 4;
         desktopContext.strokeRect(file.x - file.width / 2, file.y, file.width, file.height);
         desktopContext.fillStyle = file.color;
         desktopContext.fillRect(file.x - 42, file.y + 27, 84, 64);
         desktopContext.fillRect(file.x - 42, file.y + 17, 35, 16);
-        desktopContext.strokeStyle = "#21312a";
+        desktopContext.strokeStyle = "#071019";
         desktopContext.lineWidth = 3;
         desktopContext.strokeRect(file.x - 42, file.y + 27, 84, 64);
-        desktopContext.fillStyle = "#17241e";
+        desktopContext.fillStyle = "#e3edf0";
         desktopContext.font = "bold 20px monospace";
         desktopContext.textAlign = "center";
         desktopContext.fillText(file.title, file.x, file.y + file.height - 46);
-        desktopContext.fillStyle = "#53655b";
+        desktopContext.fillStyle = "#91a3ae";
         desktopContext.font = "14px monospace";
         desktopContext.fillText(file.note, file.x, file.y + file.height - 22);
       }
-      desktopContext.fillStyle = "rgba(255,245,225,.88)";
+      desktopContext.fillStyle = "rgba(12,18,28,.9)";
       desktopContext.fillRect(790, 315, 168, 170);
-      desktopContext.strokeStyle = "#21312a";
+      desktopContext.strokeStyle = "#40536b";
       desktopContext.lineWidth = 4;
       desktopContext.strokeRect(790, 315, 168, 170);
-      desktopContext.fillStyle = "#161817";
+      desktopContext.fillStyle = "#05080d";
       desktopContext.fillRect(820, 340, 108, 76);
-      desktopContext.fillStyle = "#d8c75e";
+      desktopContext.fillStyle = "#ef7d4d";
       desktopContext.beginPath();
       desktopContext.arc(851, 375, 7, 0, Math.PI * 2);
       desktopContext.arc(896, 375, 7, 0, Math.PI * 2);
       desktopContext.fill();
-      desktopContext.fillStyle = "#17241e";
+      desktopContext.fillStyle = "#e3edf0";
       desktopContext.font = "bold 20px monospace";
       desktopContext.textAlign = "center";
       desktopContext.fillText("cat.jpg", 874, 452);
-      desktopContext.fillStyle = "#53655b";
+      desktopContext.fillStyle = "#91a3ae";
       desktopContext.font = "13px monospace";
       desktopContext.fillText("do not open", 874, 474);
       desktopContext.textAlign = "left";

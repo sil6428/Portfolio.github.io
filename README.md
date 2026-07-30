@@ -34,7 +34,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
 - Interactive laptop desktop with separate Archtech, SSIK, About, Contact, and Resume files
-- Brighter retro laptop interface with a pastel grid, outlined folders, taskbar, and hidden `cat.jpg`
+- Dark retro laptop interface with the reference-inspired desktop layout, cyan grid, outlined folders, taskbar, and hidden `cat.jpg`
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection

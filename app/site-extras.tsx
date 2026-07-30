@@ -469,7 +469,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>07</code>
-                    <div><strong>Do not open cat.jpg</strong><p>The bright laptop desktop contains one suspicious photo. Opening it changes the room palette.</p></div>
+                    <div><strong>Do not open cat.jpg</strong><p>The laptop desktop contains one suspicious photo. Opening it changes the room palette.</p></div>
                   </li>
                   <li>
                     <code>08</code>

@@ -194,6 +194,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /tel:\+16473091927/);
   assert.match(room, /Affan_Shaikh_Resume\.pdf/);
   assert.match(room, /CanvasTexture/);
+  assert.match(room, /#080d15/);
+  assert.match(room, /#18152b/);
+  assert.doesNotMatch(room, /#a9edcf/);
   assert.match(room, /PROXMOX SERVER RACK/);
   assert.match(room, /3D PRINTER/);
   assert.match(room, /printer-head-carriage/);
