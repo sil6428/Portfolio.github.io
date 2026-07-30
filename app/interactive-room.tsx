@@ -907,34 +907,34 @@ export default function InteractiveRoom() {
     });
     const shelfSwordDarkMaterial = material("#080a0d", { metalness: 0.72, roughness: 0.28 });
     const katanaProfile = new THREE.Shape();
-    katanaProfile.moveTo(-0.035, -0.48);
-    katanaProfile.lineTo(0.035, -0.48);
-    katanaProfile.quadraticCurveTo(0.08, 0.48, 0.18, 1.32);
-    katanaProfile.quadraticCurveTo(0.18, 1.47, 0.025, 1.6);
-    katanaProfile.quadraticCurveTo(0.06, 0.52, -0.035, -0.48);
+    katanaProfile.moveTo(-0.055, -0.48);
+    katanaProfile.lineTo(0.055, -0.48);
+    katanaProfile.bezierCurveTo(0.075, 0.24, 0.105, 0.95, 0.17, 1.42);
+    katanaProfile.quadraticCurveTo(0.19, 1.54, 0.015, 1.66);
+    katanaProfile.bezierCurveTo(-0.005, 0.96, -0.03, 0.16, -0.055, -0.48);
     katanaProfile.closePath();
     const katanaBladeGeometry = new THREE.ExtrudeGeometry(katanaProfile, {
       depth: 0.055,
       bevelEnabled: true,
       bevelSegments: 2,
-      bevelSize: 0.012,
-      bevelThickness: 0.008,
-      curveSegments: 12,
+      bevelSize: 0.007,
+      bevelThickness: 0.006,
+      curveSegments: 18,
       steps: 1,
     });
     katanaBladeGeometry.rotateX(Math.PI / 2);
     katanaBladeGeometry.translate(0, 0.035, 0);
+    katanaBladeGeometry.computeVertexNormals();
     const shelfBlade = new THREE.Mesh(katanaBladeGeometry, shelfSwordBladeMaterial);
-    shelfBlade.name = "shelf-katana-curved-blade";
+    shelfBlade.name = "shelf-katana-unified-curved-blade";
     shelfSword.add(shelfBlade);
-    const katanaSpine = new THREE.Mesh(
-      new THREE.BoxGeometry(0.025, 0.045, 1.68),
-      shelfSwordBladeMaterial,
+    const katanaHabaki = new THREE.Mesh(
+      new THREE.BoxGeometry(0.13, 0.07, 0.14),
+      shelfSwordDarkMaterial,
     );
-    katanaSpine.name = "shelf-katana-white-spine";
-    katanaSpine.position.set(-0.025, 0.06, 0.38);
-    katanaSpine.rotation.y = -0.055;
-    shelfSword.add(katanaSpine);
+    katanaHabaki.name = "shelf-katana-habaki";
+    katanaHabaki.position.set(0, 0.03, -0.43);
+    shelfSword.add(katanaHabaki);
     const shelfGuard = new THREE.Mesh(
       new THREE.CylinderGeometry(0.14, 0.14, 0.055, 20),
       shelfSwordDarkMaterial,

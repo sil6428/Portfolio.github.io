@@ -43,7 +43,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A real three-minute printer sequence with a traditional double-edged dagger, solid-black handle and hilt, white blade, removable hilt supports, a height-tracking print head, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
 - Closer room framing plus a shorter wall bookshelf, camera on its top surface, and a mounted badminton racket on the back wall
-- A completed katana displayed on the bottom shelf with a long white curved blade, compact black fittings and handle, and an interactive relic effect
+- A completed katana displayed on the bottom shelf with one continuous white curved blade, a fitted black base collar, compact black fittings and handle, and an interactive relic effect
 - A simplified server rack without decorative fans or loose wiring
 - A traditional dagger print with a compact round pommel, wrapped grip, straight crossguard, long parallel-sided blade, defined taper, central fuller, and symmetrical white edges
 - Four separated printer spools in black, orange, purple, and white

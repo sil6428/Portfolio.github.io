@@ -232,8 +232,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /THREE-MINUTE PRINT COMPLETE/);
   assert.doesNotMatch(room, /cat\.jpg/i);
   assert.match(room, /bottom-shelf-printed-katana/);
-  assert.match(room, /shelf-katana-curved-blade/);
-  assert.match(room, /shelf-katana-white-spine/);
+  assert.match(room, /shelf-katana-unified-curved-blade/);
+  assert.match(room, /shelf-katana-habaki/);
+  assert.doesNotMatch(room, /shelf-katana-white-spine/);
   assert.match(room, /shelf-katana-tsuba/);
   assert.match(room, /shelf-katana-kashira/);
   assert.match(room, /hidden-server-beacon/);
