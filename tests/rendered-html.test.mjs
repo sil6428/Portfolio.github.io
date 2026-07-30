@@ -198,6 +198,12 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /3D PRINTER/);
   assert.match(room, /printer-head-carriage/);
   assert.match(room, /printer-biker-helmet/);
+  assert.match(room, /helmet-contoured-shell/);
+  assert.match(room, /helmet-curved-visor/);
+  assert.match(room, /helmet-chin-guard/);
+  assert.match(room, /helmet-chin-vent/);
+  assert.match(room, /helmet-crown-ridge/);
+  assert.match(room, /helmet-visor-pivot/);
   assert.match(room, /printer-y-bed/);
   assert.match(room, /printer-z-gantry/);
   assert.match(room, /printableParts/);

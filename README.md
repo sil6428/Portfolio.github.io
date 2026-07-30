@@ -40,11 +40,11 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, pulsing lights, and responsive interaction markers
-- A real three-minute printer sequence with a bottom-up biker helmet, live percentage, ETA, completion message, and finish glow
+- A real three-minute printer sequence with a bottom-up contoured motorcycle helmet, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
 - Closer room framing plus a shorter wall bookshelf, camera on its top surface, and a mounted badminton racket on the back wall
 - A simplified server rack without decorative fans or loose wiring
-- A layered biker-helmet print replacing the original printer cube
+- A detailed motorcycle-helmet print with a rounded shell, curved visor, chin guard, vents, crown ridge, and side hardware
 - Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
 - Left-drag orbit and right-drag camera panning with the browser menu suppressed over the room
 - Tighter room boundaries, a more centered overview, and reduced close-up camera offset

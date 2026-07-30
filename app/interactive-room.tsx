@@ -622,56 +622,170 @@ export default function InteractiveRoom() {
     printedPiece.position.set(0, 0.28, 0);
     printBedAssembly.add(printedPiece);
     const printableParts: THREE.Object3D[] = [];
-    const helmetHeight = 0.82;
-    const shellMaterial = material("#242a31", { metalness: 0.34, roughness: 0.46 });
-    const stripeMaterial = material("#d96942", { emissive: "#5a2417", emissiveIntensity: 0.24, roughness: 0.4 });
-    const visorMaterial = material("#101820", { metalness: 0.72, roughness: 0.16 });
+    const helmetHeight = 0.96;
+    const helmetLayerHeight = 0.022;
+    const shellMaterial = material("#557d8d", {
+      emissive: "#142c36",
+      emissiveIntensity: 0.2,
+      metalness: 0.38,
+      roughness: 0.34,
+    });
+    const crownMaterial = material("#8aa5ad", { metalness: 0.48, roughness: 0.28 });
+    const stripeMaterial = material("#ef7d4d", {
+      emissive: "#682713",
+      emissiveIntensity: 0.34,
+      metalness: 0.16,
+      roughness: 0.32,
+    });
+    const visorMaterial = material("#071820", {
+      emissive: "#16485b",
+      emissiveIntensity: 0.42,
+      metalness: 0.82,
+      roughness: 0.08,
+    });
+    const trimMaterial = material("#d6e5e6", { metalness: 0.72, roughness: 0.22 });
     const addPrintablePart = (part: THREE.Object3D, printHeight: number) => {
       part.visible = false;
       part.userData.printHeight = printHeight;
       printableParts.push(part);
       printedPiece.add(part);
     };
-    for (let layer = 0; layer < 33; layer += 1) {
-      const y = 0.012 + layer * 0.024;
-      const normalized = y / helmetHeight;
-      const radius =
-        normalized < 0.22
-          ? 0.36 + normalized * 0.1
-          : Math.max(0.13, 0.42 * Math.sqrt(Math.max(0, 1 - Math.pow((normalized - 0.48) / 0.58, 2))));
-      const shellLayer = new THREE.Mesh(
-        new THREE.CylinderGeometry(radius * 0.98, radius, 0.021, 28),
-        layer >= 9 && layer <= 12 ? stripeMaterial : shellMaterial,
+    const helmetSliceGeometry = (width: number, backDepth: number, frontDepth: number) => {
+      const profile = new THREE.Shape();
+      profile.moveTo(0, -backDepth);
+      profile.bezierCurveTo(
+        width * 0.72,
+        -backDepth,
+        width,
+        -backDepth * 0.52,
+        width,
+        0,
       );
-      shellLayer.position.set(0, y, -0.025);
-      shellLayer.scale.z = 0.9;
+      profile.bezierCurveTo(
+        width,
+        frontDepth * 0.56,
+        width * 0.56,
+        frontDepth,
+        0,
+        frontDepth,
+      );
+      profile.bezierCurveTo(
+        -width * 0.56,
+        frontDepth,
+        -width,
+        frontDepth * 0.56,
+        -width,
+        0,
+      );
+      profile.bezierCurveTo(
+        -width,
+        -backDepth * 0.52,
+        -width * 0.72,
+        -backDepth,
+        0,
+        -backDepth,
+      );
+      const geometry = new THREE.ExtrudeGeometry(profile, {
+        depth: helmetLayerHeight,
+        bevelEnabled: false,
+        curveSegments: 10,
+        steps: 1,
+      });
+      geometry.rotateX(Math.PI / 2);
+      geometry.translate(0, helmetLayerHeight / 2, 0);
+      return geometry;
+    };
+    for (let layer = 0; layer < 42; layer += 1) {
+      const y = 0.012 + layer * helmetLayerHeight;
+      const normalized = y / helmetHeight;
+      const dome = Math.sqrt(Math.max(0.08, 1 - Math.pow((normalized - 0.48) / 0.62, 2)));
+      const width = 0.14 + dome * 0.31;
+      const backDepth = 0.14 + dome * 0.27;
+      const frontDepth =
+        normalized < 0.34
+          ? 0.48 - normalized * 0.08
+          : 0.16 + dome * 0.25;
+      const isCrown = normalized > 0.83;
+      const isLowerStripe = normalized > 0.2 && normalized < 0.27;
+      const shellLayer = new THREE.Mesh(
+        helmetSliceGeometry(width, backDepth, frontDepth),
+        isLowerStripe ? stripeMaterial : isCrown ? crownMaterial : shellMaterial,
+      );
+      shellLayer.name = "helmet-contoured-shell";
+      shellLayer.position.y = y;
       addPrintablePart(shellLayer, y);
 
-      if (layer >= 6 && layer <= 13) {
+      if (normalized >= 0.08 && normalized <= 0.34) {
+        const chinWidth = 0.31 + Math.sin(((normalized - 0.08) / 0.26) * Math.PI) * 0.08;
         const chinLayer = new THREE.Mesh(
-          new THREE.BoxGeometry(0.58 - Math.abs(layer - 9.5) * 0.018, 0.021, 0.19),
-          layer >= 9 && layer <= 12 ? stripeMaterial : shellMaterial,
+          new THREE.BoxGeometry(chinWidth * 2, helmetLayerHeight * 0.86, 0.2),
+          isLowerStripe ? stripeMaterial : shellMaterial,
         );
-        chinLayer.position.set(0, y, 0.31);
+        chinLayer.name = "helmet-chin-guard";
+        chinLayer.position.set(0, y, 0.39);
         addPrintablePart(chinLayer, y);
       }
-      if (layer >= 15 && layer <= 22) {
+
+      if (normalized >= 0.39 && normalized <= 0.68) {
         const visorLayer = new THREE.Mesh(
-          new THREE.BoxGeometry(0.58 - Math.abs(layer - 18.5) * 0.014, 0.018, 0.075),
+          new THREE.CylinderGeometry(0.415, 0.415, helmetLayerHeight * 0.82, 30, 1, true, -1.08, 2.16),
           visorMaterial,
         );
-        visorLayer.position.set(0, y, 0.29);
+        visorLayer.name = "helmet-curved-visor";
+        visorLayer.position.set(0, y, 0.015);
+        visorLayer.scale.x = 1.04;
         addPrintablePart(visorLayer, y);
+      }
+
+      if (normalized >= 0.14 && normalized <= 0.23 && layer % 2 === 0) {
+        for (const x of [-0.16, 0, 0.16]) {
+          const vent = new THREE.Mesh(
+            new THREE.BoxGeometry(0.085, helmetLayerHeight * 0.7, 0.018),
+            visorMaterial,
+          );
+          vent.name = "helmet-chin-vent";
+          vent.position.set(x, y, 0.505);
+          addPrintablePart(vent, y);
+        }
+      }
+
+      if (normalized >= 0.86) {
+        const crownRidge = new THREE.Mesh(
+          new THREE.BoxGeometry(0.08, helmetLayerHeight * 0.82, 0.28 * (1 - (normalized - 0.86) / 0.14)),
+          stripeMaterial,
+        );
+        crownRidge.name = "helmet-crown-ridge";
+        crownRidge.position.set(0, y, -0.025);
+        addPrintablePart(crownRidge, y);
       }
     }
     for (const side of [-1, 1]) {
-      const visorPivot = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.055, 0.055, 0.035, 16),
+      const pivotHousing = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.085, 0.085, 0.045, 20),
         stripeMaterial,
       );
-      visorPivot.rotation.z = Math.PI / 2;
-      visorPivot.position.set(side * 0.35, 0.47, 0.12);
-      addPrintablePart(visorPivot, 0.47);
+      pivotHousing.name = "helmet-visor-pivot";
+      pivotHousing.rotation.z = Math.PI / 2;
+      pivotHousing.position.set(side * 0.4, 0.51, 0.06);
+      addPrintablePart(pivotHousing, 0.51);
+      const pivotCap = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.042, 0.042, 0.052, 18),
+        trimMaterial,
+      );
+      pivotCap.rotation.z = Math.PI / 2;
+      pivotCap.position.set(side * 0.422, 0.51, 0.06);
+      addPrintablePart(pivotCap, 0.51);
+    }
+    for (const y of [0.375, 0.675]) {
+      const visorTrim = new THREE.Mesh(
+        new THREE.TorusGeometry(0.417, 0.015, 6, 28, 2.16),
+        trimMaterial,
+      );
+      visorTrim.name = "helmet-visor-trim";
+      visorTrim.rotation.x = Math.PI / 2;
+      visorTrim.rotation.z = -1.08;
+      visorTrim.position.set(0, y, 0.015);
+      addPrintablePart(visorTrim, y);
     }
     printableParts.sort((a, b) => Number(a.userData.printHeight) - Number(b.userData.printHeight));
 
