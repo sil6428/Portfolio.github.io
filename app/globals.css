@@ -2964,6 +2964,15 @@ body.room-focus-active .room-fluid-hint {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+.room-popup-dismiss {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
 .room-popup {
   position: absolute;
   right: clamp(22px,4vw,64px);

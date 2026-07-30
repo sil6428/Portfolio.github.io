@@ -260,6 +260,7 @@ export default function InteractiveRoom() {
   const [visitedKeys, setVisitedKeys] = useState<string[]>([]);
   const [roomSecret, setRoomSecret] = useState("");
   const focusRef = useRef<(key: string) => void>(() => undefined);
+  const dismissRef = useRef<() => void>(() => undefined);
   const activeEntry = activeKey ? ROOM_ENTRIES[activeKey] : null;
 
   useEffect(() => {
@@ -1234,12 +1235,15 @@ export default function InteractiveRoom() {
 
     const focusObject = (key: string) => {
       if (key === "__overview") {
-        cameraMove = null;
         focusedKey = null;
-        setActiveKey(null);
-        setTransitionLabel("");
-        controls.enabled = true;
         document.body.classList.remove("room-focus-active");
+        pointerParallaxTarget.set(0, 0);
+        beginCameraMove(
+          overviewPosition,
+          overviewTarget,
+          null,
+          "RETURNING TO DEFAULT VIEW",
+        );
         return;
       }
 
@@ -1265,7 +1269,16 @@ export default function InteractiveRoom() {
         `MOVING TO ${entry.directory.toUpperCase()}`,
       );
     };
+    const dismissObjectFile = () => {
+      cameraMove = null;
+      focusedKey = null;
+      setActiveKey(null);
+      setTransitionLabel("");
+      controls.enabled = true;
+      document.body.classList.remove("room-focus-active");
+    };
     focusRef.current = focusObject;
+    dismissRef.current = dismissObjectFile;
     camera.position.copy(overviewPosition);
     controls.target.copy(overviewTarget);
     controls.enabled = true;
@@ -1502,6 +1515,7 @@ export default function InteractiveRoom() {
       window.removeEventListener("affan-room-cat", handleCatCommand);
       window.clearTimeout(roomSecretTimeout);
       focusRef.current = () => undefined;
+      dismissRef.current = () => undefined;
       document.body.classList.remove("room-focus-active");
       room.traverse((object) => {
         if (!(object instanceof THREE.Mesh)) return;
@@ -1555,41 +1569,49 @@ export default function InteractiveRoom() {
         ))}
       </nav>
       {activeEntry && (
-        <aside className="room-popup" aria-live="polite" aria-labelledby="room-popup-title">
+        <>
           <button
-            className="room-popup-close"
+            className="room-popup-dismiss"
             type="button"
-            aria-label="Close object file and enable camera controls"
-            onClick={() => focusRef.current("__overview")}
-          >
-            X
-          </button>
-          <p>{activeEntry.label}</p>
-          <h2 id="room-popup-title">{activeEntry.title}</h2>
-          <div className="room-popup-line" />
-          <p>{activeEntry.summary}</p>
-          <ul>
-            {activeEntry.details.map((detail) => <li key={detail}>{detail}</li>)}
-          </ul>
-          <div className="room-popup-sections">
-            {activeEntry.sections.map((section) => (
-              <section key={section.heading}>
-                <h3>{section.heading}</h3>
-                <p>{section.body}</p>
-              </section>
-            ))}
-          </div>
-          {activeEntry.links && (
-            <div className="room-popup-actions">
-              {activeEntry.links.map((link) => (
-                <a href={link.href} target="_blank" rel="noreferrer" key={link.href}>
-                  {link.label} <span aria-hidden="true">+</span>
-                </a>
+            aria-label="Close object file and keep the current camera view"
+            onClick={() => dismissRef.current()}
+          />
+          <aside className="room-popup" aria-live="polite" aria-labelledby="room-popup-title">
+            <button
+              className="room-popup-close"
+              type="button"
+              aria-label="Close object file and return to the default room view"
+              onClick={() => focusRef.current("__overview")}
+            >
+              X
+            </button>
+            <p>{activeEntry.label}</p>
+            <h2 id="room-popup-title">{activeEntry.title}</h2>
+            <div className="room-popup-line" />
+            <p>{activeEntry.summary}</p>
+            <ul>
+              {activeEntry.details.map((detail) => <li key={detail}>{detail}</li>)}
+            </ul>
+            <div className="room-popup-sections">
+              {activeEntry.sections.map((section) => (
+                <section key={section.heading}>
+                  <h3>{section.heading}</h3>
+                  <p>{section.body}</p>
+                </section>
               ))}
             </div>
-          )}
-          <small>ESC / CLOSE FILE / SCROLL TO ZOOM</small>
-        </aside>
+            {activeEntry.links && (
+              <div className="room-popup-actions">
+                {activeEntry.links.map((link) => (
+                  <a href={link.href} target="_blank" rel="noreferrer" key={link.href}>
+                    {link.label} <span aria-hidden="true">+</span>
+                  </a>
+                ))}
+              </div>
+            )}
+            <small>OUTSIDE / FREE CAMERA · X OR ESC / RESET VIEW</small>
+          </aside>
+        </>
       )}
     </section>
   );

@@ -46,6 +46,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A simplified server rack without decorative fans or loose wiring
 - A detailed motorcycle-helmet print with a rounded shell, curved visor, chin guard, vents, crown ridge, and side hardware
 - Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
+- Two distinct popup exits: click outside to keep the close-up camera, or use X and Escape to return to the default room angle
 - Left-drag orbit and right-drag camera panning with the browser menu suppressed over the room
 - Tighter room boundaries, a more centered overview, and reduced close-up camera offset
 - Brighter ambient lighting with cyan, violet, amber, and mint accents across the desk, rug, shelf, and wall

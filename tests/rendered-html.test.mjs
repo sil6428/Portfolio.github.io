@@ -228,10 +228,14 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /TubeGeometry/);
   assert.match(room, /raycaster\.intersectObjects/);
   assert.match(room, /beginCameraMove/);
+  assert.match(room, /RETURNING TO DEFAULT VIEW/);
+  assert.match(room, /dismissObjectFile/);
+  assert.match(room, /Close object file and keep the current camera view/);
+  assert.match(room, /Close object file and return to the default room view/);
+  assert.match(room, /OUTSIDE \/ FREE CAMERA/);
   assert.match(room, /focusObject/);
   assert.match(room, /room-popup/);
   assert.match(room, /setActiveKey/);
-  assert.match(room, /CLOSE FILE \/ SCROLL TO ZOOM/);
   assert.match(room, /controls\.enableZoom = true/);
   assert.match(room, /controls\.minDistance = 2\.1/);
   assert.match(room, /controls\.mouseButtons\.RIGHT = THREE\.MOUSE\.PAN/);
