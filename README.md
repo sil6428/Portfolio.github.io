@@ -67,6 +67,8 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Physically based glass, coated optics, and lacquer materials on the PC tower, camera lens, racket frame, and katana scabbard
 - Additional PC internals including CPU block, graphics card, RGB memory, fan blades, and front ventilation
 - Printer bed springs, X-axis belt, stepper motors, extruder grille and fan blades, plus higher-resolution chess-piece layers on desktop
+- Mechanically layered hotend with heatsink core and fins, stainless heat break, copper heater block, silicone sock, heater cartridge, thermistor, hex collar, tapered brass nozzle, fine tip, feed tube, and active extrusion thread
+- Rebuilt chess families with individual profile curves and recognizable pawn heads, rook crowns, knight snouts and manes, bishop mitres and slashes, queen crown spikes, and king orbs and crosses
 - Server handles and perforated rails, camera aperture and lens glint, labelled book spines, a katana scabbard with grip diamonds, and more expressive cat eyes and fur
 - Wall decor built directly into the Three.js room, including a framed network-topology display and a three-piece photography-inspired gallery above the bookshelf
 - Eleven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, the resume, and design inspiration

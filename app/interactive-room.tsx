@@ -1091,7 +1091,7 @@ export default function InteractiveRoom() {
     printedChessSet.position.set(0, 0.28, 0);
     printBedAssembly.add(printedChessSet);
     const printableParts: THREE.Object3D[] = [];
-    const chessSetHeight = 0.5;
+    const chessSetHeight = 0.62;
     const chessLayerHeight = 0.024;
     const blackChessMaterial = material("#080a0d", {
       emissive: "#020304",
@@ -1154,23 +1154,50 @@ export default function InteractiveRoom() {
 
     type ChessPieceType = "pawn" | "rook" | "knight" | "bishop" | "queen" | "king";
     const pieceHeights: Record<ChessPieceType, number> = {
-      pawn: 0.22,
-      rook: 0.29,
-      knight: 0.32,
-      bishop: 0.35,
-      queen: 0.39,
+      pawn: 0.24,
+      rook: 0.31,
+      knight: 0.34,
+      bishop: 0.36,
+      queen: 0.4,
       king: 0.43,
     };
     const backRank: ChessPieceType[] = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"];
+    const pieceProfiles: Record<ChessPieceType, Array<[number, number]>> = {
+      pawn: [
+        [0, 0.062], [0.1, 0.064], [0.2, 0.054], [0.3, 0.044], [0.52, 0.031],
+        [0.62, 0.027], [0.7, 0.04], [0.82, 0.051], [0.93, 0.041], [1, 0.018],
+      ],
+      rook: [
+        [0, 0.064], [0.1, 0.066], [0.2, 0.055], [0.3, 0.044], [0.62, 0.038],
+        [0.72, 0.047], [0.8, 0.057], [0.92, 0.058], [1, 0.056],
+      ],
+      knight: [
+        [0, 0.064], [0.1, 0.066], [0.2, 0.055], [0.31, 0.044], [0.58, 0.035],
+        [0.7, 0.031], [0.82, 0.037], [0.92, 0.043], [1, 0.038],
+      ],
+      bishop: [
+        [0, 0.064], [0.1, 0.066], [0.2, 0.055], [0.3, 0.043], [0.57, 0.031],
+        [0.66, 0.028], [0.73, 0.044], [0.84, 0.051], [0.95, 0.036], [1, 0.016],
+      ],
+      queen: [
+        [0, 0.066], [0.1, 0.068], [0.2, 0.057], [0.31, 0.045], [0.58, 0.032],
+        [0.67, 0.03], [0.73, 0.044], [0.8, 0.052], [0.9, 0.046], [1, 0.038],
+      ],
+      king: [
+        [0, 0.068], [0.1, 0.07], [0.2, 0.058], [0.31, 0.046], [0.58, 0.033],
+        [0.67, 0.031], [0.74, 0.046], [0.82, 0.052], [0.93, 0.04], [1, 0.035],
+      ],
+    };
     const pieceRadius = (kind: ChessPieceType, progress: number) => {
-      if (progress < 0.2) return 0.053 - progress * 0.04;
-      if (progress < 0.55) return 0.031 + Math.sin((progress - 0.2) * Math.PI * 2.2) * 0.004;
-      if (kind === "pawn") return 0.024 + Math.sin(((progress - 0.55) / 0.45) * Math.PI) * 0.025;
-      if (kind === "rook") return progress > 0.76 ? 0.052 : 0.035;
-      if (kind === "knight") return 0.034 + (progress - 0.55) * 0.018;
-      if (kind === "bishop") return 0.026 + Math.sin(((progress - 0.55) / 0.45) * Math.PI) * 0.022;
-      if (kind === "queen") return progress > 0.78 ? 0.052 : 0.034;
-      return progress > 0.78 ? 0.044 : 0.034;
+      const profile = pieceProfiles[kind];
+      for (let index = 1; index < profile.length; index += 1) {
+        const [rightProgress, rightRadius] = profile[index];
+        if (progress > rightProgress) continue;
+        const [leftProgress, leftRadius] = profile[index - 1];
+        const localProgress = (progress - leftProgress) / Math.max(0.001, rightProgress - leftProgress);
+        return THREE.MathUtils.lerp(leftRadius, rightRadius, localProgress);
+      }
+      return profile[profile.length - 1][1];
     };
     const addChessPiece = (
       kind: ChessPieceType,
@@ -1191,6 +1218,14 @@ export default function InteractiveRoom() {
       baseRing.rotation.x = Math.PI / 2;
       baseRing.position.set(x, 0.082, z);
       addPrintablePart(baseRing, 0.082);
+      const lowerBaseRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.049, 0.006, 6, highDetail ? 20 : 14),
+        pieceMaterial,
+      );
+      lowerBaseRing.name = "chess-piece-lower-base-ring";
+      lowerBaseRing.rotation.x = Math.PI / 2;
+      lowerBaseRing.position.set(x, 0.108, z);
+      addPrintablePart(lowerBaseRing, 0.108);
       for (let layer = 0; layer < pieceLayerCount; layer += 1) {
         const relativeY = Math.min(pieceHeight, (layer + 0.5) * chessLayerHeight);
         const progress = relativeY / pieceHeight;
@@ -1205,58 +1240,153 @@ export default function InteractiveRoom() {
       }
 
       const topY = 0.072 + pieceHeight;
-      if (kind === "rook") {
-        for (let turret = 0; turret < 4; turret += 1) {
+      if (kind !== "pawn") {
+        const collarY = 0.072 + pieceHeight * 0.7;
+        const collar = new THREE.Mesh(
+          new THREE.TorusGeometry(kind === "king" || kind === "queen" ? 0.043 : 0.037, 0.007, 6, highDetail ? 20 : 14),
+          pieceMaterial,
+        );
+        collar.name = "chess-piece-collar-ring";
+        collar.rotation.x = Math.PI / 2;
+        collar.position.set(x, collarY, z);
+        addPrintablePart(collar, collarY);
+      }
+
+      if (kind === "pawn") {
+        const pawnHead = new THREE.Mesh(
+          new THREE.SphereGeometry(0.045, highDetail ? 18 : 12, highDetail ? 14 : 9),
+          pieceMaterial,
+        );
+        pawnHead.name = "chess-pawn-spherical-head";
+        pawnHead.position.set(x, topY - 0.012, z);
+        addPrintablePart(pawnHead, topY + 0.03);
+      } else if (kind === "rook") {
+        const rookCrown = new THREE.Mesh(
+          new THREE.TorusGeometry(0.052, 0.008, 6, highDetail ? 22 : 14),
+          pieceMaterial,
+        );
+        rookCrown.name = "chess-rook-crown-ring";
+        rookCrown.rotation.x = Math.PI / 2;
+        rookCrown.position.set(x, topY - 0.01, z);
+        addPrintablePart(rookCrown, topY);
+        for (let turret = 0; turret < 6; turret += 1) {
+          const angle = (turret / 6) * Math.PI * 2;
           const battlement = new THREE.Mesh(
-            new THREE.BoxGeometry(0.032, 0.035, 0.032),
+            new RoundedBoxGeometry(0.027, 0.042, 0.03, 2, 0.005),
             pieceMaterial,
           );
           battlement.name = "chess-rook-battlement";
           battlement.position.set(
-            x + (turret < 2 ? -0.032 : 0.032),
-            topY + 0.014,
-            z + (turret % 2 === 0 ? -0.032 : 0.032),
+            x + Math.cos(angle) * 0.039,
+            topY + 0.013,
+            z + Math.sin(angle) * 0.039,
           );
-          addPrintablePart(battlement, topY + 0.014);
+          battlement.rotation.y = -angle;
+          addPrintablePart(battlement, topY + 0.034);
         }
       } else if (kind === "knight") {
-        const knightHead = new THREE.Mesh(new THREE.CapsuleGeometry(0.034, 0.055, 4, 8), pieceMaterial);
+        const facing = side === "white" ? -1 : 1;
+        const knightHead = new THREE.Mesh(
+          new THREE.CapsuleGeometry(0.036, 0.065, highDetail ? 5 : 3, highDetail ? 10 : 7),
+          pieceMaterial,
+        );
         knightHead.name = "chess-knight-head";
-        knightHead.position.set(x + (side === "white" ? -0.012 : 0.012), topY - 0.018, z);
-        knightHead.rotation.z = side === "white" ? -0.38 : 0.38;
-        addPrintablePart(knightHead, topY);
-        const knightEar = new THREE.Mesh(new THREE.ConeGeometry(0.018, 0.045, 8), pieceMaterial);
-        knightEar.name = "chess-knight-ear";
-        knightEar.position.set(x, topY + 0.035, z);
-        addPrintablePart(knightEar, topY + 0.035);
+        knightHead.position.set(x + facing * 0.018, topY - 0.004, z);
+        knightHead.rotation.z = facing * 0.5;
+        addPrintablePart(knightHead, topY + 0.048);
+        const knightSnout = new THREE.Mesh(
+          new RoundedBoxGeometry(0.06, 0.035, 0.048, 2, 0.01),
+          pieceMaterial,
+        );
+        knightSnout.name = "chess-knight-snout";
+        knightSnout.position.set(x + facing * 0.052, topY + 0.008, z);
+        knightSnout.rotation.z = facing * 0.12;
+        addPrintablePart(knightSnout, topY + 0.027);
+        for (const earZ of [-0.018, 0.018]) {
+          const knightEar = new THREE.Mesh(new THREE.ConeGeometry(0.015, 0.045, 8), pieceMaterial);
+          knightEar.name = "chess-knight-ear";
+          knightEar.position.set(x - facing * 0.006, topY + 0.052, z + earZ);
+          knightEar.rotation.z = -facing * 0.18;
+          addPrintablePart(knightEar, topY + 0.074);
+        }
+        for (let mane = 0; mane < 3; mane += 1) {
+          const maneRidge = new THREE.Mesh(
+            new THREE.ConeGeometry(0.015, 0.038, 7),
+            pieceMaterial,
+          );
+          maneRidge.name = "chess-knight-mane";
+          maneRidge.position.set(x - facing * (0.018 + mane * 0.014), topY + 0.027 - mane * 0.02, z);
+          maneRidge.rotation.z = -facing * 0.75;
+          addPrintablePart(maneRidge, topY + 0.05 - mane * 0.016);
+        }
       } else if (kind === "bishop") {
+        const bishopMitre = new THREE.Mesh(
+          new THREE.SphereGeometry(0.046, highDetail ? 18 : 12, highDetail ? 14 : 9),
+          pieceMaterial,
+        );
+        bishopMitre.name = "chess-bishop-mitre";
+        bishopMitre.scale.set(0.78, 1.18, 0.78);
+        bishopMitre.position.set(x, topY - 0.012, z);
+        addPrintablePart(bishopMitre, topY + 0.042);
         const bishopTip = new THREE.Mesh(
-          new THREE.ConeGeometry(0.035, 0.07, 14),
+          new THREE.ConeGeometry(0.025, 0.065, highDetail ? 16 : 10),
           pieceMaterial,
         );
         bishopTip.name = "chess-bishop-tip";
-        bishopTip.position.set(x, topY + 0.024, z);
-        addPrintablePart(bishopTip, topY + 0.024);
+        bishopTip.position.set(x, topY + 0.042, z);
+        addPrintablePart(bishopTip, topY + 0.074);
+        const bishopSlash = new THREE.Mesh(
+          new RoundedBoxGeometry(0.012, 0.062, 0.014, 2, 0.004),
+          side === "white" ? blackChessMaterial : whiteChessMaterial,
+        );
+        bishopSlash.name = "chess-bishop-mitre-slash";
+        bishopSlash.position.set(x + 0.035, topY, z);
+        bishopSlash.rotation.z = -0.48;
+        addPrintablePart(bishopSlash, topY + 0.035);
       } else if (kind === "queen") {
-        for (let crown = 0; crown < 5; crown += 1) {
-          const angle = (crown / 5) * Math.PI * 2;
+        const queenCrownRing = new THREE.Mesh(
+          new THREE.TorusGeometry(0.045, 0.008, 6, highDetail ? 20 : 14),
+          pieceMaterial,
+        );
+        queenCrownRing.name = "chess-queen-crown-ring";
+        queenCrownRing.rotation.x = Math.PI / 2;
+        queenCrownRing.position.set(x, topY - 0.008, z);
+        addPrintablePart(queenCrownRing, topY);
+        for (let crown = 0; crown < 6; crown += 1) {
+          const angle = (crown / 6) * Math.PI * 2;
+          const crownSpike = new THREE.Mesh(
+            new THREE.ConeGeometry(0.014, 0.06, 7),
+            pieceMaterial,
+          );
+          crownSpike.name = "chess-queen-crown-spike";
+          crownSpike.position.set(x + Math.cos(angle) * 0.038, topY + 0.025, z + Math.sin(angle) * 0.038);
+          crownSpike.rotation.z = Math.cos(angle) * 0.18;
+          crownSpike.rotation.x = Math.sin(angle) * 0.18;
+          addPrintablePart(crownSpike, topY + 0.055);
           const crownPoint = new THREE.Mesh(
-            new THREE.SphereGeometry(0.014, 8, 6),
+            new THREE.SphereGeometry(0.011, 8, 6),
             pieceMaterial,
           );
           crownPoint.name = "chess-queen-crown";
-          crownPoint.position.set(x + Math.cos(angle) * 0.04, topY + 0.02, z + Math.sin(angle) * 0.04);
-          addPrintablePart(crownPoint, topY + 0.02);
+          crownPoint.position.set(x + Math.cos(angle) * 0.041, topY + 0.055, z + Math.sin(angle) * 0.041);
+          addPrintablePart(crownPoint, topY + 0.066);
         }
       } else if (kind === "king") {
-        const crossStem = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.075, 0.018), pieceMaterial);
+        const kingOrb = new THREE.Mesh(
+          new THREE.SphereGeometry(0.035, highDetail ? 16 : 10, highDetail ? 12 : 8),
+          pieceMaterial,
+        );
+        kingOrb.name = "chess-king-orb";
+        kingOrb.position.set(x, topY + 0.012, z);
+        addPrintablePart(kingOrb, topY + 0.046);
+        const crossStem = new THREE.Mesh(new RoundedBoxGeometry(0.018, 0.075, 0.018, 2, 0.004), pieceMaterial);
         crossStem.name = "chess-king-cross";
-        crossStem.position.set(x, topY + 0.035, z);
-        addPrintablePart(crossStem, topY + 0.035);
-        const crossBar = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.018, 0.018), pieceMaterial);
+        crossStem.position.set(x, topY + 0.07, z);
+        addPrintablePart(crossStem, topY + 0.108);
+        const crossBar = new THREE.Mesh(new RoundedBoxGeometry(0.065, 0.018, 0.018, 2, 0.004), pieceMaterial);
         crossBar.name = "chess-king-cross";
-        crossBar.position.set(x, topY + 0.05, z);
-        addPrintablePart(crossBar, topY + 0.05);
+        crossBar.position.set(x, topY + 0.076, z);
+        addPrintablePart(crossBar, topY + 0.085);
       }
     };
 
@@ -1318,13 +1448,112 @@ export default function InteractiveRoom() {
         extruderBlade.rotation.z = (blade / 6) * Math.PI * 2;
       }
     }
-    const nozzle = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.035, 0.075, 0.24, 10),
-      material("#d49a54", { metalness: 0.88, roughness: 0.28 }),
+    const hotendAssembly = new THREE.Group();
+    hotendAssembly.name = "printer-hotend-assembly";
+    hotendAssembly.position.set(0, -0.08, 0.1);
+    printHead.add(hotendAssembly);
+    const heatsinkCore = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.034, 0.034, 0.17, highDetail ? 18 : 12),
+      material("#aab8bc", { metalness: 0.94, roughness: 0.2 }),
     );
-    nozzle.position.set(0, -0.34, 0.12);
-    printHead.add(nozzle);
-    box(printHead, [0.14, 0.12, 0.18], [0, -0.2, 0.1], "#c28b4d", { metalness: 0.86, roughness: 0.26 });
+    heatsinkCore.name = "printer-hotend-heatsink-core";
+    heatsinkCore.position.y = 0.035;
+    hotendAssembly.add(heatsinkCore);
+    for (let fin = 0; fin < 6; fin += 1) {
+      const heatsinkFin = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.078, 0.078, 0.012, highDetail ? 24 : 14),
+        material(fin % 2 ? "#9eacb0" : "#c2cccf", { metalness: 0.94, roughness: 0.18 }),
+      );
+      heatsinkFin.name = "printer-hotend-heatsink-fin";
+      heatsinkFin.position.y = 0.105 - fin * 0.03;
+      hotendAssembly.add(heatsinkFin);
+    }
+    const heatBreak = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.021, 0.024, 0.085, highDetail ? 16 : 10),
+      material("#d2dcde", { metalness: 0.96, roughness: 0.16 }),
+    );
+    heatBreak.name = "printer-hotend-heat-break";
+    heatBreak.position.y = -0.095;
+    hotendAssembly.add(heatBreak);
+    const heaterBlock = roundedBox(
+      hotendAssembly,
+      [0.18, 0.11, 0.15],
+      [0, -0.165, 0],
+      "#bd7846",
+      0.018,
+      { metalness: 0.88, roughness: 0.25 },
+    );
+    heaterBlock.name = "printer-hotend-heater-block";
+    const siliconeSock = roundedBox(
+      hotendAssembly,
+      [0.185, 0.07, 0.155],
+      [0, -0.192, 0],
+      "#20262a",
+      0.022,
+      { metalness: 0.08, roughness: 0.78 },
+    );
+    siliconeSock.name = "printer-hotend-silicone-sock";
+    const heatingCartridge = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.016, 0.016, 0.24, 12),
+      material("#d3dadc", { metalness: 0.96, roughness: 0.16 }),
+    );
+    heatingCartridge.name = "printer-hotend-heating-cartridge";
+    heatingCartridge.rotation.z = Math.PI / 2;
+    heatingCartridge.position.set(0, -0.16, 0.018);
+    hotendAssembly.add(heatingCartridge);
+    const thermistor = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.009, 0.009, 0.08, 10),
+      material("#e2a768", { metalness: 0.82, roughness: 0.26 }),
+    );
+    thermistor.name = "printer-hotend-thermistor";
+    thermistor.rotation.x = Math.PI / 2;
+    thermistor.position.set(0.055, -0.16, 0.09);
+    hotendAssembly.add(thermistor);
+    const nozzleHex = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.047, 0.047, 0.055, 6),
+      material("#d79b4f", { metalness: 0.92, roughness: 0.2 }),
+    );
+    nozzleHex.name = "printer-brass-nozzle-hex";
+    nozzleHex.position.y = -0.245;
+    hotendAssembly.add(nozzleHex);
+    const brassNozzle = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.011, 0.042, 0.105, highDetail ? 18 : 12),
+      material("#e0a74f", { metalness: 0.94, roughness: 0.18 }),
+    );
+    brassNozzle.name = "printer-brass-nozzle-cone";
+    brassNozzle.position.y = -0.325;
+    hotendAssembly.add(brassNozzle);
+    const nozzleTip = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.006, 0.009, 0.035, 10),
+      material("#b87531", { metalness: 0.92, roughness: 0.2 }),
+    );
+    nozzleTip.name = "printer-nozzle-fine-tip";
+    nozzleTip.position.y = -0.395;
+    hotendAssembly.add(nozzleTip);
+    const extrusionThread = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.004, 0.004, 0.055, 8),
+      material("#f1f2ed", { roughness: 0.48 }),
+    );
+    extrusionThread.name = "printer-active-filament-thread";
+    extrusionThread.position.y = -0.438;
+    hotendAssembly.add(extrusionThread);
+    const filamentFeedTube = new THREE.Mesh(
+      new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3([
+          new THREE.Vector3(-0.18, 0.12, -0.03),
+          new THREE.Vector3(-0.12, 0.24, 0.01),
+          new THREE.Vector3(-0.035, 0.18, 0.08),
+          new THREE.Vector3(0, 0.09, 0.1),
+        ]),
+        highDetail ? 24 : 14,
+        0.013,
+        7,
+        false,
+      ),
+      material("#dce7e9", { metalness: 0.06, roughness: 0.58 }),
+    );
+    filamentFeedTube.name = "printer-filament-feed-tube";
+    printHead.add(filamentFeedTube);
     const xAxisBelt = box(printerGantry, [1.48, 0.022, 0.035], [0, 0.055, -0.31], "#111417", {
       metalness: 0.16,
       roughness: 0.76,
@@ -2506,6 +2735,7 @@ export default function InteractiveRoom() {
     resize();
 
     const printerCarriage = room.getObjectByName("printer-head-carriage");
+    const activeFilamentThread = room.getObjectByName("printer-active-filament-thread");
     const printerSpools = [
       "printer-spool-black",
       "printer-spool-orange",
@@ -2530,6 +2760,7 @@ export default function InteractiveRoom() {
       for (const part of printableParts) {
         part.visible = Number(part.userData.printHeight) <= currentPrintHeight;
       }
+      if (activeFilamentThread) activeFilamentThread.visible = printProgress < 1;
       if (printPercent !== lastPrintPercent) {
         lastPrintPercent = printPercent;
         drawPrinterDisplay(printProgress);
