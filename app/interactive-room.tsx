@@ -2000,7 +2000,7 @@ export default function InteractiveRoom() {
     racket.position.set(-4.35, 3.52, -4.08);
     racket.rotation.z = -0.14;
     const racketMount = new THREE.Group();
-    racketMount.position.set(-4.35, 2.42, -4.16);
+    racketMount.position.set(-4.5, 2.42, -4.16);
     room.add(racketMount);
     const racketWallPlate = roundedBox(racketMount, [0.4, 0.12, 0.06], [0, 0, 0], "#303a46", 0.025, {
       metalness: 0.62,
