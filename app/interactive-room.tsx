@@ -370,13 +370,13 @@ export default function InteractiveRoom() {
 
     const floor = new THREE.Mesh(
       new THREE.PlaneGeometry(12, 8.5),
-      material("#0d1319", { metalness: 0.05, roughness: 0.95 }),
+      material("#111a24", { metalness: 0.05, roughness: 0.95 }),
     );
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     room.add(floor);
-    box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#0b1016");
-    box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#090e14");
+    box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#111622");
+    box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#0e1920");
 
     const grid = new THREE.GridHelper(12, 24, 0x254a57, 0x15232b);
     grid.position.y = 0.012;
@@ -384,7 +384,7 @@ export default function InteractiveRoom() {
 
     const desk = new THREE.Group();
     room.add(desk);
-    box(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#202a31", { metalness: 0.45, roughness: 0.48 });
+    box(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#30364c", { metalness: 0.45, roughness: 0.48 });
     for (const x of [-4.92, 2.28]) {
       for (const z of [-4.02, -2.3]) {
         box(desk, [0.17, 1.35, 0.17], [x, 0.68, z], "#141c22", { metalness: 0.62 });
@@ -392,6 +392,18 @@ export default function InteractiveRoom() {
     }
     box(desk, [7.2, 0.12, 0.18], [-1.32, 0.72, -4.03], "#111920", { metalness: 0.7 });
     box(desk, [5.9, 0.08, 0.22], [-1.72, 1.1, -4.13], "#26333a", { metalness: 0.62 });
+    const deskCyanEdge = box(desk, [7.35, 0.045, 0.045], [-1.32, 1.46, -2.07], "#77e7ff", {
+      emissive: "#255765",
+      emissiveIntensity: 0.72,
+      roughness: 0.28,
+    });
+    deskCyanEdge.name = "desk-cyan-edge";
+    const deskAmberEdge = box(desk, [0.045, 0.045, 1.9], [2.47, 1.46, -3.15], "#ffbd72", {
+      emissive: "#6e4022",
+      emissiveIntensity: 0.68,
+      roughness: 0.3,
+    });
+    deskAmberEdge.name = "desk-amber-edge";
 
     const workstation = new THREE.Group();
     workstation.position.set(-1.75, 1.46, -3.12);
@@ -728,15 +740,15 @@ export default function InteractiveRoom() {
     const bookshelf = new THREE.Group();
     bookshelf.position.set(-5.4, 0, 0.85);
     room.add(bookshelf);
-    box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#121a20", { metalness: 0.34, roughness: 0.62 });
+    box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#19262c", { metalness: 0.34, roughness: 0.62 });
     for (const z of [-1.5, 1.5]) {
-      box(bookshelf, [0.72, 2.45, 0.16], [0.1, 1.23, z], "#27343a", { metalness: 0.42, roughness: 0.54 });
+      box(bookshelf, [0.72, 2.45, 0.16], [0.1, 1.23, z], "#51466f", { metalness: 0.42, roughness: 0.54 });
     }
     for (const y of [0.16, 1.17, 2.35]) {
-      box(bookshelf, [0.72, 0.14, 3.15], [0.1, y, 0], "#27343a", { metalness: 0.42, roughness: 0.54 });
-    }
-    for (let brace = 0; brace < 2; brace += 1) {
-      box(bookshelf, [0.08, 0.08, 2.76], [0.47, 0.66 + brace * 1.02, 0], "#52656d", { metalness: 0.72 });
+      box(bookshelf, [0.72, 0.14, 3.15], [0.1, y, 0], y === 1.17 ? "#315765" : "#3a465e", {
+        metalness: 0.42,
+        roughness: 0.54,
+      });
     }
 
     const books = hotspot("books", "READING SHELF");
@@ -967,25 +979,38 @@ export default function InteractiveRoom() {
 
     const floorRug = new THREE.Mesh(
       new THREE.CircleGeometry(1.45, 48),
-      material("#121b22", { metalness: 0.02, roughness: 1 }),
+      material("#1c2437", { metalness: 0.02, roughness: 1 }),
     );
     floorRug.rotation.x = -Math.PI / 2;
     floorRug.position.set(-0.2, 0.022, 0.95);
     room.add(floorRug);
+    const rugColors = ["#77e7ff", "#9f91ff", "#ffbd72"];
     for (let ring = 1; ring <= 3; ring += 1) {
       const rugRing = new THREE.Mesh(
         new THREE.TorusGeometry(0.35 * ring, 0.012, 5, 48),
-        material(ring === 2 ? "#524580" : "#253b43", { roughness: 0.9 }),
+        material(rugColors[ring - 1], {
+          emissive: rugColors[ring - 1],
+          emissiveIntensity: 0.25,
+          roughness: 0.72,
+        }),
       );
       rugRing.rotation.x = Math.PI / 2;
       rugRing.position.set(-0.2, 0.03, 0.95);
       room.add(rugRing);
     }
+    const ceilingPanelColors = ["#77e7ff", "#9f91ff", "#ffbd72", "#68e0ae"];
     for (let panel = 0; panel < 4; panel += 1) {
-      box(room, [1.85, 0.055, 0.08], [-3.6 + panel * 2.35, 4.42, -4.34], panel % 2 ? "#3f6873" : "#38454c", {
-        emissive: panel % 2 ? "#244b54" : "#151e23",
-        emissiveIntensity: 0.35,
+      box(room, [1.85, 0.055, 0.08], [-3.6 + panel * 2.35, 4.42, -4.34], ceilingPanelColors[panel], {
+        emissive: ceilingPanelColors[panel],
+        emissiveIntensity: 0.6,
         metalness: 0.5,
+      });
+    }
+    for (let accent = 0; accent < 3; accent += 1) {
+      box(room, [0.32, 1.2 + accent * 0.18, 0.035], [2.8 + accent * 0.52, 3.15, -4.17], ceilingPanelColors[accent], {
+        emissive: ceilingPanelColors[accent],
+        emissiveIntensity: 0.46,
+        roughness: 0.4,
       });
     }
     const ceilingLight = box(room, [3.6, 0.06, 0.5], [0.7, 4.72, -1.1], "#b8f6ff", {
@@ -1014,15 +1039,15 @@ export default function InteractiveRoom() {
       interactionMarkers.set(key, marker);
     }
 
-    scene.add(new THREE.HemisphereLight(0x9fcfe0, 0x0a0b10, 1.35));
-    const cyanLight = new THREE.PointLight(0x77e7ff, 24, 10, 2);
+    scene.add(new THREE.HemisphereLight(0xb8deea, 0x12101b, 1.65));
+    const cyanLight = new THREE.PointLight(0x77e7ff, 27, 10, 2);
     cyanLight.position.set(-1.3, 3.3, -0.2);
     cyanLight.castShadow = true;
     scene.add(cyanLight);
-    const violetLight = new THREE.PointLight(0x9f91ff, 18, 9, 2);
+    const violetLight = new THREE.PointLight(0x9f91ff, 22, 9, 2);
     violetLight.position.set(3.1, 3.8, 2.2);
     scene.add(violetLight);
-    const warmLight = new THREE.PointLight(0xffbd72, 11, 7, 2);
+    const warmLight = new THREE.PointLight(0xffbd72, 14, 7, 2);
     warmLight.position.set(-4.2, 2.8, 1.5);
     scene.add(warmLight);
 
@@ -1240,7 +1265,7 @@ export default function InteractiveRoom() {
       }
 
       if (!reducedMotion) {
-        cyanLight.intensity = 22 + Math.sin(elapsed * 1.4) * 2;
+        cyanLight.intensity = 27 + Math.sin(elapsed * 1.4) * 2;
         const catSecretActive = timestamp < catSecretUntil;
         cat.position.y = catSecretActive
           ? 0.24 + Math.abs(Math.sin(elapsed * 7)) * 0.55

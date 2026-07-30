@@ -201,6 +201,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /printer-y-bed/);
   assert.match(room, /printer-z-gantry/);
   assert.match(room, /printableParts/);
+  assert.match(room, /desk-cyan-edge/);
+  assert.match(room, /ceilingPanelColors/);
+  assert.doesNotMatch(room, /let brace/);
   assert.match(room, /PRINT_DURATION_MS = 180_000/);
   assert.match(room, /drawPrinterDisplay/);
   assert.match(room, /THREE-MINUTE PRINT COMPLETE/);

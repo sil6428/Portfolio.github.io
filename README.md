@@ -47,6 +47,8 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A layered biker-helmet print replacing the original printer cube
 - Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
 - Tighter room boundaries, a more centered overview, and reduced close-up camera offset
+- Brighter ambient lighting with cyan, violet, amber, and mint accents across the desk, rug, shelf, and wall
+- Removed the front shelf braces that crossed through the book models
 - Refined procedural models for the laptop, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat
 - Ten expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, and the resume
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat
