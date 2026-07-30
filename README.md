@@ -56,6 +56,12 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Brighter ambient lighting with cyan, violet, amber, and mint accents across the desk, rug, shelf, and wall
 - Removed the front shelf braces that crossed through the book models
 - Refined procedural models for the desktop PC, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat with a bandana, tag, yarn ball, toy mouse, and water bowl
+- High-detail geometry pass with softened edges, improved materials, modeled hardware, and object-specific details while retaining a performance-conscious procedural scene
+- Beveled monitor, keyboard, mouse, and glass-sided PC tower with visible motherboard traces, internal lighting, cooling rings, webcam, and individual rounded keycaps
+- Detailed printer mechanics including twin threaded Z screws, gantry wheels, bed clips, separated rimmed spools, and a beveled chessboard with ringed piece bases
+- Refined server faceplates, network ports, rack screws and status badge without restoring the removed wires or decorative server fans
+- Camera focus rings, coated lens glass, viewfinder, rear display and controls, plus book covers, page blocks, page lines, shelf fasteners, racket throat, grommets, and denser strings
+- More expressive cat details including modeled whiskers, mouth, and paw toes
 - Wall decor built directly into the Three.js room, including a framed network-topology display and a three-piece photography-inspired gallery above the bookshelf
 - Eleven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, the resume, and design inspiration
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat

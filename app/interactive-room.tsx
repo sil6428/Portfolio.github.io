@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { playSiteSfx } from "./site-sfx";
 
 type HotspotData = {
@@ -383,6 +384,26 @@ export default function InteractiveRoom() {
       return mesh;
     };
 
+    const roundedBox = (
+      parent: THREE.Object3D,
+      size: [number, number, number],
+      position: [number, number, number],
+      color: THREE.ColorRepresentation,
+      radius = 0.04,
+      options?: Parameters<typeof material>[1],
+    ) => {
+      const safeRadius = Math.min(radius, Math.min(...size) * 0.42);
+      const mesh = new THREE.Mesh(
+        new RoundedBoxGeometry(size[0], size[1], size[2], 3, safeRadius),
+        material(color, options),
+      );
+      mesh.position.set(...position);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      parent.add(mesh);
+      return mesh;
+    };
+
     const hotspot = (key: string, label: string, parent: THREE.Object3D = room) => {
       const group = new THREE.Group();
       group.userData = { key, label } satisfies HotspotData;
@@ -511,7 +532,11 @@ export default function InteractiveRoom() {
 
     const desk = new THREE.Group();
     room.add(desk);
-    box(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#30364c", { metalness: 0.45, roughness: 0.48 });
+    const deskTop = roundedBox(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#30364c", 0.07, {
+      metalness: 0.45,
+      roughness: 0.48,
+    });
+    deskTop.name = "beveled-desk-top";
     for (const x of [-4.92, 2.28]) {
       for (const z of [-4.02, -2.3]) {
         box(desk, [0.17, 1.35, 0.17], [x, 0.68, z], "#141c22", { metalness: 0.62 });
@@ -536,14 +561,40 @@ export default function InteractiveRoom() {
     workstation.name = "compact-desktop-pc-setup";
     workstation.position.set(-1.75, 1.46, -3.12);
     room.add(workstation);
-    box(workstation, [2.72, 0.08, 0.78], [-0.2, 0.07, 0.4], "#151e24", { metalness: 0.55, roughness: 0.38 });
-    box(workstation, [0.92, 0.06, 0.5], [-0.2, 0.09, -0.52], "#222d34", { metalness: 0.58, roughness: 0.3 });
+    const keyboardDeck = roundedBox(workstation, [2.72, 0.08, 0.78], [-0.2, 0.07, 0.4], "#151e24", 0.035, {
+      metalness: 0.55,
+      roughness: 0.38,
+    });
+    keyboardDeck.name = "desktop-keyboard-beveled-deck";
+    const monitorBase = roundedBox(workstation, [0.92, 0.06, 0.5], [-0.2, 0.09, -0.52], "#222d34", 0.025, {
+      metalness: 0.58,
+      roughness: 0.3,
+    });
+    monitorBase.name = "desktop-monitor-beveled-base";
     box(workstation, [0.14, 0.74, 0.14], [-0.2, 0.43, -0.72], "#29363d", { metalness: 0.78, roughness: 0.28 });
     const desktopMonitor = new THREE.Group();
     desktopMonitor.name = "desktop-monitor";
     desktopMonitor.position.set(-0.2, 0.39, -0.82);
     workstation.add(desktopMonitor);
-    box(desktopMonitor, [3.16, 1.86, 0.13], [0, 0.97, 0], "#10171d", { metalness: 0.68, roughness: 0.32 });
+    const monitorBezel = roundedBox(desktopMonitor, [3.16, 1.86, 0.13], [0, 0.97, 0], "#10171d", 0.055, {
+      metalness: 0.68,
+      roughness: 0.32,
+    });
+    monitorBezel.name = "desktop-monitor-rounded-bezel";
+    const webcam = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.028, 0.028, 0.018, 16),
+      material("#050709", { metalness: 0.5, roughness: 0.2 }),
+    );
+    webcam.name = "desktop-monitor-webcam";
+    webcam.rotation.x = Math.PI / 2;
+    webcam.position.set(0, 1.83, 0.082);
+    desktopMonitor.add(webcam);
+    const webcamGlass = new THREE.Mesh(
+      new THREE.CircleGeometry(0.014, 16),
+      material("#457a97", { emissive: "#12354b", emissiveIntensity: 0.5, roughness: 0.08 }),
+    );
+    webcamGlass.position.set(0, 1.83, 0.093);
+    desktopMonitor.add(webcamGlass);
 
     const desktopCanvas = document.createElement("canvas");
     desktopCanvas.width = 1024;
@@ -664,13 +715,15 @@ export default function InteractiveRoom() {
 
     for (let row = 0; row < 4; row += 1) {
       for (let key = 0; key < 13; key += 1) {
-        box(
+        const keycap = roundedBox(
           workstation,
           [0.15, 0.028, 0.12],
           [-1.35 + key * 0.19, 0.125, 0.16 + row * 0.16],
           row === 0 && key > 9 ? "#3c4c54" : "#27353c",
-          { metalness: 0.24 },
+          0.012,
+          { metalness: 0.24, roughness: 0.48 },
         );
+        keycap.name = "desktop-keycap";
       }
     }
     box(workstation, [0.72, 0.02, 0.58], [1.28, 0.11, 0.45], "#1a242a", { metalness: 0.35, roughness: 0.34 });
@@ -682,8 +735,59 @@ export default function InteractiveRoom() {
     desktopMouse.scale.set(0.72, 0.35, 1);
     desktopMouse.position.set(1.28, 0.15, 0.43);
     workstation.add(desktopMouse);
-    box(workstation, [0.48, 1.18, 0.85], [1.48, 0.6, -0.32], "#121a20", { metalness: 0.62, roughness: 0.34 });
+    const mouseWheel = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.024, 0.024, 0.075, 14),
+      material("#77e7ff", { emissive: "#245765", emissiveIntensity: 0.35, roughness: 0.46 }),
+    );
+    mouseWheel.name = "desktop-mouse-scroll-wheel";
+    mouseWheel.rotation.z = Math.PI / 2;
+    mouseWheel.position.set(1.28, 0.205, 0.34);
+    workstation.add(mouseWheel);
+    const desktopTower = roundedBox(workstation, [0.48, 1.18, 0.85], [1.48, 0.6, -0.32], "#121a20", 0.055, {
+      metalness: 0.62,
+      roughness: 0.34,
+    });
+    desktopTower.name = "desktop-tower-beveled-case";
     box(workstation, [0.035, 1.02, 0.7], [1.23, 0.6, -0.32], "#263640", { metalness: 0.38, roughness: 0.24 });
+    const towerGlass = roundedBox(workstation, [0.018, 0.92, 0.62], [1.205, 0.6, -0.32], "#17303b", 0.015, {
+      metalness: 0.2,
+      roughness: 0.12,
+      emissive: "#0d2733",
+      emissiveIntensity: 0.42,
+    });
+    towerGlass.name = "desktop-tower-glass";
+    const motherboard = box(workstation, [0.018, 0.58, 0.52], [1.185, 0.6, -0.3], "#20504c", {
+      metalness: 0.22,
+      roughness: 0.58,
+    });
+    motherboard.name = "desktop-motherboard";
+    for (let trace = 0; trace < 4; trace += 1) {
+      const boardTrace = box(
+        workstation,
+        [0.008, 0.018, 0.32 - trace * 0.045],
+        [1.172, 0.43 + trace * 0.11, -0.27 + trace * 0.025],
+        trace % 2 ? "#ffbd72" : "#77e7ff",
+        { emissive: trace % 2 ? "#6e4022" : "#255765", emissiveIntensity: 0.55, roughness: 0.35 },
+      );
+      boardTrace.name = "desktop-motherboard-trace";
+    }
+    for (const y of [0.4, 0.75]) {
+      const pcFan = new THREE.Mesh(
+        new THREE.TorusGeometry(0.13, 0.017, 8, 24),
+        material("#77e7ff", { emissive: "#255765", emissiveIntensity: 0.65, metalness: 0.34, roughness: 0.3 }),
+      );
+      pcFan.name = "desktop-case-fan-ring";
+      pcFan.rotation.y = Math.PI / 2;
+      pcFan.position.set(1.165, y, -0.33);
+      workstation.add(pcFan);
+      const pcFanHub = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.027, 0.027, 0.018, 12),
+        material("#243138", { metalness: 0.62, roughness: 0.3 }),
+      );
+      pcFanHub.rotation.z = Math.PI / 2;
+      pcFanHub.position.set(1.155, y, -0.33);
+      workstation.add(pcFanHub);
+    }
     box(workstation, [0.03, 0.88, 0.055], [1.225, 0.62, -0.34], "#77e7ff", {
       emissive: "#255765",
       emissiveIntensity: 0.86,
@@ -699,8 +803,16 @@ export default function InteractiveRoom() {
 
     const rack = hotspot("rack", "PROXMOX SERVER RACK");
     rack.position.set(4.45, 0, -3.35);
-    box(rack, [1.9, 0.16, 1.46], [0, 0.1, 0], "#151d24", { metalness: 0.7, roughness: 0.36 });
-    box(rack, [1.9, 0.16, 1.46], [0, 3.7, 0], "#151d24", { metalness: 0.7, roughness: 0.36 });
+    const rackBase = roundedBox(rack, [1.9, 0.16, 1.46], [0, 0.1, 0], "#151d24", 0.045, {
+      metalness: 0.7,
+      roughness: 0.36,
+    });
+    rackBase.name = "server-rack-beveled-base";
+    const rackCap = roundedBox(rack, [1.9, 0.16, 1.46], [0, 3.7, 0], "#151d24", 0.045, {
+      metalness: 0.7,
+      roughness: 0.36,
+    });
+    rackCap.name = "server-rack-beveled-cap";
     for (const x of [-0.86, 0.86]) {
       for (const z of [-0.62, 0.62]) {
         box(rack, [0.14, 3.65, 0.14], [x, 1.85, z], "#202b32", { metalness: 0.78, roughness: 0.3 });
@@ -708,10 +820,11 @@ export default function InteractiveRoom() {
     }
     box(rack, [1.62, 3.38, 0.08], [0, 1.9, -0.67], "#0f151a", { metalness: 0.54, roughness: 0.46 });
     for (let unit = 0; unit < 7; unit += 1) {
-      box(rack, [1.58, 0.34, 0.14], [0, 0.55 + unit * 0.44, 0.69], unit === 5 ? "#1d2930" : "#26323a", {
+      const faceplate = roundedBox(rack, [1.58, 0.34, 0.14], [0, 0.55 + unit * 0.44, 0.69], unit === 5 ? "#1d2930" : "#26323a", 0.025, {
         metalness: 0.7,
         roughness: 0.38,
       });
+      faceplate.name = "server-rack-unit-faceplate";
       const led = new THREE.Mesh(
         new THREE.BoxGeometry(0.045, 0.045, 0.025),
         material(unit % 3 === 0 ? amber : "#68e0ae", {
@@ -723,7 +836,25 @@ export default function InteractiveRoom() {
       rack.add(led);
       box(rack, [0.18, 0.1, 0.035], [-0.61, 0.55 + unit * 0.44, 0.777], "#0c1115", { metalness: 0.8 });
       for (let port = 0; port < 5; port += 1) {
-        box(rack, [0.082, 0.05, 0.026], [-0.34 + port * 0.125, 0.55 + unit * 0.44, 0.78], "#61757d", { metalness: 0.72 });
+        const serverPort = roundedBox(
+          rack,
+          [0.082, 0.05, 0.026],
+          [-0.34 + port * 0.125, 0.55 + unit * 0.44, 0.78],
+          "#61757d",
+          0.008,
+          { metalness: 0.72 },
+        );
+        serverPort.name = "server-rack-network-port";
+      }
+      for (const x of [-0.7, 0.7]) {
+        const screw = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.022, 0.022, 0.018, 12),
+          material("#a6b2b6", { metalness: 0.92, roughness: 0.18 }),
+        );
+        screw.name = "server-rack-screw";
+        screw.rotation.x = Math.PI / 2;
+        screw.position.set(x, 0.55 + unit * 0.44, 0.785);
+        rack.add(screw);
       }
     }
     box(rack, [0.1, 3.3, 0.1], [-0.72, 1.86, 0.79], "#53636a", { metalness: 0.88 });
@@ -731,6 +862,13 @@ export default function InteractiveRoom() {
     for (let vent = 0; vent < 10; vent += 1) {
       box(rack, [0.82, 0.025, 0.025], [0, 3.27 + vent * 0.035, 0.79], "#415158", { metalness: 0.72, roughness: 0.34 });
     }
+    const rackBadge = roundedBox(rack, [0.44, 0.14, 0.03], [-0.48, 3.4, 0.8], "#10171c", 0.018, {
+      metalness: 0.46,
+      roughness: 0.4,
+      emissive: "#122830",
+      emissiveIntensity: 0.25,
+    });
+    rackBadge.name = "server-rack-status-badge";
     const serverBeacon = easterHotspot("signal", "PRESS SERVER BEACON", rack);
     serverBeacon.position.set(0.69, 3.38, 0.81);
     const serverBeaconMaterial = material("#68e0ae", {
@@ -752,14 +890,50 @@ export default function InteractiveRoom() {
 
     const printer = hotspot("printer", "3D PRINTER");
     printer.position.set(1.28, 1.45, -3.18);
-    box(printer, [2.05, 0.14, 1.7], [0, 0.08, 0], "#222d34", { metalness: 0.55 });
+    const printerBase = roundedBox(printer, [2.05, 0.14, 1.7], [0, 0.08, 0], "#222d34", 0.055, {
+      metalness: 0.55,
+      roughness: 0.38,
+    });
+    printerBase.name = "printer-beveled-base";
     box(printer, [0.14, 2.5, 0.14], [-0.9, 1.3, -0.68], "#202a31", { metalness: 0.62 });
     box(printer, [0.14, 2.5, 0.14], [0.9, 1.3, -0.68], "#202a31", { metalness: 0.62 });
     box(printer, [1.95, 0.14, 0.14], [0, 2.52, -0.68], "#202a31", { metalness: 0.62 });
+    for (const x of [-0.74, 0.74]) {
+      const leadScrew = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.022, 0.022, 2.32, 12),
+        material("#9aa9ad", { metalness: 0.94, roughness: 0.2 }),
+      );
+      leadScrew.name = "printer-z-lead-screw";
+      leadScrew.position.set(x, 1.34, -0.63);
+      printer.add(leadScrew);
+      for (let thread = 0; thread < 13; thread += 1) {
+        const threadRing = new THREE.Mesh(
+          new THREE.TorusGeometry(0.026, 0.004, 5, 10),
+          material("#c5cfd1", { metalness: 0.96, roughness: 0.18 }),
+        );
+        threadRing.name = "printer-lead-screw-thread";
+        threadRing.rotation.x = Math.PI / 2;
+        threadRing.position.set(x, 0.28 + thread * 0.17, -0.63);
+        printer.add(threadRing);
+      }
+    }
     const printBedAssembly = new THREE.Group();
     printBedAssembly.name = "printer-y-bed";
     printer.add(printBedAssembly);
-    box(printBedAssembly, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", { metalness: 0.38 });
+    const printBed = roundedBox(printBedAssembly, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", 0.035, {
+      metalness: 0.38,
+      roughness: 0.46,
+    });
+    printBed.name = "printer-textured-build-plate";
+    for (const x of [-0.72, 0.72]) {
+      for (const z of [-0.52, 0.52]) {
+        const bedClip = roundedBox(printBedAssembly, [0.16, 0.035, 0.08], [x, 0.31, z], "#9aa8ac", 0.012, {
+          metalness: 0.88,
+          roughness: 0.24,
+        });
+        bedClip.name = "printer-bed-clip";
+      }
+    }
     const printedChessSet = new THREE.Group();
     printedChessSet.name = "printer-miniature-chess-set";
     printedChessSet.position.set(0, 0.28, 0);
@@ -791,7 +965,7 @@ export default function InteractiveRoom() {
     for (let layer = 0; layer < 3; layer += 1) {
       const y = 0.01 + layer * 0.018;
       const boardLayer = new THREE.Mesh(
-        new THREE.BoxGeometry(1.22, 0.016, 1.22),
+        new RoundedBoxGeometry(1.22, 0.016, 1.22, 2, 0.006),
         layer === 2 ? lightBoardMaterial : darkBoardMaterial,
       );
       boardLayer.name = "chess-board-layer";
@@ -813,6 +987,17 @@ export default function InteractiveRoom() {
         );
         addPrintablePart(square, 0.064);
       }
+    }
+    for (const [size, position] of [
+      [[1.3, 0.035, 0.04], [0, 0.076, -0.63]],
+      [[1.3, 0.035, 0.04], [0, 0.076, 0.63]],
+      [[0.04, 0.035, 1.22], [-0.63, 0.076, 0]],
+      [[0.04, 0.035, 1.22], [0.63, 0.076, 0]],
+    ] as Array<[[number, number, number], [number, number, number]]>) {
+      const boardBorder = new THREE.Mesh(new RoundedBoxGeometry(...size, 2, 0.01), darkBoardMaterial);
+      boardBorder.name = "chess-board-beveled-border";
+      boardBorder.position.set(...position);
+      addPrintablePart(boardBorder, 0.076);
     }
 
     type ChessPieceType = "pawn" | "rook" | "knight" | "bishop" | "queen" | "king";
@@ -846,6 +1031,14 @@ export default function InteractiveRoom() {
       const z = (row - 3.5) * squareSize;
       const pieceHeight = pieceHeights[kind];
       const pieceLayerCount = Math.ceil(pieceHeight / chessLayerHeight);
+      const baseRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.054, 0.009, 6, 18),
+        pieceMaterial,
+      );
+      baseRing.name = "chess-piece-base-ring";
+      baseRing.rotation.x = Math.PI / 2;
+      baseRing.position.set(x, 0.082, z);
+      addPrintablePart(baseRing, 0.082);
       for (let layer = 0; layer < pieceLayerCount; layer += 1) {
         const relativeY = Math.min(pieceHeight, (layer + 0.5) * chessLayerHeight);
         const progress = relativeY / pieceHeight;
@@ -875,14 +1068,15 @@ export default function InteractiveRoom() {
           addPrintablePart(battlement, topY + 0.014);
         }
       } else if (kind === "knight") {
-        const knightHead = new THREE.Mesh(
-          new THREE.BoxGeometry(0.06, 0.09, 0.052),
-          pieceMaterial,
-        );
+        const knightHead = new THREE.Mesh(new THREE.CapsuleGeometry(0.034, 0.055, 4, 8), pieceMaterial);
         knightHead.name = "chess-knight-head";
         knightHead.position.set(x + (side === "white" ? -0.012 : 0.012), topY - 0.018, z);
         knightHead.rotation.z = side === "white" ? -0.38 : 0.38;
         addPrintablePart(knightHead, topY);
+        const knightEar = new THREE.Mesh(new THREE.ConeGeometry(0.018, 0.045, 8), pieceMaterial);
+        knightEar.name = "chess-knight-ear";
+        knightEar.position.set(x, topY + 0.035, z);
+        addPrintablePart(knightEar, topY + 0.035);
       } else if (kind === "bishop") {
         const bishopTip = new THREE.Mesh(
           new THREE.ConeGeometry(0.035, 0.07, 14),
@@ -927,6 +1121,16 @@ export default function InteractiveRoom() {
     printerGantry.position.y = 0.84;
     printer.add(printerGantry);
     box(printerGantry, [1.72, 0.08, 0.08], [0, 0, -0.28], "#68777d", { metalness: 0.9 });
+    for (const x of [-0.68, 0.68]) {
+      const gantryWheel = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.075, 0.075, 0.045, 18),
+        material("#11171b", { metalness: 0.4, roughness: 0.48 }),
+      );
+      gantryWheel.name = "printer-gantry-wheel";
+      gantryWheel.rotation.x = Math.PI / 2;
+      gantryWheel.position.set(x, 0, -0.23);
+      printerGantry.add(gantryWheel);
+    }
     const printHead = new THREE.Group();
     printHead.name = "printer-head-carriage";
     printHead.position.set(0, 0, -0.28);
@@ -958,6 +1162,16 @@ export default function InteractiveRoom() {
       filament.name = `${name}-filament`;
       filament.rotation.z = Math.PI / 2;
       spoolGroup.add(filament);
+      for (const rimX of [-0.095, 0.095]) {
+        const rim = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.34, 0.34, 0.025, 30),
+          material("#273239", { metalness: 0.52, roughness: 0.36 }),
+        );
+        rim.name = `${name}-rim`;
+        rim.rotation.z = Math.PI / 2;
+        rim.position.x = rimX;
+        spoolGroup.add(rim);
+      }
 
       const core = new THREE.Mesh(
         new THREE.CylinderGeometry(0.105, 0.105, 0.19, 20),
@@ -1018,6 +1232,18 @@ export default function InteractiveRoom() {
         metalness: 0.42,
         roughness: 0.54,
       });
+    }
+    for (const y of [0.2, 1.2, 2.38]) {
+      for (const z of [-1.36, 1.36]) {
+        const shelfFastener = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.025, 0.025, 0.018, 12),
+          material("#a7b4b8", { metalness: 0.92, roughness: 0.2 }),
+        );
+        shelfFastener.name = "shelf-fastener";
+        shelfFastener.rotation.z = Math.PI / 2;
+        shelfFastener.position.set(-4.95, y, 0.85 + z);
+        room.add(shelfFastener);
+      }
     }
     const shelfSwordBaseY = 0.38;
     const shelfSword = easterHotspot("relic", "TOUCH THE PRINTED KATANA");
@@ -1116,8 +1342,24 @@ export default function InteractiveRoom() {
     bookColors.forEach((color, index) => {
       const width = bookWidths[index];
       const height = 0.68 + (index % 3) * 0.09;
-      box(books, [0.44, height, width], [0, height / 2, bookZ], color, { roughness: 0.86 });
-      box(books, [0.02, height * 0.72, width * 0.7], [0.23, height / 2, bookZ], "#d5cdb6", { roughness: 0.96 });
+      const bookCover = roundedBox(books, [0.44, height, width], [0, height / 2, bookZ], color, 0.018, {
+        roughness: 0.86,
+      });
+      bookCover.name = "book-rounded-cover";
+      const pageBlock = roundedBox(books, [0.028, height * 0.72, width * 0.7], [0.23, height / 2, bookZ], "#d5cdb6", 0.008, {
+        roughness: 0.96,
+      });
+      pageBlock.name = "book-page-block";
+      for (let page = -1; page <= 1; page += 1) {
+        const pageLine = box(
+          books,
+          [0.008, 0.008, width * 0.58],
+          [0.246, height / 2 + page * height * 0.19, bookZ],
+          "#938d7e",
+          { roughness: 1 },
+        );
+        pageLine.name = "book-page-line";
+      }
       box(books, [0.455, 0.035, width * 0.92], [0, height - 0.1, bookZ], index % 2 ? cyan : amber, {
         emissive: index % 2 ? "#2b626c" : "#815c2e",
         emissiveIntensity: 0.25,
@@ -1131,24 +1373,63 @@ export default function InteractiveRoom() {
 
     const cameraGroup = hotspot("camera", "PHOTOGRAPHY");
     cameraGroup.position.set(-5.4, 2.8, 0.34);
-    box(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", { metalness: 0.7, roughness: 0.34 });
+    const cameraBody = roundedBox(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", 0.09, {
+      metalness: 0.7,
+      roughness: 0.34,
+    });
+    cameraBody.name = "camera-beveled-body";
     const lens = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.27, 0.34, 0.46, 24),
+      new THREE.CylinderGeometry(0.27, 0.34, 0.46, 36),
       material("#11161b", { metalness: 0.82, roughness: 0.24 }),
     );
+    lens.name = "camera-lens-barrel";
     lens.rotation.z = -Math.PI / 2;
     lens.position.x = 0.43;
     cameraGroup.add(lens);
+    for (let ringIndex = 0; ringIndex < 4; ringIndex += 1) {
+      const focusRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.29 - ringIndex * 0.012, 0.018, 8, 32),
+        material(ringIndex === 2 ? "#5d6c72" : "#151b20", { metalness: 0.74, roughness: 0.3 }),
+      );
+      focusRing.name = "camera-focus-ring";
+      focusRing.rotation.y = Math.PI / 2;
+      focusRing.position.x = 0.28 + ringIndex * 0.1;
+      cameraGroup.add(focusRing);
+    }
     const glass = new THREE.Mesh(
-      new THREE.CircleGeometry(0.22, 24),
+      new THREE.CircleGeometry(0.22, 36),
       material("#4b77a5", { emissive: "#1d3857", emissiveIntensity: 0.55, roughness: 0.12 }),
     );
+    glass.name = "camera-coated-lens-glass";
     glass.rotation.y = Math.PI / 2;
     glass.position.x = 0.67;
     cameraGroup.add(glass);
-    box(cameraGroup, [0.44, 0.28, 0.38], [-0.03, 0.4, -0.3], "#222b31", { metalness: 0.68, roughness: 0.3 });
-    box(cameraGroup, [0.42, 0.18, 0.28], [-0.02, 0.44, 0.35], "#252f35", { metalness: 0.66, roughness: 0.28 });
-    box(cameraGroup, [0.52, 0.5, 0.24], [0, -0.08, 0.5], "#11171b", { roughness: 0.42 });
+    roundedBox(cameraGroup, [0.44, 0.28, 0.38], [-0.03, 0.4, -0.3], "#222b31", 0.045, { metalness: 0.68, roughness: 0.3 });
+    roundedBox(cameraGroup, [0.42, 0.18, 0.28], [-0.02, 0.44, 0.35], "#252f35", 0.04, { metalness: 0.66, roughness: 0.28 });
+    const cameraGrip = roundedBox(cameraGroup, [0.52, 0.5, 0.24], [0, -0.08, 0.5], "#11171b", 0.055, { roughness: 0.42 });
+    cameraGrip.name = "camera-sculpted-grip";
+    const cameraRearLcd = roundedBox(cameraGroup, [0.025, 0.4, 0.58], [-0.275, -0.02, -0.12], "#142530", 0.012, {
+      emissive: "#15394e",
+      emissiveIntensity: 0.36,
+      metalness: 0.18,
+      roughness: 0.14,
+    });
+    cameraRearLcd.name = "camera-rear-lcd";
+    const viewfinder = roundedBox(cameraGroup, [0.22, 0.17, 0.24], [-0.04, 0.49, 0.02], "#11171b", 0.025, {
+      metalness: 0.62,
+      roughness: 0.32,
+    });
+    viewfinder.name = "camera-viewfinder";
+    for (let buttonIndex = 0; buttonIndex < 3; buttonIndex += 1) {
+      const rearButton = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.025, 0.025, 0.018, 12),
+        material("#78858a", { metalness: 0.6, roughness: 0.28 }),
+      );
+      rearButton.name = "camera-rear-control";
+      rearButton.rotation.z = Math.PI / 2;
+      rearButton.position.set(-0.295, -0.2 + buttonIndex * 0.16, 0.3);
+      cameraGroup.add(rearButton);
+    }
     const shutter = new THREE.Mesh(
       new THREE.CylinderGeometry(0.055, 0.055, 0.035, 16),
       material("#aeb9bc", { metalness: 0.92, roughness: 0.2 }),
@@ -1196,9 +1477,10 @@ export default function InteractiveRoom() {
       });
     }
     const racketHead = new THREE.Mesh(
-      new THREE.TorusGeometry(0.58, 0.055, 10, 38),
+      new THREE.TorusGeometry(0.58, 0.052, 12, 52),
       material("#dce7e9", { metalness: 0.55, roughness: 0.32 }),
     );
+    racketHead.name = "racket-aero-frame";
     racketHead.scale.y = 1.28;
     racket.add(racketHead);
     const shaft = new THREE.Mesh(
@@ -1207,19 +1489,34 @@ export default function InteractiveRoom() {
     );
     shaft.position.y = -1.03;
     racket.add(shaft);
+    for (const side of [-1, 1]) {
+      const throatStart = new THREE.Vector3(side * 0.29, -0.5, 0);
+      const throatEnd = new THREE.Vector3(side * 0.055, -0.68, 0);
+      const throatDirection = throatEnd.clone().sub(throatStart);
+      const throat = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.028, 0.035, throatDirection.length(), 12),
+        material("#c5d6da", { metalness: 0.7, roughness: 0.3 }),
+      );
+      throat.name = "racket-throat";
+      throat.position.copy(throatStart.clone().add(throatEnd).multiplyScalar(0.5));
+      throat.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), throatDirection.normalize());
+      racket.add(throat);
+    }
     const grip = new THREE.Mesh(
       new THREE.CylinderGeometry(0.065, 0.078, 0.62, 12),
       material("#7046b7", { roughness: 0.62 }),
     );
     grip.position.y = -1.72;
     racket.add(grip);
-    for (let string = -3; string <= 3; string += 1) {
-      const chord = Math.sqrt(Math.max(0, 1 - Math.pow((string * 0.13) / 0.58, 2))) * 1.35;
-      box(racket, [0.014, chord, 0.012], [string * 0.13, 0, 0], "#788a90", { metalness: 0.18 });
-    }
     for (let string = -4; string <= 4; string += 1) {
-      const chord = Math.sqrt(Math.max(0, 1 - Math.pow((string * 0.12) / 0.74, 2))) * 1.02;
-      box(racket, [chord, 0.014, 0.012], [0, string * 0.12, 0], "#788a90", { metalness: 0.18 });
+      const chord = Math.sqrt(Math.max(0, 1 - Math.pow((string * 0.105) / 0.58, 2))) * 1.35;
+      const racketString = box(racket, [0.01, chord, 0.009], [string * 0.105, 0, 0], "#91a3a8", { metalness: 0.18 });
+      racketString.name = "racket-string";
+    }
+    for (let string = -5; string <= 5; string += 1) {
+      const chord = Math.sqrt(Math.max(0, 1 - Math.pow((string * 0.098) / 0.74, 2))) * 1.02;
+      const racketString = box(racket, [chord, 0.01, 0.009], [0, string * 0.098, 0], "#91a3a8", { metalness: 0.18 });
+      racketString.name = "racket-string";
     }
     for (let wrap = 0; wrap < 6; wrap += 1) {
       const gripBand = new THREE.Mesh(
@@ -1229,6 +1526,23 @@ export default function InteractiveRoom() {
       gripBand.rotation.x = Math.PI / 2;
       gripBand.position.y = -1.47 - wrap * 0.1;
       racket.add(gripBand);
+    }
+    const racketEndCap = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.085, 0.074, 0.055, 16),
+      material("#27173d", { metalness: 0.3, roughness: 0.55 }),
+    );
+    racketEndCap.name = "racket-end-cap";
+    racketEndCap.position.y = -2.04;
+    racket.add(racketEndCap);
+    for (let grommet = 0; grommet < 18; grommet += 1) {
+      const angle = (grommet / 18) * Math.PI * 2;
+      const grommetMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.013, 7, 5),
+        material("#1b2226", { metalness: 0.45, roughness: 0.42 }),
+      );
+      grommetMesh.name = "racket-string-grommet";
+      grommetMesh.position.set(Math.cos(angle) * 0.58, Math.sin(angle) * 0.58 * 1.28, 0);
+      racket.add(grommetMesh);
     }
 
     const cat = new THREE.Group();
@@ -1381,7 +1695,28 @@ export default function InteractiveRoom() {
           new THREE.TubeGeometry(new THREE.LineCurve3(start, end), 6, 0.004, 5, false),
           material("#a8abad", { metalness: 0.08, roughness: 0.58 }),
         );
+        whisker.name = "cat-whisker";
         cat.add(whisker);
+      }
+    }
+    const catMouth = new THREE.Mesh(
+      new THREE.TorusGeometry(0.038, 0.006, 5, 16, Math.PI),
+      material("#a47b82", { roughness: 0.74 }),
+    );
+    catMouth.name = "cat-mouth-detail";
+    catMouth.rotation.set(Math.PI / 2, 0, -Math.PI / 2);
+    catMouth.position.set(0.738, 0.565, 0);
+    cat.add(catMouth);
+    for (const z of [-0.19, 0.19]) {
+      for (let toe = -1; toe <= 1; toe += 1) {
+        const toeLine = new THREE.Mesh(
+          new THREE.TorusGeometry(0.025, 0.004, 5, 12, Math.PI * 0.72),
+          material("#343739", { roughness: 0.9 }),
+        );
+        toeLine.name = "cat-paw-toe";
+        toeLine.rotation.set(Math.PI / 2, 0, Math.PI / 2);
+        toeLine.position.set(0.495, -0.085, z + toe * 0.024);
+        cat.add(toeLine);
       }
     }
 

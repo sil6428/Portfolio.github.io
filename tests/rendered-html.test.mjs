@@ -203,6 +203,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
     readFile(new URL("../app/interactive-room.tsx", import.meta.url), "utf8"),
   );
   assert.match(room, /OrbitControls/);
+  assert.match(room, /RoundedBoxGeometry/);
   assert.match(room, /OPEN ARCHTECH FILE/);
   assert.match(room, /OPEN SSIK FILE/);
   assert.match(room, /OPEN ABOUT FILE/);
@@ -228,10 +229,20 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /desktop-monitor/);
   assert.match(room, /desktop-mouse/);
   assert.match(room, /desktop-pc-power/);
+  assert.match(room, /desktop-monitor-rounded-bezel/);
+  assert.match(room, /desktop-keycap/);
+  assert.match(room, /desktop-tower-glass/);
+  assert.match(room, /desktop-motherboard/);
+  assert.match(room, /desktop-case-fan-ring/);
+  assert.match(room, /desktop-mouse-scroll-wheel/);
+  assert.match(room, /server-rack-screw/);
+  assert.match(room, /server-rack-unit-faceplate/);
   assert.match(room, /printer-head-carriage/);
   assert.match(room, /printer-miniature-chess-set/);
   assert.match(room, /chess-board-layer/);
   assert.match(room, /chess-board-square/);
+  assert.match(room, /chess-board-beveled-border/);
+  assert.match(room, /chess-piece-base-ring/);
   assert.match(room, /pieceLayer\.name = `chess-\$\{kind\}-layer`/);
   assert.match(room, /\["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"\]/);
   assert.match(room, /chess-rook-battlement/);
@@ -243,6 +254,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /0\.84 \+ printProgress \* chessSetHeight/);
   assert.match(room, /printer-y-bed/);
   assert.match(room, /printer-z-gantry/);
+  assert.match(room, /printer-z-lead-screw/);
+  assert.match(room, /printer-bed-clip/);
+  assert.match(room, /printer-gantry-wheel/);
   assert.match(room, /printer-spool-black/);
   assert.match(room, /printer-spool-orange/);
   assert.match(room, /printer-spool-purple/);
@@ -253,6 +267,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /racketMount/);
   assert.match(room, /racket\.position\.set\(-4\.35, 3\.52, -4\.08\)/);
   assert.match(room, /cameraGroup\.position\.set\(-5\.4, 2\.8, 0\.34\)/);
+  assert.match(room, /camera-beveled-body/);
+  assert.match(room, /camera-focus-ring/);
+  assert.match(room, /camera-rear-lcd/);
+  assert.match(room, /camera-viewfinder/);
   assert.match(room, /ceilingPanelColors/);
   assert.doesNotMatch(room, /let brace/);
   assert.match(room, /PRINT_DURATION_MS = 180_000/);
@@ -277,9 +295,16 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /BADMINTON/);
   assert.match(room, /READING SHELF/);
   assert.match(room, /PHOTOGRAPHY/);
+  assert.match(room, /shelf-fastener/);
+  assert.match(room, /book-rounded-cover/);
+  assert.match(room, /book-page-block/);
+  assert.match(room, /racket-throat/);
+  assert.match(room, /racket-string-grommet/);
   assert.match(room, /cat-tail-3d/);
   assert.match(room, /cat-patterned-bandana/);
   assert.match(room, /cat-name-tag/);
+  assert.match(room, /cat-whisker/);
+  assert.match(room, /cat-paw-toe/);
   assert.match(room, /cat-rug-yarn-ball/);
   assert.match(room, /cat-rug-loose-yarn/);
   assert.match(room, /cat-rug-toy-mouse/);
