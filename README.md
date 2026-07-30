@@ -34,11 +34,13 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
 - Interactive laptop desktop with separate Archtech, SSIK, About, Contact, and Resume files
+- Brighter retro laptop interface with a pastel grid, outlined folders, taskbar, and hidden `cat.jpg`
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, pulsing lights, and responsive interaction markers
+- A real three-minute printer sequence with a growing cyber helmet, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
 - Closer room framing plus a shorter wall bookshelf, camera on its top surface, and racket leaning clear of the shelf
 - A simplified server rack without decorative fans or loose wiring
@@ -51,6 +53,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Section-specific Three.js network topology on the supporting pages
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns
+- Hidden interactions for petting the cat, changing the room palette, animating the racket, and controlling room secrets from the terminal
 - GitHub, LinkedIn, VSCO, email, phone, and resume links
 - Metadata, Open Graph images, robots rules, and a generated sitemap
 - Motion with reduced-motion support

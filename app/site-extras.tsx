@@ -44,7 +44,7 @@ function runTerminalCommand(command: string) {
   const normalized = command.trim().toLowerCase();
 
   const responses: Record<string, string[]> = {
-    help: ["Available commands: whoami, projects, interests, status, eggs, clear"],
+    help: ["Available commands: whoami, projects, interests, status, lights, cat, print, eggs, clear"],
     whoami: [
       "Affan Shaikh",
       "Cybersecurity student, builder, and regional badminton player.",
@@ -58,6 +58,9 @@ function runTerminalCommand(command: string) {
       "There is a whole Interests page hiding in plain sight.",
     ],
     status: ["ONLINE", "Currently turning old computers into a Proxmox server."],
+    lights: ["Sending a colour override to the 3D room..."],
+    cat: ["Sending three approved pets to the room cat..."],
+    print: ["The helmet print takes exactly 03:00.", "Watch the printer display for live progress."],
     eggs: ["Opening easter-eggs.md..."],
   };
 
@@ -276,6 +279,8 @@ export default function SiteExtras() {
       setTerminalLines((lines) => [...lines, `visitor@affan:~$ ${command}`, ...runTerminalCommand(command)]);
     }
 
+    if (normalized === "lights") window.dispatchEvent(new Event("affan-room-palette"));
+    if (normalized === "cat") window.dispatchEvent(new Event("affan-room-cat"));
     if (normalized === "eggs") setTerminalPage("eggs");
     setTerminalInput("");
   }
@@ -444,7 +449,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>02</code>
-                    <div><strong>Terminal commands</strong><p>Try help, whoami, projects, interests, status, eggs, and clear.</p></div>
+                    <div><strong>Terminal commands</strong><p>Try help, whoami, projects, interests, status, lights, cat, print, eggs, and clear.</p></div>
                   </li>
                   <li>
                     <code>03</code>
@@ -452,7 +457,23 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>04</code>
-                    <div><strong>Laptop files</strong><p>Move over the laptop desktop in the 3D room. Its Archtech, SSIK, and About files are separate selectable objects.</p></div>
+                    <div><strong>Laptop files</strong><p>Archtech, SSIK, About, Contact, and Resume are separate selectable desktop objects.</p></div>
+                  </li>
+                  <li>
+                    <code>05</code>
+                    <div><strong>Three-minute print</strong><p>The printer starts when the room loads. Watch its display and the helmet grow until it finishes at 03:00.</p></div>
+                  </li>
+                  <li>
+                    <code>06</code>
+                    <div><strong>Cat trust</strong><p>Find the black cat and pet it three times. The terminal command cat also works.</p></div>
+                  </li>
+                  <li>
+                    <code>07</code>
+                    <div><strong>Do not open cat.jpg</strong><p>The bright laptop desktop contains one suspicious photo. Opening it changes the room palette.</p></div>
+                  </li>
+                  <li>
+                    <code>08</code>
+                    <div><strong>Terminal room controls</strong><p>Try lights, cat, and print in the hidden terminal.</p></div>
                   </li>
                 </ol>
               </div>

@@ -5,7 +5,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 type HotspotData = {
-  key: string;
+  key?: string;
+  easterEgg?: "cat" | "palette";
   label: string;
 };
 
@@ -92,8 +93,8 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "3D printer",
     label: "MAKING / DESIGN",
     title: "3D printing",
-    summary: "From digital models to finished props, including a katana inspired by Elden Ring and Leon's hand cannon.",
-    details: ["Slicing", "Assembly", "Sanding + finishing"],
+    summary: "From digital models to finished props. In the room, a cyber-helmet prints from zero to complete over three minutes.",
+    details: ["Live 03:00 print", "Slicing", "Assembly", "Sanding + finishing"],
     sections: [
       {
         heading: "From file to object",
@@ -240,11 +241,12 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
 };
 
 const DIRECTORY = Object.entries(ROOM_ENTRIES);
+const PRINT_DURATION_MS = 180_000;
 
 function findHotspot(object: THREE.Object3D | null): THREE.Object3D | null {
   let current = object;
   while (current) {
-    if (current.userData.key) return current;
+    if (current.userData.key || current.userData.easterEgg) return current;
     current = current.parent;
   }
   return null;
@@ -256,6 +258,7 @@ export default function InteractiveRoom() {
   const [transitionLabel, setTransitionLabel] = useState("");
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [visitedKeys, setVisitedKeys] = useState<string[]>([]);
+  const [roomSecret, setRoomSecret] = useState("");
   const focusRef = useRef<(key: string) => void>(() => undefined);
   const activeEntry = activeKey ? ROOM_ENTRIES[activeKey] : null;
 
@@ -351,6 +354,18 @@ export default function InteractiveRoom() {
       return group;
     };
 
+    const easterHotspot = (
+      easterEgg: HotspotData["easterEgg"],
+      label: string,
+      parent: THREE.Object3D = room,
+    ) => {
+      const group = new THREE.Group();
+      group.userData = { easterEgg, label } satisfies HotspotData;
+      clickable.push(group);
+      parent.add(group);
+      return group;
+    };
+
     const floor = new THREE.Mesh(
       new THREE.PlaneGeometry(13, 9),
       material("#0d1319", { metalness: 0.05, roughness: 0.95 }),
@@ -393,56 +408,88 @@ export default function InteractiveRoom() {
     const desktopContext = desktopCanvas.getContext("2d");
     if (desktopContext) {
       const background = desktopContext.createLinearGradient(0, 0, 1024, 640);
-      background.addColorStop(0, "#071018");
-      background.addColorStop(0.52, "#12253a");
-      background.addColorStop(1, "#241943");
+      background.addColorStop(0, "#a9edcf");
+      background.addColorStop(0.5, "#f6e6a8");
+      background.addColorStop(1, "#9ee16b");
       desktopContext.fillStyle = background;
       desktopContext.fillRect(0, 0, 1024, 640);
-      desktopContext.strokeStyle = "rgba(119,231,255,.16)";
+      desktopContext.strokeStyle = "rgba(255,255,255,.72)";
       desktopContext.lineWidth = 2;
-      for (let line = -180; line < 1180; line += 90) {
+      for (let x = 0; x <= 1024; x += 52) {
         desktopContext.beginPath();
-        desktopContext.moveTo(line, 640);
-        desktopContext.lineTo(line + 320, 0);
+        desktopContext.moveTo(x, 0);
+        desktopContext.lineTo(x, 570);
         desktopContext.stroke();
       }
-      desktopContext.fillStyle = "rgba(5,10,16,.72)";
-      desktopContext.fillRect(0, 0, 1024, 58);
-      desktopContext.fillStyle = "#90a7b4";
-      desktopContext.font = "22px monospace";
-      desktopContext.fillText("AFFAN_OS", 30, 37);
+      for (let y = 0; y <= 570; y += 52) {
+        desktopContext.beginPath();
+        desktopContext.moveTo(0, y);
+        desktopContext.lineTo(1024, y);
+        desktopContext.stroke();
+      }
+      desktopContext.fillStyle = "#16271f";
+      desktopContext.fillRect(0, 0, 1024, 12);
+      desktopContext.fillStyle = "rgba(235,255,225,.94)";
+      desktopContext.fillRect(0, 570, 1024, 70);
+      desktopContext.strokeStyle = "#17221d";
+      desktopContext.lineWidth = 5;
+      desktopContext.strokeRect(2, 2, 1020, 636);
+      desktopContext.beginPath();
+      desktopContext.moveTo(0, 570);
+      desktopContext.lineTo(1024, 570);
+      desktopContext.stroke();
+      desktopContext.fillStyle = "#1d3127";
+      desktopContext.font = "bold 20px monospace";
+      desktopContext.fillText("AFFAN_OS", 24, 614);
       desktopContext.textAlign = "right";
-      desktopContext.fillText("PROJECT DESKTOP   08:28", 994, 37);
+      desktopContext.fillText("LAB ONLINE  •  08:28", 996, 614);
       desktopContext.textAlign = "left";
       const files = [
-        { x: 170, y: 102, width: 182, height: 188, color: "#77e7ff", title: "ARCHTECH", note: "project.file" },
-        { x: 512, y: 102, width: 182, height: 188, color: "#9f91ff", title: "SSIK", note: "project.file" },
-        { x: 854, y: 102, width: 182, height: 188, color: "#ffbd72", title: "ABOUT", note: "profile.doc" },
-        { x: 340, y: 340, width: 218, height: 150, color: "#68e0ae", title: "CONTACT", note: "links.file" },
-        { x: 684, y: 340, width: 218, height: 150, color: "#e7eceb", title: "RESUME", note: "resume.pdf" },
+        { x: 138, y: 78, width: 170, height: 172, color: "#83d9ff", title: "ARCHTECH", note: "projects/" },
+        { x: 360, y: 78, width: 170, height: 172, color: "#b99aff", title: "SSIK", note: "consulting/" },
+        { x: 582, y: 78, width: 170, height: 172, color: "#ffc982", title: "ABOUT", note: "profile.doc" },
+        { x: 250, y: 306, width: 184, height: 168, color: "#83e6b3", title: "CONTACT", note: "links.file" },
+        { x: 512, y: 306, width: 184, height: 168, color: "#f4f2e9", title: "RESUME", note: "resume.pdf" },
       ];
       for (const file of files) {
-        desktopContext.fillStyle = "rgba(4,8,14,.74)";
+        desktopContext.fillStyle = "rgba(255,255,245,.84)";
         desktopContext.fillRect(file.x - file.width / 2, file.y, file.width, file.height);
-        desktopContext.strokeStyle = file.color;
+        desktopContext.strokeStyle = "#21312a";
+        desktopContext.lineWidth = 4;
         desktopContext.strokeRect(file.x - file.width / 2, file.y, file.width, file.height);
         desktopContext.fillStyle = file.color;
-        desktopContext.fillRect(file.x - 43, file.y + 38, 86, 62);
-        desktopContext.fillRect(file.x - 43, file.y + 26, 38, 18);
-        desktopContext.fillStyle = "#eaf8fb";
-        desktopContext.font = "21px monospace";
+        desktopContext.fillRect(file.x - 42, file.y + 27, 84, 64);
+        desktopContext.fillRect(file.x - 42, file.y + 17, 35, 16);
+        desktopContext.strokeStyle = "#21312a";
+        desktopContext.lineWidth = 3;
+        desktopContext.strokeRect(file.x - 42, file.y + 27, 84, 64);
+        desktopContext.fillStyle = "#17241e";
+        desktopContext.font = "bold 20px monospace";
         desktopContext.textAlign = "center";
-        desktopContext.fillText(file.title, file.x, file.y + file.height - 43);
-        desktopContext.fillStyle = "#82949e";
-        desktopContext.font = "15px monospace";
-        desktopContext.fillText(file.note, file.x, file.y + file.height - 19);
+        desktopContext.fillText(file.title, file.x, file.y + file.height - 46);
+        desktopContext.fillStyle = "#53655b";
+        desktopContext.font = "14px monospace";
+        desktopContext.fillText(file.note, file.x, file.y + file.height - 22);
       }
-      desktopContext.fillStyle = "rgba(4,8,14,.78)";
-      desktopContext.fillRect(250, 555, 524, 52);
-      for (let icon = 0; icon < 6; icon += 1) {
-        desktopContext.fillStyle = icon === 2 ? "#77e7ff" : "#556975";
-        desktopContext.fillRect(285 + icon * 78, 569, 28, 24);
-      }
+      desktopContext.fillStyle = "rgba(255,245,225,.88)";
+      desktopContext.fillRect(790, 315, 168, 170);
+      desktopContext.strokeStyle = "#21312a";
+      desktopContext.lineWidth = 4;
+      desktopContext.strokeRect(790, 315, 168, 170);
+      desktopContext.fillStyle = "#161817";
+      desktopContext.fillRect(820, 340, 108, 76);
+      desktopContext.fillStyle = "#d8c75e";
+      desktopContext.beginPath();
+      desktopContext.arc(851, 375, 7, 0, Math.PI * 2);
+      desktopContext.arc(896, 375, 7, 0, Math.PI * 2);
+      desktopContext.fill();
+      desktopContext.fillStyle = "#17241e";
+      desktopContext.font = "bold 20px monospace";
+      desktopContext.textAlign = "center";
+      desktopContext.fillText("cat.jpg", 874, 452);
+      desktopContext.fillStyle = "#53655b";
+      desktopContext.font = "13px monospace";
+      desktopContext.fillText("do not open", 874, 474);
       desktopContext.textAlign = "left";
     }
     const desktopTexture = new THREE.CanvasTexture(desktopCanvas);
@@ -473,11 +520,19 @@ export default function InteractiveRoom() {
       file.add(hitArea);
       return file;
     };
-    addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.06, 1.34, 0.62, 0.6, cyan);
-    addDesktopFile("ssik", "OPEN SSIK FILE", 0, 1.34, 0.62, 0.6, violet);
-    addDesktopFile("profile", "OPEN ABOUT FILE", 1.06, 1.34, 0.62, 0.6, amber);
-    addDesktopFile("contact", "OPEN CONTACT FILE", -0.54, 0.66, 0.74, 0.48, "#68e0ae");
-    addDesktopFile("resume", "OPEN RESUME PDF", 0.54, 0.66, 0.74, 0.48, "#e7eceb");
+    addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.16, 1.46, 0.53, 0.48, cyan);
+    addDesktopFile("ssik", "OPEN SSIK FILE", -0.47, 1.46, 0.53, 0.48, violet);
+    addDesktopFile("profile", "OPEN ABOUT FILE", 0.22, 1.46, 0.53, 0.48, amber);
+    addDesktopFile("contact", "OPEN CONTACT FILE", -0.81, 0.84, 0.57, 0.47, "#68e0ae");
+    addDesktopFile("resume", "OPEN RESUME PDF", 0, 0.84, 0.57, 0.47, "#e7eceb");
+    const mysteryFile = easterHotspot("palette", "OPEN CAT.JPG", laptopLid);
+    mysteryFile.position.set(1.12, 0.78, 0.09);
+    mysteryFile.add(
+      new THREE.Mesh(
+        new THREE.PlaneGeometry(0.46, 0.48),
+        new THREE.MeshBasicMaterial({ color: "#d8c75e", transparent: true, opacity: 0.035, depthWrite: false }),
+      ),
+    );
 
     for (let row = 0; row < 4; row += 1) {
       for (let key = 0; key < 13; key += 1) {
@@ -572,6 +627,7 @@ export default function InteractiveRoom() {
         roughness: 0.74,
       });
     }
+    printedPiece.scale.y = 0.015;
     box(printer, [1.72, 0.08, 0.08], [0, 2.18, -0.28], "#68777d", { metalness: 0.9 });
     const printHead = new THREE.Group();
     printHead.name = "printer-head-carriage";
@@ -602,7 +658,38 @@ export default function InteractiveRoom() {
     spoolCore.position.copy(spool.position);
     printer.add(spoolCore);
     box(printer, [0.52, 0.32, 0.08], [0.62, 0.28, 0.88], "#162028", { metalness: 0.55 });
-    box(printer, [0.34, 0.14, 0.02], [0.62, 0.28, 0.925], cyan, { emissive: cyan, emissiveIntensity: 0.75 });
+    const printerDisplayCanvas = document.createElement("canvas");
+    printerDisplayCanvas.width = 256;
+    printerDisplayCanvas.height = 96;
+    const printerDisplayContext = printerDisplayCanvas.getContext("2d");
+    const printerDisplayTexture = new THREE.CanvasTexture(printerDisplayCanvas);
+    printerDisplayTexture.colorSpace = THREE.SRGBColorSpace;
+    const printerDisplay = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.42, 0.17),
+      new THREE.MeshBasicMaterial({ map: printerDisplayTexture, toneMapped: false }),
+    );
+    printerDisplay.position.set(0.62, 0.28, 0.926);
+    printer.add(printerDisplay);
+    const drawPrinterDisplay = (progress: number) => {
+      if (!printerDisplayContext) return;
+      const percent = Math.round(progress * 100);
+      const remainingSeconds = Math.max(0, Math.ceil((PRINT_DURATION_MS * (1 - progress)) / 1000));
+      const minutes = Math.floor(remainingSeconds / 60);
+      const seconds = `${remainingSeconds % 60}`.padStart(2, "0");
+      printerDisplayContext.fillStyle = "#10221f";
+      printerDisplayContext.fillRect(0, 0, 256, 96);
+      printerDisplayContext.fillStyle = progress >= 1 ? "#f6d36c" : "#7df0c0";
+      printerDisplayContext.font = "bold 26px monospace";
+      printerDisplayContext.fillText(progress >= 1 ? "COMPLETE" : `PRINT ${`${percent}`.padStart(3, "0")}%`, 12, 35);
+      printerDisplayContext.fillStyle = "#dcece5";
+      printerDisplayContext.font = "19px monospace";
+      printerDisplayContext.fillText(progress >= 1 ? "HELMET READY" : `ETA ${minutes}:${seconds}`, 12, 70);
+      printerDisplayTexture.needsUpdate = true;
+    };
+    drawPrinterDisplay(0);
+    const printCompletionLight = new THREE.PointLight(0xf6d36c, 0, 3.2, 2);
+    printCompletionLight.position.set(0, 1.1, 0.4);
+    printer.add(printCompletionLight);
 
     const bookshelf = new THREE.Group();
     bookshelf.position.set(-6.08, 0, 1.05);
@@ -733,6 +820,8 @@ export default function InteractiveRoom() {
     const cat = new THREE.Group();
     cat.position.set(-0.2, 0.24, 0.95);
     cat.rotation.y = -0.32;
+    cat.userData = { easterEgg: "cat", label: "PET THE CAT" } satisfies HotspotData;
+    clickable.push(cat);
     room.add(cat);
     const catFur = material("#050607", { roughness: 0.92 });
     const catBody = new THREE.Mesh(new THREE.SphereGeometry(0.34, 24, 18), catFur);
@@ -978,6 +1067,41 @@ export default function InteractiveRoom() {
     controls.target.copy(overviewTarget);
     controls.enabled = true;
 
+    let roomSecretTimeout = 0;
+    let catTapCount = 0;
+    let catSecretUntil = 0;
+    let paletteSecretUntil = 0;
+    let paletteWasActive = false;
+    const showRoomSecret = (message: string) => {
+      window.clearTimeout(roomSecretTimeout);
+      setRoomSecret(message);
+      roomSecretTimeout = window.setTimeout(() => setRoomSecret(""), 3200);
+    };
+    const activateRoomSecret = (easterEgg: HotspotData["easterEgg"]) => {
+      if (easterEgg === "palette") {
+        paletteSecretUntil = performance.now() + 12_000;
+        showRoomSecret("CAT.JPG OPENED / SUNROOM PALETTE UNLOCKED");
+        return;
+      }
+      if (easterEgg === "cat") {
+        catTapCount += 1;
+        if (catTapCount < 3) {
+          showRoomSecret(`CAT TRUST ${catTapCount} / 3`);
+          return;
+        }
+        catTapCount = 0;
+        catSecretUntil = performance.now() + 3600;
+        showRoomSecret("PURR MODE UNLOCKED");
+      }
+    };
+    const handlePaletteCommand = () => activateRoomSecret("palette");
+    const handleCatCommand = () => {
+      catTapCount = 2;
+      activateRoomSecret("cat");
+    };
+    window.addEventListener("affan-room-palette", handlePaletteCommand);
+    window.addEventListener("affan-room-cat", handleCatCommand);
+
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
     let pressedAt = { x: 0, y: 0 };
@@ -1008,7 +1132,11 @@ export default function InteractiveRoom() {
     const handlePointerUp = (event: PointerEvent) => {
       if (Math.hypot(event.clientX - pressedAt.x, event.clientY - pressedAt.y) > 7) return;
       const selected = pick(event);
-      if (selected?.userData.key) focusObject(selected.userData.key);
+      if (selected?.userData.easterEgg) {
+        activateRoomSecret(selected.userData.easterEgg);
+      } else if (selected?.userData.key) {
+        focusObject(selected.userData.key);
+      }
     };
 
     const handlePointerLeave = () => {
@@ -1036,18 +1164,57 @@ export default function InteractiveRoom() {
     const printerCarriage = room.getObjectByName("printer-head-carriage");
     const printerSpool = room.getObjectByName("printer-spool");
     const animatedCatTail = room.getObjectByName("cat-tail-3d");
+    const printStartedAt = performance.now();
+    let lastPrintPercent = -1;
+    let printCompletedAt = 0;
     let previousTimestamp = performance.now();
     let frame = 0;
     const render = (timestamp = performance.now()) => {
       const elapsed = timestamp * 0.001;
       const delta = Math.min((timestamp - previousTimestamp) * 0.001, 0.05);
+      const printProgress = Math.min(1, Math.max(0, (timestamp - printStartedAt) / PRINT_DURATION_MS));
+      const printPercent = Math.round(printProgress * 100);
       previousTimestamp = timestamp;
+      printedPiece.scale.y = Math.max(0.015, printProgress);
+      if (printPercent !== lastPrintPercent) {
+        lastPrintPercent = printPercent;
+        drawPrinterDisplay(printProgress);
+      }
+      if (printProgress >= 1 && printCompletedAt === 0) {
+        printCompletedAt = timestamp;
+        showRoomSecret("THREE-MINUTE PRINT COMPLETE / HELMET READY");
+      }
+      printCompletionLight.intensity =
+        printCompletedAt > 0 && timestamp - printCompletedAt < 8000
+          ? 5 + Math.sin(elapsed * 8) * 2
+          : 0;
+
+      const paletteActive = timestamp < paletteSecretUntil;
+      if (paletteActive !== paletteWasActive) {
+        paletteWasActive = paletteActive;
+        cyanLight.color.set(paletteActive ? "#b8ff6a" : "#77e7ff");
+        violetLight.color.set(paletteActive ? "#ff83bd" : "#9f91ff");
+        warmLight.color.set(paletteActive ? "#ffd76d" : "#ffbd72");
+        renderer.setClearColor(paletteActive ? 0x162217 : 0x080a0f, paletteActive ? 0.9 : 0.82);
+        if (scene.fog) scene.fog.color.set(paletteActive ? "#162217" : "#080a0f");
+      }
+
       if (!reducedMotion) {
         cyanLight.intensity = 22 + Math.sin(elapsed * 1.4) * 2;
-        cat.position.y = 0.24 + Math.sin(elapsed * 1.15) * 0.012;
+        const catSecretActive = timestamp < catSecretUntil;
+        cat.position.y = catSecretActive
+          ? 0.24 + Math.abs(Math.sin(elapsed * 7)) * 0.55
+          : 0.24 + Math.sin(elapsed * 1.15) * 0.012;
+        cat.rotation.y = catSecretActive ? -0.32 + Math.sin(elapsed * 5) * 0.5 : -0.32;
         if (animatedCatTail) animatedCatTail.rotation.y = Math.sin(elapsed * 0.72) * 0.11;
-        if (printerCarriage) printerCarriage.position.x = Math.sin(elapsed * 0.9) * 0.55;
-        if (printerSpool) printerSpool.rotation.x += delta * 0.34;
+        if (printerCarriage) printerCarriage.position.x = printProgress < 1 ? Math.sin(elapsed * 1.9) * 0.55 : 0;
+        if (printerSpool && printProgress < 1) printerSpool.rotation.x += delta * 0.34;
+        const smashActive = document.body.classList.contains("easter-mode");
+        racket.rotation.z = THREE.MathUtils.lerp(
+          racket.rotation.z,
+          smashActive ? -0.14 + Math.sin(elapsed * 8) * 0.4 : -0.14,
+          1 - Math.pow(0.0001, delta),
+        );
       }
 
       if (!cameraMove && focusedKey === null) {
@@ -1120,6 +1287,9 @@ export default function InteractiveRoom() {
       renderer.domElement.removeEventListener("pointerdown", handlePointerDown);
       renderer.domElement.removeEventListener("pointerup", handlePointerUp);
       renderer.domElement.removeEventListener("pointerleave", handlePointerLeave);
+      window.removeEventListener("affan-room-palette", handlePaletteCommand);
+      window.removeEventListener("affan-room-cat", handleCatCommand);
+      window.clearTimeout(roomSecretTimeout);
       focusRef.current = () => undefined;
       document.body.classList.remove("room-focus-active");
       room.traverse((object) => {
@@ -1130,6 +1300,7 @@ export default function InteractiveRoom() {
         else objectMaterial.dispose();
       });
       desktopTexture.dispose();
+      printerDisplayTexture.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
@@ -1159,6 +1330,7 @@ export default function InteractiveRoom() {
         <span>Select an object / inspect</span>
         <strong>{visitedKeys.length} / {DIRECTORY.length} viewed</strong>
       </div>
+      {roomSecret && <div className="room-secret-toast" role="status">{roomSecret}</div>}
       <nav className="room-directory-accessible" aria-label="3D room objects">
         {DIRECTORY.map(([key, entry]) => (
           <button

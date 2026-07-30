@@ -150,6 +150,11 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /AFFAN_OS/);
   assert.match(source, /Hidden things and how to find them/);
   assert.match(source, /Laptop files/);
+  assert.match(source, /Three-minute print/);
+  assert.match(source, /Cat trust/);
+  assert.match(source, /Do not open cat\.jpg/);
+  assert.match(source, /affan-room-palette/);
+  assert.match(source, /affan-room-cat/);
   assert.doesNotMatch(source, /PortfolioCat/);
   assert.doesNotMatch(source, /portfolio-cat-swat/);
   assert.doesNotMatch(source, /cat-is-home/);
@@ -193,6 +198,12 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /3D PRINTER/);
   assert.match(room, /printer-head-carriage/);
   assert.match(room, /printer-cyber-helmet/);
+  assert.match(room, /PRINT_DURATION_MS = 180_000/);
+  assert.match(room, /drawPrinterDisplay/);
+  assert.match(room, /THREE-MINUTE PRINT COMPLETE/);
+  assert.match(room, /OPEN CAT\.JPG/);
+  assert.match(room, /PURR MODE UNLOCKED/);
+  assert.match(room, /SUNROOM PALETTE UNLOCKED/);
   assert.match(room, /BADMINTON/);
   assert.match(room, /READING SHELF/);
   assert.match(room, /PHOTOGRAPHY/);
@@ -228,6 +239,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
 
   assert.match(styles, /room-fluid-hint/);
   assert.match(styles, /room-directory-accessible/);
+  assert.match(styles, /room-secret-toast/);
   assert.match(styles, /body\.room-focus-active \.immersive-intro/);
   assert.doesNotMatch(styles, /room-drive-hud/);
   assert.doesNotMatch(styles, /rover-pad/);
