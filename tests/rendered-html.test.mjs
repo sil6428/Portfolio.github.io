@@ -18,7 +18,7 @@ test("renders the work portfolio", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Affan Shaikh/);
-  assert.match(html, /I study cybersecurity and build things/);
+  assert.match(html, /I learn systems by taking them apart/);
   assert.match(html, /Archtech/);
   assert.match(html, /SSIK Website/);
   assert.match(html, /independently designed and built the public website for SSIK/);
@@ -27,7 +27,7 @@ test("renders the work portfolio", async () => {
   assert.match(html, /Read case study/);
   assert.match(html, /href="\/work\/archtech"/);
   assert.match(html, /href="\/work\/ssik"/);
-  assert.match(html, /graduating in 2028/i);
+  assert.match(html, /CYBERSECURITY \/ 2028/);
   assert.match(html, /Soundtrack/);
   assert.doesNotMatch(html, /Arch Narrative/i);
 });
@@ -60,7 +60,7 @@ test("publishes crawler and structured profile metadata", async () => {
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /ProfilePage/);
   assert.match(html, /Ontario Tech University/);
-  assert.match(html, /\/portfolio-cover\.png/);
+  assert.match(html, /\/og-topology\.png/);
   assert.match(html, /\/terminal-favicon\.svg/);
 
   const sitemapResponse = await render("/sitemap.xml");
@@ -155,6 +155,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /cat-footer-visible/);
   assert.match(source, /MobileNavigationTransitions/);
   assert.match(source, /startViewTransition/);
+  assert.match(source, /Choose an audio file/);
+  assert.match(source, /URL\.createObjectURL/);
 
   const styles = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -163,4 +165,11 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(styles, /body\.cat-footer-visible \.soundtrack-panel/);
   assert.match(styles, /view-transition-name: mobile-active-tab/);
   assert.match(styles, /prefers-reduced-motion: reduce/);
+
+  const topology = await import("node:fs/promises").then(({ readFile }) =>
+    readFile(new URL("../app/topology-scene.tsx", import.meta.url), "utf8"),
+  );
+  assert.match(topology, /from "three"/);
+  assert.match(topology, /WebGLRenderer/);
+  assert.match(topology, /LIVE TOPOLOGY/);
 });

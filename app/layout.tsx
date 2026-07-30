@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import SiteExtras from "./site-extras";
+import TopologyScene from "./topology-scene";
 import "./globals.css";
 
 const publicUrl = "https://affan-shaikh-portfolio.sil6428-archtech.workers.dev";
@@ -22,13 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "Networks, security, and software built with purpose.",
       type: "website",
       url: origin,
-      images: [{ url: "/portfolio-cover.png", width: 1200, height: 630, alt: "Affan Shaikh portfolio" }],
+      images: [{ url: "/og-topology.png", width: 1200, height: 630, alt: "Affan Shaikh interactive topology portfolio" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "Affan Shaikh | Networking & Cybersecurity",
       description: "Networks, security, and software built with purpose.",
-      images: ["/portfolio-cover.png"],
+      images: ["/og-topology.png"],
     },
   };
 }
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
         />
+        <TopologyScene />
         {children}
         <SiteExtras />
       </body>

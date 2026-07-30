@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, type ChangeEvent, type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 const PLAYLIST_STORAGE_KEY = "affan-portfolio-spotify-playlist-v2";
@@ -429,6 +429,7 @@ export default function SiteExtras() {
   const [playlistId, setPlaylistId] = useState(DEFAULT_PLAYLIST_ID);
   const [playlistInput, setPlaylistInput] = useState("");
   const [playlistError, setPlaylistError] = useState("");
+  const [localTrack, setLocalTrack] = useState<{ name: string; url: string } | null>(null);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalInput, setTerminalInput] = useState("");
   const [terminalPage, setTerminalPage] = useState<"console" | "eggs">("console");
@@ -440,6 +441,7 @@ export default function SiteExtras() {
   const [easterMode, setEasterMode] = useState(false);
   const sequencePosition = useRef(0);
   const terminalInputRef = useRef<HTMLInputElement>(null);
+  const localTrackUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     const storedPlaylist =
@@ -451,6 +453,12 @@ export default function SiteExtras() {
   useEffect(() => {
     if (terminalOpen && terminalPage === "console") terminalInputRef.current?.focus();
   }, [terminalOpen, terminalPage]);
+
+  useEffect(() => {
+    return () => {
+      if (localTrackUrlRef.current) URL.revokeObjectURL(localTrackUrlRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -517,6 +525,23 @@ export default function SiteExtras() {
     setPlaylistId("");
     setPlaylistInput("");
     setPlaylistError("");
+  }
+
+  function selectLocalTrack(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (localTrackUrlRef.current) URL.revokeObjectURL(localTrackUrlRef.current);
+    const url = URL.createObjectURL(file);
+    localTrackUrlRef.current = url;
+    setLocalTrack({ name: file.name, url });
+    event.target.value = "";
+  }
+
+  function removeLocalTrack() {
+    if (localTrackUrlRef.current) URL.revokeObjectURL(localTrackUrlRef.current);
+    localTrackUrlRef.current = null;
+    setLocalTrack(null);
   }
 
   function submitTerminal(event: FormEvent<HTMLFormElement>) {
@@ -611,6 +636,24 @@ export default function SiteExtras() {
             </form>
           )}
           <small>No embedded preview. The playlist opens directly in Spotify.</small>
+          <div className="local-audio">
+            <div className="local-audio-heading">
+              <span>LOCAL AUDIO</span>
+              <p>Play an MP3 you own or have permission to use. It stays on your device.</p>
+            </div>
+            {localTrack ? (
+              <div className="local-audio-player">
+                <strong>{localTrack.name}</strong>
+                <audio src={localTrack.url} controls autoPlay />
+                <button type="button" onClick={removeLocalTrack}>Remove</button>
+              </div>
+            ) : (
+              <label className="local-audio-picker">
+                Choose an audio file
+                <input type="file" accept="audio/*,.mp3" onChange={selectLocalTrack} />
+              </label>
+            )}
+          </div>
         </aside>
       )}
 

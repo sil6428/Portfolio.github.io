@@ -132,11 +132,12 @@ export default function Home() {
 
       <section className="hero wrap">
         <div className="hero-copy">
+          <p className="hero-kicker">AFFAN / CYBERSECURITY / 2028</p>
           <div className="status"><span /> AVAILABLE FOR CO-OP OPPORTUNITIES</div>
-          <h1>Hi, I&apos;m Affan. I study cybersecurity and build things to understand how they work.</h1>
+          <h1>I learn systems by taking them apart, then building better ones.</h1>
           <p className="hero-note">
-            I&apos;m at Ontario Tech, graduating in 2028. Lately I&apos;ve been building Archtech,
-            studying for Security+, and turning old computers into a Proxmox lab.
+            I&apos;m Affan, a cybersecurity student at Ontario Tech. Lately I&apos;ve been building
+            Archtech, studying for Security+, and turning old computers into a Proxmox lab.
           </p>
           <div className="hero-actions">
             <a href="#work">Projects ↓</a>
@@ -144,7 +145,7 @@ export default function Home() {
           </div>
         </div>
         <aside className="now-list" aria-label="What Affan is currently doing">
-          <h2>Right now</h2>
+          <h2>Active nodes</h2>
           <div>
             <span>Building</span>
             <p>Archtech and a home server</p>

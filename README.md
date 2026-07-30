@@ -4,11 +4,11 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 [View the live portfolio](https://affan-shaikh-portfolio.sil6428-archtech.workers.dev)
 
-![Affan Shaikh portfolio preview](public/portfolio-cover.png)
+![Affan Shaikh portfolio preview](public/og-topology.png)
 
 ## Overview
 
-The site presents my technical work, education, experience, and interests without relying on a profile photo. Its visual direction combines a dark Notion-style workspace with small terminal-inspired details.
+The site presents my technical work, education, experience, and interests without relying on a profile photo. Its visual direction is built around an interactive Three.js network topology that reacts to pointer movement, scrolling, and the current section.
 
 The portfolio is designed as a set of focused pages instead of one long landing page. Project and interest cards lead to expanded pages with more context.
 
@@ -32,7 +32,8 @@ The portfolio is designed as a set of focused pages instead of one long landing 
 - Responsive navigation for desktop, tablet, and mobile layouts
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
-- Spotify playlist integration
+- Interactive Three.js topology with section-specific visual states
+- Spotify playlist link plus device-local audio playback for files the visitor owns
 - GitHub, LinkedIn, VSCO, email, phone, and resume links
 - Metadata, Open Graph images, robots rules, and a generated sitemap
 - Motion with reduced-motion support
@@ -43,6 +44,7 @@ The portfolio is designed as a set of focused pages instead of one long landing 
 
 - React 19
 - TypeScript 5
+- Three.js
 - Next.js-compatible routing through Vinext
 - Vite 8
 - HTML and custom CSS
