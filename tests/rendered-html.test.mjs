@@ -30,6 +30,7 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.match(html, /About file/);
   assert.match(html, /Contact file/);
   assert.match(html, /Resume file/);
+  assert.match(html, /Inspiration file/);
   assert.doesNotMatch(html, /Room controls/);
   assert.doesNotMatch(html, /08 ACTIVE OBJECTS/);
   assert.doesNotMatch(html, /href="#room-directory"/);
@@ -197,6 +198,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /OPEN ABOUT FILE/);
   assert.match(room, /OPEN CONTACT FILE/);
   assert.match(room, /OPEN RESUME PDF/);
+  assert.match(room, /OPEN INSPIRATION FILE/);
+  assert.match(room, /https:\/\/bruno-simon\.com\//);
+  assert.match(room, /https:\/\/idas-gameboy\.netlify\.app\//);
+  assert.match(room, /https:\/\/www\.jesse-zhou\.com\//);
   assert.match(room, /Open resume PDF/);
   assert.match(room, /tel:\+16473091927/);
   assert.match(room, /Affan_Shaikh_Resume\.pdf/);

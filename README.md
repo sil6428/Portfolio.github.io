@@ -33,7 +33,8 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
-- Interactive laptop desktop with separate Archtech, SSIK, About, Contact, and Resume files
+- Interactive laptop desktop with separate Archtech, SSIK, About, Contact, Resume, and Inspiration files
+- An Inspiration file that credits Bruno Simon, Ida's Gameboy, and Jesse Zhou, with direct links and notes on what each site influenced
 - Dark retro laptop interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement

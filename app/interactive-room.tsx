@@ -238,6 +238,35 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     cameraOffset: [0, 0.1, 3.05],
     targetOffset: [0, 0, 0],
   },
+  inspiration: {
+    number: "11",
+    directory: "Inspiration file",
+    label: "CREDITS / WEB INSPIRATION",
+    title: "Sites that shaped the lab",
+    summary: "Three interactive portfolios helped set the standard for the room, its camera movement, and the laptop interface.",
+    details: ["Interactive 3D", "Fluid camera work", "Desktop interface", "Original implementation"],
+    sections: [
+      {
+        heading: "Bruno Simon",
+        body: "Bruno Simon's portfolio inspired the idea of making the environment itself the navigation and treating movement through a 3D space as part of the experience.",
+      },
+      {
+        heading: "Ida's Gameboy",
+        body: "Ida's Gameboy inspired the laptop desktop, selectable files, and the idea of revealing portfolio content through a playful device interface.",
+      },
+      {
+        heading: "Jesse Zhou",
+        body: "Jesse Zhou's portfolio influenced the focus on fluid camera motion, polished object interactions, and transitions that keep the 3D scene feeling responsive.",
+      },
+    ],
+    links: [
+      { label: "Visit Bruno Simon", href: "https://bruno-simon.com/" },
+      { label: "Visit Ida's Gameboy", href: "https://idas-gameboy.netlify.app/" },
+      { label: "Visit Jesse Zhou", href: "https://www.jesse-zhou.com/" },
+    ],
+    cameraOffset: [0, 0.1, 3.05],
+    targetOffset: [0, 0, 0],
+  },
 };
 
 const DIRECTORY = Object.entries(ROOM_ENTRIES);
@@ -479,6 +508,7 @@ export default function InteractiveRoom() {
         { x: 138, y: 78, width: 170, height: 172, color: "#4ea7c8", title: "ARCHTECH", note: "projects/" },
         { x: 360, y: 78, width: 170, height: 172, color: "#7869bc", title: "SSIK", note: "consulting/" },
         { x: 582, y: 78, width: 170, height: 172, color: "#c4865d", title: "ABOUT", note: "profile.doc" },
+        { x: 804, y: 78, width: 184, height: 172, color: "#d6b85d", title: "INSPIRATION", note: "credits/" },
         { x: 250, y: 306, width: 184, height: 168, color: "#4f9d7d", title: "CONTACT", note: "links.file" },
         { x: 512, y: 306, width: 184, height: 168, color: "#8da2ac", title: "RESUME", note: "resume.pdf" },
       ];
@@ -514,7 +544,7 @@ export default function InteractiveRoom() {
     laptopLid.add(laptopScreen);
 
     const addDesktopFile = (
-      key: "archtech" | "ssik" | "profile" | "contact" | "resume",
+      key: "archtech" | "ssik" | "profile" | "contact" | "resume" | "inspiration",
       label: string,
       x: number,
       y: number,
@@ -534,6 +564,7 @@ export default function InteractiveRoom() {
     addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.16, 1.46, 0.53, 0.48, cyan);
     addDesktopFile("ssik", "OPEN SSIK FILE", -0.47, 1.46, 0.53, 0.48, violet);
     addDesktopFile("profile", "OPEN ABOUT FILE", 0.22, 1.46, 0.53, 0.48, amber);
+    addDesktopFile("inspiration", "OPEN INSPIRATION FILE", 0.91, 1.46, 0.57, 0.48, "#d6b85d");
     addDesktopFile("contact", "OPEN CONTACT FILE", -0.81, 0.84, 0.57, 0.47, "#68e0ae");
     addDesktopFile("resume", "OPEN RESUME PDF", 0, 0.84, 0.57, 0.47, "#e7eceb");
 
