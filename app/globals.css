@@ -3113,7 +3113,8 @@ main {
   right: clamp(22px,4vw,64px);
   top: 17vh;
   z-index: 11;
-  width: min(390px, calc(100vw - 44px));
+  width: min(440px, calc(100vw - 44px));
+  max-height: calc(100svh - 210px);
   padding: 28px;
   border: 1px solid rgba(119,231,255,.25);
   color: #d5e2e5;
@@ -3122,6 +3123,8 @@ main {
     rgba(6,10,15,.93);
   box-shadow: 0 30px 100px rgba(0,0,0,.58);
   backdrop-filter: blur(22px);
+  overflow-y: auto;
+  scrollbar-color: rgba(119,231,255,.25) transparent;
   animation: room-popup-in .42s cubic-bezier(.2,.75,.25,1) both;
 }
 .room-popup::before {
@@ -3171,6 +3174,28 @@ main {
   border: 1px solid rgba(119,231,255,.13);
   color: #8fa1a7;
   font: 7px "DM Mono", monospace;
+}
+.room-popup-sections {
+  display: grid;
+  gap: 17px;
+  margin: 4px 0 22px;
+}
+.room-popup-sections section {
+  padding-top: 14px;
+  border-top: 1px solid rgba(119,231,255,.1);
+}
+.room-popup-sections h3 {
+  margin: 0 0 7px;
+  color: #d9eef1;
+  font: 8px "DM Mono", monospace;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.room-popup-sections p {
+  margin: 0;
+  color: #879ba1;
+  font-size: 11px;
+  line-height: 1.72;
 }
 .room-popup-actions {
   display: grid;
@@ -3259,8 +3284,7 @@ body:has(.immersive-home) .soundtrack-toggle { bottom: 92px; }
     right: 12px;
     bottom: 142px;
     width: min(410px,calc(100vw - 24px));
-    max-height: 52vh;
-    overflow-y: auto;
+    max-height: 56vh;
   }
   .immersive-status { display: none; }
   body:has(.immersive-home) .soundtrack-toggle { bottom: 152px; }
@@ -3272,7 +3296,7 @@ body:has(.immersive-home) .soundtrack-toggle { bottom: 92px; }
   .immersive-intro > span { max-width: 270px; }
   .immersive-home .room-stage-bar { top: 70px; max-width: calc(100vw - 24px); }
   .immersive-home .room-directory { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .room-popup { bottom: 202px; padding: 24px 20px 20px; max-height: 48vh; }
+  .room-popup { bottom: 202px; padding: 24px 20px 20px; max-height: 50vh; }
   .room-popup h2 { font-size: 40px; }
   .immersive-footer a { display: none; }
   body:has(.immersive-home) .soundtrack-toggle { bottom: 212px; }

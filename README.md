@@ -10,7 +10,7 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 The site presents my technical work, education, experience, and interests without relying on a profile photo. The homepage is a full-screen Three.js cyber lab where each object represents part of my work or personality.
 
-Visitors can drag to look around, select an object, watch the camera move toward it, and read its file in an on-screen panel. Focused project and interest pages remain available as direct links and accessible fallbacks.
+Visitors can drag to look around, select an object, watch the camera move toward it, and read its complete file in an on-screen panel. The room does not send visitors to separate internal pages. Earlier focused routes remain available as unlisted fallbacks.
 
 ## Pages
 
@@ -33,9 +33,11 @@ Visitors can drag to look around, select an object, watch the camera move toward
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with draggable camera controls and selectable objects
-- Animated camera pans that frame each object before revealing its content panel
-- Seven object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, and profile details
-- Accessible room directory, keyboard controls, Escape-to-return behavior, and direct fallback pages
+- Animated camera pans with object-relative positions and centered, upright framing
+- More detailed workstation, server rack, 3D printer, books, camera, badminton, profile-board, room, and cat models
+- Seven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, experience, and contact details
+- All main portfolio content stays inside the room instead of redirecting to internal pages
+- Accessible room directory, keyboard controls, Escape-to-return behavior, and unlisted fallback routes
 - Section-specific Three.js network topology on the supporting pages
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns

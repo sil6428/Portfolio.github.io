@@ -20,7 +20,7 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.match(html, /Affan Shaikh/);
   assert.match(html, /AFFAN_OS \/ INTERACTIVE PORTFOLIO/);
   assert.match(html, /Enter the lab/);
-  assert.match(html, /Direct page navigation/);
+  assert.match(html, /Room controls/);
   assert.match(html, /Interactive 3D portfolio/);
   assert.match(html, /3D room directory/);
   assert.match(html, /Workstation/);
@@ -28,8 +28,10 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.match(html, /3D printer/);
   assert.match(html, /Wall board/);
   assert.match(html, /07 ACTIVE OBJECTS/);
-  assert.match(html, /href="\/info"/);
-  assert.match(html, /href="\/interests"/);
+  assert.match(html, /href="#room-directory"/);
+  assert.doesNotMatch(html, /href="\/info"/);
+  assert.doesNotMatch(html, /href="\/interests"/);
+  assert.doesNotMatch(html, /href="\/work\//);
   assert.match(html, /Affan_Shaikh_Resume\.pdf/);
   assert.match(html, /Soundtrack/);
   assert.doesNotMatch(html, /Arch Narrative/i);
@@ -180,7 +182,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
     readFile(new URL("../app/interactive-room.tsx", import.meta.url), "utf8"),
   );
   assert.match(room, /OrbitControls/);
-  assert.match(room, /ARCHTECH WORKSTATION/);
+  assert.match(room, /PROJECTS WORKSTATION/);
   assert.match(room, /PROXMOX SERVER RACK/);
   assert.match(room, /3D PRINTER/);
   assert.match(room, /BADMINTON/);
@@ -192,4 +194,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /room-popup/);
   assert.match(room, /setActiveKey/);
   assert.match(room, /RETURN TO ROOM/);
+  assert.match(room, /cameraOffset/);
+  assert.match(room, /targetOffset/);
+  assert.match(room, /room-popup-sections/);
+  assert.doesNotMatch(room, /from "next\/link"/);
+  assert.doesNotMatch(room, /href: "\/work\//);
+  assert.doesNotMatch(room, /href: "\/interests\//);
 });
