@@ -812,7 +812,7 @@ export default function InteractiveRoom() {
     cameraGroup.add(strap);
 
     const racket = hotspot("racket", "BADMINTON");
-    racket.position.set(-4.66, 1.96, 3.02);
+    racket.position.set(-4, 1.96, -1.35);
     racket.rotation.y = Math.PI / 2;
     racket.rotation.z = -0.14;
     const racketHead = new THREE.Mesh(

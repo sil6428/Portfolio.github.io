@@ -42,7 +42,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, pulsing lights, and responsive interaction markers
 - A real three-minute printer sequence with a bottom-up biker helmet, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
-- Closer room framing plus a shorter wall bookshelf, camera on its top surface, and an easier-to-reach racket leaning clear of the shelf
+- Closer room framing plus a shorter wall bookshelf, camera on its top surface, and an easier-to-reach racket beside the desk
 - A simplified server rack without decorative fans or loose wiring
 - A layered biker-helmet print replacing the original printer cube
 - Manual wheel and trackpad zoom after closing an object file, without an automatic camera reset
