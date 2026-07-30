@@ -125,8 +125,8 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         body: "Every rally gives immediate feedback. I like the balance of technique, quick decisions, and the discipline of returning to the next point after a mistake.",
       },
     ],
-    cameraOffset: [2.75, 0.08, 0],
-    targetOffset: [0, -0.1, 0],
+    cameraOffset: [0, 0.08, 2.75],
+    targetOffset: [0, -0.55, 0.08],
   },
   books: {
     number: "06",
@@ -829,9 +829,20 @@ export default function InteractiveRoom() {
     cameraGroup.add(strap);
 
     const racket = hotspot("racket", "BADMINTON");
-    racket.position.set(-4, 1.96, -1.35);
-    racket.rotation.y = Math.PI / 2;
+    racket.position.set(-4.35, 3.52, -4.08);
     racket.rotation.z = -0.14;
+    const racketMount = new THREE.Group();
+    racketMount.position.set(-4.35, 2.7, -4.12);
+    room.add(racketMount);
+    box(racketMount, [0.68, 0.1, 0.08], [0, 0, 0], "#3a465e", { metalness: 0.62, roughness: 0.42 });
+    for (const x of [-0.2, 0.2]) {
+      box(racketMount, [0.075, 0.22, 0.18], [x, 0.08, 0.08], "#9f91ff", {
+        emissive: "#493c86",
+        emissiveIntensity: 0.46,
+        metalness: 0.58,
+        roughness: 0.34,
+      });
+    }
     const racketHead = new THREE.Mesh(
       new THREE.TorusGeometry(0.58, 0.055, 10, 38),
       material("#dce7e9", { metalness: 0.55, roughness: 0.32 }),
