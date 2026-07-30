@@ -33,14 +33,17 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
+- Interactive laptop desktop with separate Archtech, SSIK, and About files
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
-- Ambient systems including moving printer parts, rotating rack fans, pulsing lights, and responsive interaction markers
+- Ambient systems including a synchronized printer carriage and nozzle, rotating rack fans, a moving 3D cat tail, pulsing lights, and responsive interaction markers
 - Curved camera transitions with smoother-step easing, object-relative positions, and centered, upright framing
-- More detailed workstation, server rack, 3D printer, books, camera, badminton, profile-board, room, and cat models
-- Seven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, experience, and contact details
+- Reorganized room with the desk against the wall, the printer on the desk, a wall bookshelf, a raised camera shelf, and the racket leaning beside the shelf
+- Refined procedural models for the laptop, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat
+- Eight expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, experience, and contact details
+- Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat
 - All main portfolio content stays inside the room instead of redirecting to internal pages
 - Accessible room directory, Escape-to-return behavior, touch support, and unlisted fallback routes
 - Section-specific Three.js network topology on the supporting pages

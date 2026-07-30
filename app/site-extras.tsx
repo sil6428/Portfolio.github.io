@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, type ChangeEvent, type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, type ChangeEvent, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 const PLAYLIST_STORAGE_KEY = "affan-portfolio-spotify-playlist-v2";
@@ -44,7 +44,7 @@ function runTerminalCommand(command: string) {
   const normalized = command.trim().toLowerCase();
 
   const responses: Record<string, string[]> = {
-    help: ["Available commands: whoami, projects, interests, status, eggs, cat, clear"],
+    help: ["Available commands: whoami, projects, interests, status, eggs, clear"],
     whoami: [
       "Affan Shaikh",
       "Cybersecurity student, builder, and regional badminton player.",
@@ -58,15 +58,12 @@ function runTerminalCommand(command: string) {
       "There is a whole Interests page hiding in plain sight.",
     ],
     status: ["ONLINE", "Currently turning old computers into a Proxmox server."],
-    cat: ["Calling the resident cat...", "It has unfinished business with the soundtrack button."],
     eggs: ["Opening easter-eggs.md..."],
   };
 
   if (!normalized) return [];
   return responses[normalized] ?? [`Command not found: ${normalized}`, "Type help to see the command list."];
 }
-
-type CatMood = "sit" | "walk" | "pet" | "swat" | "nap" | "jump" | "home";
 
 type TransitionDocument = Document & {
   startViewTransition?: (update: () => Promise<void> | void) => {
@@ -145,283 +142,6 @@ function MobileNavigationTransitions() {
   }, [pathname, router]);
 
   return null;
-}
-
-function PortfolioCat() {
-  const pathname = usePathname();
-  const [position, setPosition] = useState(280);
-  const [facing, setFacing] = useState<"left" | "right">("right");
-  const [mood, setMood] = useState<CatMood>("sit");
-  const [message, setMessage] = useState("pspsps?");
-  const [leapHeight, setLeapHeight] = useState(130);
-  const positionRef = useRef(280);
-  const homeRef = useRef(false);
-  const busyRef = useRef(false);
-  const messageTimerRef = useRef<number | null>(null);
-  const actionTimersRef = useRef<number[]>([]);
-
-  const later = useCallback((callback: () => void, delay: number) => {
-    const timer = window.setTimeout(callback, delay);
-    actionTimersRef.current.push(timer);
-  }, []);
-
-  const showMessage = useCallback((text: string, duration = 1800) => {
-    setMessage(text);
-    if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current);
-    messageTimerRef.current = window.setTimeout(() => setMessage(""), duration);
-  }, []);
-
-  const moveTo = useCallback((target: number) => {
-    const maximum = Math.max(12, window.innerWidth - 92);
-    const next = Math.max(12, Math.min(maximum, target));
-    setFacing(next < positionRef.current ? "left" : "right");
-    positionRef.current = next;
-    setMood("walk");
-    setPosition(next);
-  }, []);
-
-  const swatSoundtrack = useCallback(() => {
-    if (homeRef.current || busyRef.current) return;
-    const soundtrack = document.querySelector<HTMLElement>(".soundtrack-toggle");
-    if (!soundtrack) return;
-    busyRef.current = true;
-
-    const bounds = soundtrack.getBoundingClientRect();
-    const soundtrackOnLeft = bounds.left < window.innerWidth / 2;
-    moveTo(soundtrackOnLeft ? bounds.right + 5 : bounds.left - 78);
-    setFacing(soundtrackOnLeft ? "left" : "right");
-    showMessage("target spotted", 1500);
-
-    later(() => {
-      if (homeRef.current) return;
-      setMood("swat");
-      soundtrack.classList.add("cat-swatted");
-      showMessage("bonk!", 1300);
-    }, 1250);
-
-    later(() => {
-      soundtrack.classList.remove("cat-swatted");
-      busyRef.current = false;
-      if (!homeRef.current) setMood("sit");
-    }, 2350);
-  }, [later, moveTo, showMessage]);
-
-  const interactWithPage = useCallback(() => {
-    if (homeRef.current || busyRef.current) return false;
-
-    const interactions = [
-      { match: "/interests/badminton", selector: ".shuttle", effect: "cat-play-badminton", message: "birdie!" },
-      { match: "/interests/3d-printing", selector: ".printer-head", effect: "cat-play-printer", message: "machine goes brrr" },
-      { match: "/interests/reading", selector: ".book-two", effect: "cat-play-books", message: "new pillow?" },
-      { match: "/interests/photography", selector: ".photo-b", effect: "cat-play-photo", message: "photobomb!" },
-      { match: "/interests/home-lab", selector: ".rack-unit:nth-child(2)", effect: "cat-play-rack", message: "blinky lights" },
-      { match: "/interests", selector: ".shuttle", effect: "cat-play-badminton", message: "mine!" },
-      { match: "/info", selector: ".profile-facts", effect: "cat-play-info", message: "inspecting..." },
-      { match: "/work/archtech", selector: ".case-facts", effect: "cat-play-case", message: "security audit" },
-      { match: "/work/ssik", selector: ".case-facts", effect: "cat-play-case", message: "consulting" },
-      { match: "/", selector: ".browser-frame", effect: "cat-play-work", message: "caught a bug" },
-    ];
-    const interaction = interactions.find((item) => item.match === pathname);
-    const target = interaction
-      ? document.querySelector<HTMLElement>(interaction.selector)
-      : null;
-    if (!interaction || !target) return false;
-
-    const bounds = target.getBoundingClientRect();
-    if (bounds.bottom < 20 || bounds.top > window.innerHeight - 20) return false;
-
-    busyRef.current = true;
-    const targetX = bounds.left + bounds.width / 2 - 41;
-    const height = Math.max(85, Math.min(260, window.innerHeight - bounds.top - 62));
-    setLeapHeight(height);
-    moveTo(targetX);
-    showMessage(interaction.message, 1650);
-
-    later(() => {
-      if (homeRef.current) return;
-      setMood("jump");
-      target.classList.add(interaction.effect);
-    }, 1300);
-
-    later(() => {
-      target.classList.remove(interaction.effect);
-      busyRef.current = false;
-      if (!homeRef.current) setMood("sit");
-    }, 2800);
-    return true;
-  }, [later, moveTo, pathname, showMessage]);
-
-  useEffect(() => {
-    const resetPosition = () => {
-      const maximum = Math.max(12, window.innerWidth - 92);
-      const next = Math.min(positionRef.current, maximum);
-      positionRef.current = next;
-      setPosition(next);
-    };
-
-    actionTimersRef.current.forEach((timer) => window.clearTimeout(timer));
-    actionTimersRef.current = [];
-    homeRef.current = false;
-    busyRef.current = false;
-    document.querySelector(".site-footer")?.classList.remove("cat-house-ready", "cat-is-home");
-    document.body.classList.remove("cat-footer-visible");
-    const initial = Math.max(24, Math.min(window.innerWidth * 0.26, window.innerWidth - 96));
-    positionRef.current = initial;
-    const routeReset = window.setTimeout(() => {
-      setPosition(initial);
-      setFacing("right");
-      setMood("sit");
-      setMessage("");
-    }, 0);
-
-    window.addEventListener("resize", resetPosition);
-    return () => {
-      window.clearTimeout(routeReset);
-      window.removeEventListener("resize", resetPosition);
-    };
-  }, [pathname]);
-
-  useEffect(() => {
-    const wander = window.setInterval(() => {
-      if (document.hidden || homeRef.current || busyRef.current) return;
-
-      if (Math.random() < 0.42 && interactWithPage()) return;
-
-      if (Math.random() < 0.32) {
-        swatSoundtrack();
-        return;
-      }
-
-      const shouldNap = Math.random() < 0.24;
-      const target = shouldNap
-        ? Math.max(28, Math.min(window.innerWidth * 0.27, window.innerWidth - 130))
-        : 24 + Math.random() * Math.max(40, window.innerWidth - 130);
-      moveTo(target);
-      showMessage(shouldNap ? "nap spot found" : Math.random() < 0.5 ? "patrol..." : "mrrp", 1400);
-      later(() => {
-        if (!homeRef.current) setMood(shouldNap ? "nap" : "sit");
-      }, 1900);
-    }, 7200);
-
-    return () => window.clearInterval(wander);
-  }, [interactWithPage, later, moveTo, showMessage, swatSoundtrack]);
-
-  useEffect(() => {
-    const callCat = () => {
-      if (!interactWithPage()) swatSoundtrack();
-    };
-    window.addEventListener("portfolio-cat-swat", callCat);
-    return () => window.removeEventListener("portfolio-cat-swat", callCat);
-  }, [interactWithPage, swatSoundtrack]);
-
-  useEffect(() => {
-    const footer = document.querySelector<HTMLElement>(".site-footer");
-    if (!footer) return;
-
-    const updateHomeState = (reachedBottom: boolean) => {
-      document.body.classList.toggle("cat-footer-visible", reachedBottom);
-
-      if (reachedBottom && !homeRef.current) {
-        homeRef.current = true;
-        footer.classList.add("cat-house-ready");
-        const bounds = footer.getBoundingClientRect();
-        moveTo(bounds.right - 126);
-        setFacing("right");
-        showMessage("home time", 1500);
-
-        later(() => {
-          if (!homeRef.current) return;
-          setMood("home");
-          footer.classList.remove("cat-house-ready");
-          footer.classList.add("cat-is-home");
-          showMessage("zzz", 1200);
-        }, 1750);
-      } else if (!reachedBottom && homeRef.current) {
-        homeRef.current = false;
-        busyRef.current = false;
-        footer.classList.remove("cat-house-ready", "cat-is-home");
-        setMood("sit");
-        setFacing("left");
-        showMessage("back on patrol", 1400);
-      }
-    };
-
-    const checkForHome = () => {
-      const bounds = footer.getBoundingClientRect();
-      updateHomeState(bounds.top < window.innerHeight - 8 && bounds.bottom > 8);
-    };
-    const houseObserver = new IntersectionObserver(
-      ([entry]) => updateHomeState(entry.isIntersecting && entry.intersectionRatio > 0.08),
-      { threshold: [0, 0.08, 0.35] },
-    );
-
-    houseObserver.observe(footer);
-    window.addEventListener("resize", checkForHome);
-    const initialCheck = window.setTimeout(checkForHome, 150);
-    return () => {
-      window.clearTimeout(initialCheck);
-      window.removeEventListener("resize", checkForHome);
-      houseObserver.disconnect();
-      footer.classList.remove("cat-house-ready", "cat-is-home");
-      document.body.classList.remove("cat-footer-visible");
-    };
-  }, [later, moveTo, pathname, showMessage]);
-
-  useEffect(() => {
-    const actionTimers = actionTimersRef.current;
-    return () => {
-      if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current);
-      actionTimers.forEach((timer) => window.clearTimeout(timer));
-    };
-  }, []);
-
-  function petCat() {
-    if (homeRef.current) {
-      showMessage("zzz", 1000);
-      return;
-    }
-    setMood("pet");
-    showMessage("purr  +1", 1500);
-    later(() => setMood("sit"), 1200);
-  }
-
-  function startPageInteraction() {
-    if (!interactWithPage()) swatSoundtrack();
-  }
-
-  return (
-    <button
-      className={`portfolio-cat cat-${mood}`}
-      type="button"
-      style={{ left: position, "--cat-leap": `${leapHeight}px` } as CSSProperties}
-      aria-label="Pet the roaming portfolio cat. Double-click to trigger its current page interaction."
-      title="Pet me. Double-click to see what I do on this page."
-      onClick={petCat}
-      onDoubleClick={startPageInteraction}
-    >
-      <span className="cat-message" aria-live="polite">{message}</span>
-      <span className={`cat-sprite cat-facing-${facing}`} aria-hidden="true">
-        <i className="cat-shadow" />
-        <i className="cat-tail" />
-        <i className="cat-body" />
-        <i className="cat-chest" />
-        <i className="cat-leg cat-leg-back" />
-        <i className="cat-leg cat-leg-front" />
-        <i className="cat-head">
-          <b className="cat-ear cat-ear-left" />
-          <b className="cat-ear cat-ear-right" />
-          <b className="cat-eye cat-eye-left" />
-          <b className="cat-eye cat-eye-right" />
-          <b className="cat-muzzle" />
-          <b className="cat-nose" />
-          <b className="cat-whiskers cat-whiskers-left" />
-          <b className="cat-whiskers cat-whiskers-right" />
-        </i>
-        <i className="cat-paw" />
-        <i className="cat-heart">♥</i>
-      </span>
-    </button>
-  );
 }
 
 export default function SiteExtras() {
@@ -557,7 +277,6 @@ export default function SiteExtras() {
     }
 
     if (normalized === "eggs") setTerminalPage("eggs");
-    if (normalized === "cat") window.dispatchEvent(new Event("portfolio-cat-swat"));
     setTerminalInput("");
   }
 
@@ -725,7 +444,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>02</code>
-                    <div><strong>Terminal commands</strong><p>Try help, whoami, projects, interests, status, cat, eggs, and clear.</p></div>
+                    <div><strong>Terminal commands</strong><p>Try help, whoami, projects, interests, status, eggs, and clear.</p></div>
                   </li>
                   <li>
                     <code>03</code>
@@ -733,19 +452,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>04</code>
-                    <div><strong>The resident cat</strong><p>Click or tap the cat to pet it. Double-click it, or type cat in the console, to trigger its current page interaction.</p></div>
-                  </li>
-                  <li>
-                    <code>05</code>
-                    <div><strong>Cat house</strong><p>Scroll all the way to the bottom. The cat walks into its house in the footer and comes back out when you scroll up.</p></div>
-                  </li>
-                  <li>
-                    <code>06</code>
-                    <div><strong>Cat patrol</strong><p>Leave the page open. The cat wanders, naps, and occasionally swats the soundtrack without being asked.</p></div>
-                  </li>
-                  <li>
-                    <code>07</code>
-                    <div><strong>Page-specific tricks</strong><p>The cat chases the badminton birdie, investigates the printer and home lab, knocks books, photobombs, and inspects project details.</p></div>
+                    <div><strong>Laptop files</strong><p>Move over the laptop desktop in the 3D room. Its Archtech, SSIK, and About files are separate selectable objects.</p></div>
                   </li>
                 </ol>
               </div>
@@ -753,8 +460,6 @@ export default function SiteExtras() {
           </section>
         </div>
       )}
-
-      <PortfolioCat />
 
       {easterMode && (
         <>

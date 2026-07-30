@@ -24,11 +24,12 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.match(html, /Room controls/);
   assert.match(html, /Interactive 3D portfolio/);
   assert.match(html, /3D room directory/);
-  assert.match(html, /Workstation/);
+  assert.match(html, /Archtech file/);
+  assert.match(html, /SSIK file/);
   assert.match(html, /Server rack/);
   assert.match(html, /3D printer/);
-  assert.match(html, /Wall board/);
-  assert.match(html, /07 ACTIVE OBJECTS/);
+  assert.match(html, /About file/);
+  assert.match(html, /08 ACTIVE OBJECTS/);
   assert.match(html, /href="#room-directory"/);
   assert.doesNotMatch(html, /href="\/info"/);
   assert.doesNotMatch(html, /href="\/interests"/);
@@ -143,22 +144,13 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /window\.localStorage/);
   assert.match(source, /KONAMI_SEQUENCE/);
   assert.match(source, /AFFAN_OS/);
-  assert.match(source, /PortfolioCat/);
-  assert.match(source, /portfolio-cat-swat/);
   assert.match(source, /Hidden things and how to find them/);
-  assert.match(source, /Double-click it/);
-  assert.match(source, /cat-is-home/);
-  assert.match(source, /Scroll all the way to the bottom/);
-  assert.match(source, /cat-play-badminton/);
-  assert.match(source, /cat-play-printer/);
-  assert.match(source, /cat-play-books/);
-  assert.match(source, /cat-play-photo/);
-  assert.match(source, /cat-play-rack/);
-  assert.match(source, /Page-specific tricks/);
+  assert.match(source, /Laptop files/);
+  assert.doesNotMatch(source, /PortfolioCat/);
+  assert.doesNotMatch(source, /portfolio-cat-swat/);
+  assert.doesNotMatch(source, /cat-is-home/);
+  assert.doesNotMatch(source, /cat-play-badminton/);
   assert.match(source, /usePathname/);
-  assert.match(source, /nap spot found/);
-  assert.match(source, /IntersectionObserver/);
-  assert.match(source, /cat-footer-visible/);
   assert.match(source, /MobileNavigationTransitions/);
   assert.match(source, /startViewTransition/);
   assert.match(source, /Choose an audio file/);
@@ -167,8 +159,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   const styles = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   );
-  assert.match(styles, /body\.cat-footer-visible \.soundtrack-toggle/);
-  assert.match(styles, /body\.cat-footer-visible \.soundtrack-panel/);
+  assert.doesNotMatch(styles, /portfolio-cat/);
+  assert.doesNotMatch(styles, /cat-footer-visible/);
+  assert.doesNotMatch(styles, /cat-house-ready/);
   assert.match(styles, /view-transition-name: mobile-active-tab/);
   assert.match(styles, /prefers-reduced-motion: reduce/);
 
@@ -183,12 +176,18 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
     readFile(new URL("../app/interactive-room.tsx", import.meta.url), "utf8"),
   );
   assert.match(room, /OrbitControls/);
-  assert.match(room, /PROJECTS WORKSTATION/);
+  assert.match(room, /OPEN ARCHTECH FILE/);
+  assert.match(room, /OPEN SSIK FILE/);
+  assert.match(room, /OPEN ABOUT FILE/);
+  assert.match(room, /CanvasTexture/);
   assert.match(room, /PROXMOX SERVER RACK/);
   assert.match(room, /3D PRINTER/);
+  assert.match(room, /printer-head-carriage/);
   assert.match(room, /BADMINTON/);
+  assert.match(room, /READING SHELF/);
   assert.match(room, /PHOTOGRAPHY/);
-  assert.match(room, /ABOUT AFFAN/);
+  assert.match(room, /cat-tail-3d/);
+  assert.match(room, /TubeGeometry/);
   assert.match(room, /raycaster\.intersectObjects/);
   assert.match(room, /beginCameraMove/);
   assert.match(room, /focusObject/);

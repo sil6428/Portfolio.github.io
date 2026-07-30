@@ -23,32 +23,52 @@ type RoomEntry = {
 };
 
 const ROOM_ENTRIES: Record<string, RoomEntry> = {
-  workstation: {
+  archtech: {
     number: "01",
-    directory: "Workstation",
-    label: "SELECTED WORK / TWO CASE STUDIES",
-    title: "Projects workstation",
-    summary: "The main screen holds Archtech, my privacy-focused platform in progress. The second holds SSIK, the IT consulting site I independently designed and built.",
-    details: ["Archtech", "SSIK Website", "TypeScript + React", "Cloudflare"],
+    directory: "Archtech file",
+    label: "PROJECT FILE / WORK IN PROGRESS",
+    title: "Archtech",
+    summary: "A privacy-focused community platform in development, built around secure communication, publishing, moderation, and controlled access.",
+    details: ["Privacy-first", "TypeScript + React", "Cloudflare", "Work in progress"],
     sections: [
       {
-        heading: "Archtech",
+        heading: "What I am building",
         body: "A stealth, work-in-progress nonprofit platform centered on private community messaging, publishing, moderation, role-based access, and program coordination. I have been building the interface, deployment flow, and privacy-aware access model across staged releases.",
       },
       {
-        heading: "SSIK Website",
-        body: "I independently designed and built SSIK's public website for our IT consulting team. It explains our services, gives prospective clients a clear way to understand the team, and is deployed through GitHub Pages.",
+        heading: "Current stage",
+        body: "The project remains unreleased. I use staged repositories and deployments to preserve each milestone while I test the interface, access rules, and overall product direction.",
+      },
+    ],
+    cameraOffset: [0, 0.1, 3.05],
+    targetOffset: [0, 0, 0],
+  },
+  ssik: {
+    number: "02",
+    directory: "SSIK file",
+    label: "PROJECT FILE / IT CONSULTING",
+    title: "SSIK website",
+    summary: "The public service website for our IT consulting team, independently designed and built by me.",
+    details: ["IT consulting", "Sole site creator", "Responsive design", "GitHub Pages"],
+    sections: [
+      {
+        heading: "The role",
+        body: "I am part of the SSIK consulting team and independently created its public website. The site explains our services and gives prospective clients a clear way to understand what the team offers.",
       },
       {
         heading: "What I learned",
-        body: "Both projects pushed me to plan information architecture, responsive states, real deployment constraints, and maintainable interfaces instead of treating the website as a static mockup.",
+        body: "Building the complete site pushed me to plan its information architecture, responsive states, service copy, deployment, and maintenance instead of treating it as a static mockup.",
       },
     ],
-    cameraOffset: [0.2, 0.45, 3.45],
-    targetOffset: [0, 2.2, 0.08],
+    links: [
+      { label: "View SSIK website", href: "https://sil6428.github.io/SSIK-website/index.html" },
+      { label: "View source", href: "https://github.com/sil6428/SSIK-website" },
+    ],
+    cameraOffset: [0, 0.1, 3.05],
+    targetOffset: [0, 0, 0],
   },
   rack: {
-    number: "02",
+    number: "03",
     directory: "Server rack",
     label: "CURRENT LAB",
     title: "Proxmox home lab",
@@ -64,11 +84,11 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         body: "I am planning storage, backups, addressing, remote access, and a clean network layout before moving important services onto the lab.",
       },
     ],
-    cameraOffset: [0, 0.15, 3.7],
-    targetOffset: [0, 1.9, 0.68],
+    cameraOffset: [0, 0.12, 2.7],
+    targetOffset: [0, 1.88, 0.72],
   },
   printer: {
-    number: "03",
+    number: "04",
     directory: "3D printer",
     label: "MAKING / DESIGN",
     title: "3D printing",
@@ -84,11 +104,11 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         body: "A full katana inspired by Elden Ring and Leon's hand cannon from Resident Evil taught me how much the final result depends on patient assembly after the printer stops.",
       },
     ],
-    cameraOffset: [0.15, 0.35, 3.45],
-    targetOffset: [0, 1.25, 0.05],
+    cameraOffset: [0, 0.28, 3.05],
+    targetOffset: [0, 1.12, 0.2],
   },
   racket: {
-    number: "04",
+    number: "05",
     directory: "Racket",
     label: "REGIONAL COMPETITOR",
     title: "Badminton",
@@ -104,11 +124,11 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         body: "Every rally gives immediate feedback. I like the balance of technique, quick decisions, and the discipline of returning to the next point after a mistake.",
       },
     ],
-    cameraOffset: [0, 0.1, 3.1],
-    targetOffset: [0, -0.05, 0.05],
+    cameraOffset: [2.75, 0.08, 0],
+    targetOffset: [0, -0.1, 0],
   },
   books: {
-    number: "05",
+    number: "06",
     directory: "Books",
     label: "CURRENTLY READING",
     title: "Long-form fiction",
@@ -124,11 +144,11 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         body: "I enjoy strategic characters, consistent world rules, layered mysteries, and stories where earlier details become meaningful much later.",
       },
     ],
-    cameraOffset: [0, 0.45, 2.9],
-    targetOffset: [0, 0.5, 0],
+    cameraOffset: [3.0, 0.25, 0],
+    targetOffset: [0, 0.28, 0],
   },
   camera: {
-    number: "06",
+    number: "07",
     directory: "Camera",
     label: "PHOTOGRAPHY",
     title: "Frames I keep",
@@ -145,12 +165,12 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
     ],
     links: [{ label: "View VSCO gallery", href: "https://sy1len.vsco.site" }],
-    cameraOffset: [0, 0.25, 2.65],
-    targetOffset: [0, 0, 0.4],
+    cameraOffset: [3.0, 0.18, 0],
+    targetOffset: [0, 0, 0.08],
   },
   profile: {
-    number: "07",
-    directory: "Wall board",
+    number: "08",
+    directory: "About file",
     label: "PROFILE / 2028",
     title: "About Affan",
     summary: "Cybersecurity student at Ontario Tech, part of the SSIK consulting team, and someone who learns best by building.",
@@ -175,8 +195,8 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       { label: "Email", href: "mailto:ffaanshake@gmail.com" },
       { label: "Resume", href: "/Affan_Shaikh_Resume.pdf" },
     ],
-    cameraOffset: [0, 0, 3.55],
-    targetOffset: [0, 0, 0.08],
+    cameraOffset: [0, 0.1, 3.05],
+    targetOffset: [0, 0, 0],
   },
 };
 
@@ -283,12 +303,12 @@ export default function InteractiveRoom() {
       return mesh;
     };
 
-    const hotspot = (key: string, label: string) => {
+    const hotspot = (key: string, label: string, parent: THREE.Object3D = room) => {
       const group = new THREE.Group();
       group.userData = { key, label } satisfies HotspotData;
       clickable.push(group);
       objectByKey.set(key, group);
-      room.add(group);
+      parent.add(group);
       return group;
     };
 
@@ -308,134 +328,238 @@ export default function InteractiveRoom() {
 
     const desk = new THREE.Group();
     room.add(desk);
-    box(desk, [5.2, 0.18, 2.05], [-1.25, 1.35, -1.15], "#202a31", { metalness: 0.45, roughness: 0.48 });
-    box(desk, [0.17, 1.35, 0.17], [-3.52, 0.68, -1.88], "#141c22", { metalness: 0.62 });
-    box(desk, [0.17, 1.35, 0.17], [1.02, 0.68, -1.88], "#141c22", { metalness: 0.62 });
-    box(desk, [0.17, 1.35, 0.17], [-3.52, 0.68, -0.42], "#141c22", { metalness: 0.62 });
-    box(desk, [0.17, 1.35, 0.17], [1.02, 0.68, -0.42], "#141c22", { metalness: 0.62 });
-
-    const workstation = hotspot("workstation", "PROJECTS WORKSTATION");
-    workstation.position.set(-1.35, 0, -1.05);
-    box(workstation, [2.35, 1.38, 0.15], [0, 2.25, 0], "#111820", { metalness: 0.52 });
-    box(workstation, [2.08, 1.12, 0.04], [0, 2.25, 0.095], "#79e9ff", {
-      emissive: "#2aa9c5",
-      emissiveIntensity: 1.15,
-      metalness: 0.08,
-      roughness: 0.32,
-    });
-    box(workstation, [0.12, 0.72, 0.12], [0, 1.48, 0], "#18232a", { metalness: 0.7 });
-    box(workstation, [0.72, 0.08, 0.46], [0, 1.39, 0], "#18232a", { metalness: 0.7 });
-    for (let line = 0; line < 5; line += 1) {
-      box(workstation, [1.25 - line * 0.09, 0.018, 0.018], [-0.25, 2.55 - line * 0.16, 0.125], line === 1 ? violet : cyan, {
-        emissive: line === 1 ? violet : cyan,
-        emissiveIntensity: 1.3,
-      });
+    box(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#202a31", { metalness: 0.45, roughness: 0.48 });
+    for (const x of [-4.92, 2.28]) {
+      for (const z of [-4.02, -2.3]) {
+        box(desk, [0.17, 1.35, 0.17], [x, 0.68, z], "#141c22", { metalness: 0.62 });
+      }
     }
-    const sideMonitor = box(workstation, [1.22, 0.92, 0.12], [1.72, 2.15, -0.12], "#121a21", { metalness: 0.55 });
-    sideMonitor.rotation.y = -0.16;
-    const sideScreen = box(workstation, [1.05, 0.74, 0.025], [1.7, 2.15, -0.045], "#9f91ff", {
-      emissive: "#503eb8",
-      emissiveIntensity: 0.9,
-      roughness: 0.28,
-    });
-    sideScreen.rotation.y = -0.16;
-    box(workstation, [0.09, 0.6, 0.09], [1.72, 1.52, -0.12], "#18232a", { metalness: 0.72 });
-    box(workstation, [0.56, 0.06, 0.34], [1.72, 1.4, -0.02], "#18232a", { metalness: 0.72 });
-    box(workstation, [2.1, 0.08, 0.72], [0.05, 1.49, 0.63], "#151e24", { metalness: 0.44 });
+    box(desk, [7.2, 0.12, 0.18], [-1.32, 0.72, -4.03], "#111920", { metalness: 0.7 });
+    box(desk, [5.9, 0.08, 0.22], [-1.72, 1.1, -4.13], "#26333a", { metalness: 0.62 });
+
+    const workstation = new THREE.Group();
+    workstation.position.set(-1.75, 1.46, -3.12);
+    room.add(workstation);
+    box(workstation, [3.45, 0.12, 1.86], [0, 0.02, 0.05], "#151e24", { metalness: 0.55, roughness: 0.38 });
+    box(workstation, [1.02, 0.035, 0.72], [0, 0.095, 0.35], "#222d34", { metalness: 0.42, roughness: 0.32 });
+    const laptopLid = new THREE.Group();
+    laptopLid.position.set(0, 0.11, -0.82);
+    laptopLid.rotation.x = -0.08;
+    workstation.add(laptopLid);
+    box(laptopLid, [3.42, 2.04, 0.13], [0, 1.03, 0], "#10171d", { metalness: 0.68, roughness: 0.32 });
+
+    const desktopCanvas = document.createElement("canvas");
+    desktopCanvas.width = 1024;
+    desktopCanvas.height = 640;
+    const desktopContext = desktopCanvas.getContext("2d");
+    if (desktopContext) {
+      const background = desktopContext.createLinearGradient(0, 0, 1024, 640);
+      background.addColorStop(0, "#071018");
+      background.addColorStop(0.52, "#12253a");
+      background.addColorStop(1, "#241943");
+      desktopContext.fillStyle = background;
+      desktopContext.fillRect(0, 0, 1024, 640);
+      desktopContext.strokeStyle = "rgba(119,231,255,.16)";
+      desktopContext.lineWidth = 2;
+      for (let line = -180; line < 1180; line += 90) {
+        desktopContext.beginPath();
+        desktopContext.moveTo(line, 640);
+        desktopContext.lineTo(line + 320, 0);
+        desktopContext.stroke();
+      }
+      desktopContext.fillStyle = "rgba(5,10,16,.72)";
+      desktopContext.fillRect(0, 0, 1024, 58);
+      desktopContext.fillStyle = "#90a7b4";
+      desktopContext.font = "22px monospace";
+      desktopContext.fillText("AFFAN_OS", 30, 37);
+      desktopContext.textAlign = "right";
+      desktopContext.fillText("PROJECT DESKTOP   08:28", 994, 37);
+      desktopContext.textAlign = "left";
+      const files = [
+        { x: 165, color: "#77e7ff", title: "ARCHTECH", note: "project.file" },
+        { x: 505, color: "#9f91ff", title: "SSIK", note: "project.file" },
+        { x: 845, color: "#ffbd72", title: "ABOUT", note: "profile.doc" },
+      ];
+      for (const file of files) {
+        desktopContext.fillStyle = "rgba(4,8,14,.74)";
+        desktopContext.fillRect(file.x - 104, 142, 208, 250);
+        desktopContext.strokeStyle = file.color;
+        desktopContext.strokeRect(file.x - 104, 142, 208, 250);
+        desktopContext.fillStyle = file.color;
+        desktopContext.fillRect(file.x - 52, 190, 104, 84);
+        desktopContext.fillRect(file.x - 52, 174, 44, 22);
+        desktopContext.fillStyle = "#eaf8fb";
+        desktopContext.font = "24px monospace";
+        desktopContext.textAlign = "center";
+        desktopContext.fillText(file.title, file.x, 324);
+        desktopContext.fillStyle = "#82949e";
+        desktopContext.font = "17px monospace";
+        desktopContext.fillText(file.note, file.x, 355);
+      }
+      desktopContext.fillStyle = "rgba(4,8,14,.78)";
+      desktopContext.fillRect(250, 555, 524, 52);
+      for (let icon = 0; icon < 6; icon += 1) {
+        desktopContext.fillStyle = icon === 2 ? "#77e7ff" : "#556975";
+        desktopContext.fillRect(285 + icon * 78, 569, 28, 24);
+      }
+      desktopContext.textAlign = "left";
+    }
+    const desktopTexture = new THREE.CanvasTexture(desktopCanvas);
+    desktopTexture.colorSpace = THREE.SRGBColorSpace;
+    desktopTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    const laptopScreen = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.18, 1.78),
+      new THREE.MeshBasicMaterial({ map: desktopTexture, toneMapped: false }),
+    );
+    laptopScreen.position.set(0, 1.03, 0.071);
+    laptopLid.add(laptopScreen);
+
+    const addDesktopFile = (
+      key: "archtech" | "ssik" | "profile",
+      label: string,
+      x: number,
+      color: THREE.ColorRepresentation,
+    ) => {
+      const file = hotspot(key, label, laptopLid);
+      file.position.set(x, 1.1, 0.09);
+      const hitArea = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.9, 1.05),
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.035, depthWrite: false }),
+      );
+      file.add(hitArea);
+      return file;
+    };
+    addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.05, cyan);
+    addDesktopFile("ssik", "OPEN SSIK FILE", 0, violet);
+    addDesktopFile("profile", "OPEN ABOUT FILE", 1.05, amber);
+
     for (let row = 0; row < 4; row += 1) {
-      for (let key = 0; key < 12; key += 1) {
+      for (let key = 0; key < 13; key += 1) {
         box(
           workstation,
-          [0.11, 0.025, 0.09],
-          [-0.82 + key * 0.15, 1.55, 0.43 + row * 0.13],
-          row === 0 && key > 8 ? "#33434a" : "#26343b",
-          { metalness: 0.26 },
+          [0.15, 0.028, 0.12],
+          [-1.18 + key * 0.19, 0.105, -0.08 + row * 0.18],
+          row === 0 && key > 9 ? "#3c4c54" : "#27353c",
+          { metalness: 0.24 },
         );
       }
     }
-    const mouse = new THREE.Mesh(
-      new THREE.SphereGeometry(0.18, 16, 12),
-      material("#25323a", { metalness: 0.45, roughness: 0.4 }),
+    box(workstation, [0.92, 0.02, 0.52], [0, 0.11, 0.73], "#1a242a", { metalness: 0.35, roughness: 0.34 });
+    const laptopPower = new THREE.Mesh(
+      new THREE.SphereGeometry(0.025, 10, 8),
+      material(cyan, { emissive: cyan, emissiveIntensity: 2.2 }),
     );
-    mouse.scale.set(0.72, 0.28, 1.05);
-    mouse.position.set(1.38, 1.57, 0.62);
-    workstation.add(mouse);
-    box(workstation, [0.64, 1.2, 0.8], [-2.05, 0.74, -0.05], "#10171d", { metalness: 0.62, roughness: 0.34 });
-    for (let vent = 0; vent < 4; vent += 1) {
-      box(workstation, [0.34, 0.035, 0.018], [-2.05, 0.45 + vent * 0.18, 0.37], "#4e6269", { metalness: 0.8 });
-    }
-    const powerLed = new THREE.Mesh(
-      new THREE.SphereGeometry(0.035, 10, 10),
-      material(cyan, { emissive: cyan, emissiveIntensity: 2 }),
-    );
-    powerLed.position.set(-2.05, 1.17, 0.38);
-    workstation.add(powerLed);
+    laptopPower.position.set(1.5, 0.12, -0.7);
+    workstation.add(laptopPower);
 
     const rack = hotspot("rack", "PROXMOX SERVER RACK");
-    rack.position.set(3.55, 0, -2.65);
-    box(rack, [1.7, 3.65, 1.35], [0, 1.83, 0], "#141b22", { metalness: 0.62, roughness: 0.42 });
+    rack.position.set(4.72, 0, -3.48);
+    box(rack, [1.9, 0.16, 1.46], [0, 0.1, 0], "#151d24", { metalness: 0.7, roughness: 0.36 });
+    box(rack, [1.9, 0.16, 1.46], [0, 3.7, 0], "#151d24", { metalness: 0.7, roughness: 0.36 });
+    for (const x of [-0.86, 0.86]) {
+      for (const z of [-0.62, 0.62]) {
+        box(rack, [0.14, 3.65, 0.14], [x, 1.85, z], "#202b32", { metalness: 0.78, roughness: 0.3 });
+      }
+    }
+    box(rack, [1.62, 3.38, 0.08], [0, 1.9, -0.67], "#0f151a", { metalness: 0.54, roughness: 0.46 });
     for (let unit = 0; unit < 7; unit += 1) {
-      box(rack, [1.48, 0.32, 0.08], [0, 0.58 + unit * 0.43, 0.7], "#26323a", { metalness: 0.7, roughness: 0.38 });
+      box(rack, [1.58, 0.34, 0.14], [0, 0.55 + unit * 0.44, 0.69], unit === 5 ? "#1d2930" : "#26323a", {
+        metalness: 0.7,
+        roughness: 0.38,
+      });
       const led = new THREE.Mesh(
-        new THREE.SphereGeometry(0.035, 10, 10),
+        new THREE.BoxGeometry(0.045, 0.045, 0.025),
         material(unit % 3 === 0 ? amber : "#68e0ae", {
           emissive: unit % 3 === 0 ? amber : "#68e0ae",
           emissiveIntensity: 2,
         }),
       );
-      led.position.set(0.55, 0.58 + unit * 0.43, 0.76);
+      led.position.set(0.61, 0.55 + unit * 0.44, 0.775);
       rack.add(led);
-      box(rack, [0.12, 0.09, 0.035], [-0.54, 0.58 + unit * 0.43, 0.755], "#0c1115", { metalness: 0.8 });
-      for (let port = 0; port < 4; port += 1) {
-        box(rack, [0.075, 0.045, 0.025], [-0.28 + port * 0.12, 0.58 + unit * 0.43, 0.76], "#61757d", { metalness: 0.72 });
+      box(rack, [0.18, 0.1, 0.035], [-0.61, 0.55 + unit * 0.44, 0.777], "#0c1115", { metalness: 0.8 });
+      for (let port = 0; port < 5; port += 1) {
+        box(rack, [0.082, 0.05, 0.026], [-0.34 + port * 0.125, 0.55 + unit * 0.44, 0.78], "#61757d", { metalness: 0.72 });
       }
     }
-    box(rack, [0.09, 3.25, 0.09], [-0.7, 1.86, 0.76], "#53636a", { metalness: 0.88 });
-    box(rack, [0.09, 3.25, 0.09], [0.7, 1.86, 0.76], "#53636a", { metalness: 0.88 });
+    box(rack, [0.1, 3.3, 0.1], [-0.72, 1.86, 0.79], "#53636a", { metalness: 0.88 });
+    box(rack, [0.1, 3.3, 0.1], [0.72, 1.86, 0.79], "#53636a", { metalness: 0.88 });
     for (let fanIndex = 0; fanIndex < 2; fanIndex += 1) {
-      const fan = new THREE.Mesh(
-        new THREE.TorusGeometry(0.16, 0.025, 8, 24),
-        material("#090d11", { metalness: 0.64, roughness: 0.36 }),
-      );
+      const fan = new THREE.Group();
       fan.name = `rack-fan-${fanIndex}`;
-      fan.position.set(-0.28 + fanIndex * 0.56, 3.34, 0.75);
+      fan.position.set(-0.31 + fanIndex * 0.62, 3.42, 0.785);
+      box(fan, [0.5, 0.5, 0.035], [0, 0, 0], "#0d1216", { metalness: 0.58, roughness: 0.4 });
+      const hub = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.065, 0.065, 0.05, 14),
+        material("#53656c", { metalness: 0.72, roughness: 0.3 }),
+      );
+      hub.rotation.x = Math.PI / 2;
+      fan.add(hub);
+      for (let blade = 0; blade < 5; blade += 1) {
+        const pivot = new THREE.Group();
+        pivot.rotation.z = blade * (Math.PI * 2 / 5);
+        fan.add(pivot);
+        box(pivot, [0.07, 0.19, 0.025], [0, 0.13, 0.035], "#2f3e45", { metalness: 0.46, roughness: 0.4 });
+      }
       rack.add(fan);
     }
-    const patchCable = new THREE.Mesh(
-      new THREE.TorusGeometry(0.34, 0.018, 6, 32, Math.PI * 1.45),
-      material("#49d9a0", { emissive: "#1d6048", emissiveIntensity: 0.45, roughness: 0.52 }),
-    );
-    patchCable.rotation.z = 0.3;
-    patchCable.position.set(0.2, 2.15, 0.82);
-    rack.add(patchCable);
+    const cablePaths = [
+      [
+        new THREE.Vector3(-0.28, 2.3, 0.82),
+        new THREE.Vector3(-0.12, 2.18, 0.92),
+        new THREE.Vector3(0.18, 1.9, 0.92),
+        new THREE.Vector3(0.3, 1.43, 0.82),
+      ],
+      [
+        new THREE.Vector3(-0.15, 2.72, 0.82),
+        new THREE.Vector3(0.04, 2.55, 0.94),
+        new THREE.Vector3(0.4, 2.42, 0.9),
+        new THREE.Vector3(0.45, 2.28, 0.82),
+      ],
+    ];
+    cablePaths.forEach((points, index) => {
+      const cable = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 20, 0.014, 6, false),
+        material(index ? "#77e7ff" : "#49d9a0", {
+          emissive: index ? "#235b66" : "#1d6048",
+          emissiveIntensity: 0.5,
+          roughness: 0.52,
+        }),
+      );
+      rack.add(cable);
+    });
 
     const printer = hotspot("printer", "3D PRINTER");
-    printer.position.set(2.65, 0, 1.6);
-    box(printer, [2.05, 0.14, 1.7], [0, 0.1, 0], "#222d34", { metalness: 0.55 });
+    printer.position.set(1.28, 1.45, -3.18);
+    box(printer, [2.05, 0.14, 1.7], [0, 0.08, 0], "#222d34", { metalness: 0.55 });
     box(printer, [0.14, 2.5, 0.14], [-0.9, 1.3, -0.68], "#202a31", { metalness: 0.62 });
     box(printer, [0.14, 2.5, 0.14], [0.9, 1.3, -0.68], "#202a31", { metalness: 0.62 });
     box(printer, [1.95, 0.14, 0.14], [0, 2.52, -0.68], "#202a31", { metalness: 0.62 });
-    box(printer, [1.72, 0.1, 1.35], [0, 0.55, 0], "#29363d", { metalness: 0.38 });
-    box(printer, [0.58, 0.7, 0.58], [0, 0.96, 0], "#8f73ff", {
+    box(printer, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", { metalness: 0.38 });
+    box(printer, [0.58, 0.62, 0.58], [0, 0.6, 0], "#8f73ff", {
       emissive: "#5637c9",
       emissiveIntensity: 0.45,
       roughness: 0.46,
     });
     for (let layer = 0; layer < 7; layer += 1) {
-      box(printer, [0.62 - layer * 0.025, 0.018, 0.62 - layer * 0.025], [0, 0.64 + layer * 0.095, 0], layer % 2 ? "#7458e0" : "#9b82ff", {
+      box(printer, [0.62 - layer * 0.025, 0.018, 0.62 - layer * 0.025], [0, 0.33 + layer * 0.08, 0], layer % 2 ? "#7458e0" : "#9b82ff", {
         emissive: "#39268a",
         emissiveIntensity: 0.28,
       });
     }
-    box(printer, [0.52, 0.32, 0.45], [0, 2.22, -0.34], "#1b242b", { metalness: 0.72 });
     box(printer, [1.72, 0.08, 0.08], [0, 2.18, -0.28], "#68777d", { metalness: 0.9 });
+    const printHead = new THREE.Group();
+    printHead.name = "printer-head-carriage";
+    printHead.position.set(0, 2.18, -0.28);
+    printer.add(printHead);
+    box(printHead, [0.5, 0.34, 0.44], [0, -0.08, 0.02], "#151d23", { metalness: 0.72, roughness: 0.32 });
+    box(printHead, [0.32, 0.11, 0.455], [0, 0.11, 0.025], "#303e44", { metalness: 0.78, roughness: 0.26 });
     const nozzle = new THREE.Mesh(
       new THREE.CylinderGeometry(0.035, 0.075, 0.24, 10),
       material("#d49a54", { metalness: 0.88, roughness: 0.28 }),
     );
-    nozzle.name = "printer-nozzle";
-    nozzle.position.set(0, 1.97, -0.12);
-    printer.add(nozzle);
+    nozzle.position.set(0, -0.34, 0.12);
+    printHead.add(nozzle);
+    box(printHead, [0.14, 0.12, 0.18], [0, -0.2, 0.1], "#c28b4d", { metalness: 0.86, roughness: 0.26 });
     const spool = new THREE.Mesh(
       new THREE.CylinderGeometry(0.38, 0.38, 0.26, 28),
       material("#6e55dd", { roughness: 0.52 }),
@@ -451,177 +575,245 @@ export default function InteractiveRoom() {
     spoolCore.rotation.z = Math.PI / 2;
     spoolCore.position.copy(spool.position);
     printer.add(spoolCore);
-    box(printer, [0.52, 0.32, 0.08], [0.62, 0.48, 0.88], "#162028", { metalness: 0.55 });
-    box(printer, [0.34, 0.14, 0.02], [0.62, 0.48, 0.925], cyan, { emissive: cyan, emissiveIntensity: 0.75 });
+    box(printer, [0.52, 0.32, 0.08], [0.62, 0.28, 0.88], "#162028", { metalness: 0.55 });
+    box(printer, [0.34, 0.14, 0.02], [0.62, 0.28, 0.925], cyan, { emissive: cyan, emissiveIntensity: 0.75 });
 
-    const books = hotspot("books", "READING STACK");
-    books.position.set(-4.35, 0, 1.7);
-    [["#424d55", 0.22], ["#7d6cc8", 0.48], ["#9b7448", 0.73]].forEach(([color, y], index) => {
-      box(books, [1.65 - index * 0.08, 0.24, 1.05], [0, Number(y), 0], color as string, { roughness: 0.9 });
-      box(books, [1.46 - index * 0.08, 0.16, 1.065], [0.06, Number(y), 0], "#d6cfb4", { roughness: 1 });
-      box(books, [0.08, 0.25, 1.08], [-0.79 + index * 0.04, Number(y), 0], color as string, { roughness: 0.88 });
+    const bookshelf = new THREE.Group();
+    bookshelf.position.set(-6.08, 0, 1.05);
+    room.add(bookshelf);
+    box(bookshelf, [0.22, 3.65, 3.15], [-0.18, 1.88, 0], "#121a20", { metalness: 0.34, roughness: 0.62 });
+    for (const z of [-1.5, 1.5]) {
+      box(bookshelf, [0.72, 3.72, 0.16], [0.1, 1.88, z], "#27343a", { metalness: 0.42, roughness: 0.54 });
+    }
+    for (const y of [0.16, 1.17, 2.2, 3.62]) {
+      box(bookshelf, [0.72, 0.14, 3.15], [0.1, y, 0], "#27343a", { metalness: 0.42, roughness: 0.54 });
+    }
+    for (let brace = 0; brace < 3; brace += 1) {
+      box(bookshelf, [0.08, 0.08, 2.76], [0.47, 0.66 + brace * 1.02, 0], "#52656d", { metalness: 0.72 });
+    }
+
+    const books = hotspot("books", "READING SHELF");
+    books.position.set(-5.67, 1.3, 1.28);
+    const bookColors = ["#4d6170", "#7965be", "#9a6c45", "#355968", "#a86a65", "#65518e"];
+    const bookWidths = [0.21, 0.24, 0.19, 0.28, 0.22, 0.25];
+    let bookZ = -1.04;
+    bookColors.forEach((color, index) => {
+      const width = bookWidths[index];
+      const height = 0.68 + (index % 3) * 0.09;
+      box(books, [0.44, height, width], [0, height / 2, bookZ], color, { roughness: 0.86 });
+      box(books, [0.02, height * 0.72, width * 0.7], [0.23, height / 2, bookZ], "#d5cdb6", { roughness: 0.96 });
+      box(books, [0.455, 0.035, width * 0.92], [0, height - 0.1, bookZ], index % 2 ? cyan : amber, {
+        emissive: index % 2 ? "#2b626c" : "#815c2e",
+        emissiveIntensity: 0.25,
+        roughness: 0.8,
+      });
+      bookZ += width + 0.06;
     });
-    const uprightBook = box(books, [0.32, 1.25, 1.02], [0.42, 1.45, -0.02], "#314e5b", { roughness: 0.86 });
-    uprightBook.rotation.z = -0.1;
-    box(books, [0.34, 0.06, 1.04], [0.49, 1.87, -0.01], amber, { roughness: 0.76 });
-    const bookmark = box(books, [0.08, 0.42, 0.025], [0.25, 0.83, 0.42], "#d16b60", { roughness: 0.9 });
-    bookmark.rotation.z = 0.08;
+    const laidBook = box(books, [0.45, 0.16, 0.88], [0, 0.08, 0.9], "#6e5caf", { roughness: 0.88 });
+    laidBook.rotation.x = 0.03;
+    box(books, [0.02, 0.11, 0.72], [0.23, 0.08, 0.9], "#d8d1bb", { roughness: 1 });
 
     const cameraGroup = hotspot("camera", "PHOTOGRAPHY");
-    cameraGroup.position.set(-3.25, 1.58, -0.4);
-    box(cameraGroup, [1.05, 0.72, 0.48], [0, 0, 0], "#1a2025", { metalness: 0.7, roughness: 0.34 });
+    cameraGroup.position.set(-5.62, 2.6, 0.02);
+    box(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", { metalness: 0.7, roughness: 0.34 });
     const lens = new THREE.Mesh(
       new THREE.CylinderGeometry(0.27, 0.34, 0.46, 24),
       material("#11161b", { metalness: 0.82, roughness: 0.24 }),
     );
-    lens.rotation.x = Math.PI / 2;
-    lens.position.z = 0.43;
+    lens.rotation.z = -Math.PI / 2;
+    lens.position.x = 0.43;
     cameraGroup.add(lens);
     const glass = new THREE.Mesh(
       new THREE.CircleGeometry(0.22, 24),
       material("#4b77a5", { emissive: "#1d3857", emissiveIntensity: 0.55, roughness: 0.12 }),
     );
-    glass.position.z = 0.67;
+    glass.rotation.y = Math.PI / 2;
+    glass.position.x = 0.67;
     cameraGroup.add(glass);
-    box(cameraGroup, [0.36, 0.26, 0.42], [-0.36, 0.38, -0.02], "#222b31", { metalness: 0.68, roughness: 0.3 });
-    box(cameraGroup, [0.26, 0.18, 0.38], [0.39, 0.42, -0.01], "#252f35", { metalness: 0.66, roughness: 0.28 });
-    box(cameraGroup, [0.24, 0.5, 0.5], [0.48, -0.08, 0], "#11171b", { roughness: 0.42 });
+    box(cameraGroup, [0.44, 0.28, 0.38], [-0.03, 0.4, -0.3], "#222b31", { metalness: 0.68, roughness: 0.3 });
+    box(cameraGroup, [0.42, 0.18, 0.28], [-0.02, 0.44, 0.35], "#252f35", { metalness: 0.66, roughness: 0.28 });
+    box(cameraGroup, [0.52, 0.5, 0.24], [0, -0.08, 0.5], "#11171b", { roughness: 0.42 });
     const shutter = new THREE.Mesh(
       new THREE.CylinderGeometry(0.055, 0.055, 0.035, 16),
       material("#aeb9bc", { metalness: 0.92, roughness: 0.2 }),
     );
-    shutter.position.set(0.34, 0.51, 0.12);
+    shutter.position.set(0.12, 0.5, -0.32);
     cameraGroup.add(shutter);
     for (let dialIndex = 0; dialIndex < 2; dialIndex += 1) {
       const dial = new THREE.Mesh(
         new THREE.CylinderGeometry(0.11, 0.11, 0.07, 18),
         material("#303a40", { metalness: 0.78, roughness: 0.24 }),
       );
-      dial.position.set(-0.28 + dialIndex * 0.48, 0.49, -0.02);
+      dial.position.set(-0.12, 0.5, -0.15 + dialIndex * 0.42);
       cameraGroup.add(dial);
     }
     const strap = new THREE.Mesh(
-      new THREE.TorusGeometry(0.68, 0.025, 7, 36, Math.PI * 1.6),
+      new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3([
+          new THREE.Vector3(-0.12, 0.15, -0.52),
+          new THREE.Vector3(-0.28, -0.42, -0.72),
+          new THREE.Vector3(-0.2, -0.54, 0.62),
+          new THREE.Vector3(-0.12, 0.12, 0.5),
+        ]),
+        26,
+        0.022,
+        6,
+        false,
+      ),
       material("#202629", { roughness: 0.95 }),
     );
-    strap.rotation.z = Math.PI;
-    strap.position.set(-0.02, -0.48, -0.12);
     cameraGroup.add(strap);
 
     const racket = hotspot("racket", "BADMINTON");
-    racket.position.set(4.72, 1.62, 0.1);
-    racket.rotation.z = -0.32;
+    racket.position.set(-5.56, 2.08, 2.62);
+    racket.rotation.y = Math.PI / 2;
+    racket.rotation.z = -0.14;
     const racketHead = new THREE.Mesh(
       new THREE.TorusGeometry(0.58, 0.055, 10, 38),
       material("#dce7e9", { metalness: 0.55, roughness: 0.32 }),
     );
     racketHead.scale.y = 1.28;
     racket.add(racketHead);
-    const handle = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.055, 0.075, 1.55, 12),
+    const shaft = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.035, 0.045, 0.92, 12),
+      material("#b9c8cc", { metalness: 0.74, roughness: 0.3 }),
+    );
+    shaft.position.y = -1.03;
+    racket.add(shaft);
+    const grip = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.065, 0.078, 0.62, 12),
       material("#7046b7", { roughness: 0.62 }),
     );
-    handle.position.y = -1.18;
-    racket.add(handle);
+    grip.position.y = -1.72;
+    racket.add(grip);
     for (let string = -3; string <= 3; string += 1) {
-      box(racket, [0.018, 1.16, 0.012], [string * 0.13, 0, 0], "#66767c", { metalness: 0.18 });
+      const chord = Math.sqrt(Math.max(0, 1 - Math.pow((string * 0.13) / 0.58, 2))) * 1.35;
+      box(racket, [0.014, chord, 0.012], [string * 0.13, 0, 0], "#788a90", { metalness: 0.18 });
     }
     for (let string = -4; string <= 4; string += 1) {
-      box(racket, [0.98, 0.014, 0.012], [0, string * 0.12, 0], "#66767c", { metalness: 0.18 });
+      const chord = Math.sqrt(Math.max(0, 1 - Math.pow((string * 0.12) / 0.74, 2))) * 1.02;
+      box(racket, [chord, 0.014, 0.012], [0, string * 0.12, 0], "#788a90", { metalness: 0.18 });
     }
-    for (let wrap = 0; wrap < 7; wrap += 1) {
+    for (let wrap = 0; wrap < 6; wrap += 1) {
       const gripBand = new THREE.Mesh(
         new THREE.TorusGeometry(0.072, 0.012, 6, 18),
         material(wrap % 2 ? "#9a75da" : "#503177", { roughness: 0.8 }),
       );
       gripBand.rotation.x = Math.PI / 2;
-      gripBand.position.y = -0.72 - wrap * 0.15;
+      gripBand.position.y = -1.47 - wrap * 0.1;
       racket.add(gripBand);
-    }
-    const shuttle = new THREE.Group();
-    shuttle.position.set(-0.92, -0.3, 0.04);
-    const shuttleCork = new THREE.Mesh(
-      new THREE.SphereGeometry(0.1, 14, 10),
-      material("#e5d0a6", { roughness: 0.82 }),
-    );
-    shuttleCork.scale.y = 0.72;
-    shuttle.add(shuttleCork);
-    const shuttleSkirt = new THREE.Mesh(
-      new THREE.ConeGeometry(0.25, 0.44, 12, 1, true),
-      material("#e7eceb", { roughness: 0.72 }),
-    );
-    shuttleSkirt.position.y = 0.26;
-    shuttle.add(shuttleSkirt);
-    shuttle.rotation.z = 0.45;
-    racket.add(shuttle);
-
-    const profile = hotspot("profile", "ABOUT AFFAN");
-    profile.position.set(-1.7, 2.95, -4.34);
-    box(profile, [3.2, 1.45, 0.12], [0, 0, 0], "#172027", { metalness: 0.34 });
-    box(profile, [2.88, 1.15, 0.04], [0, 0, 0.08], "#705eb7", {
-      emissive: "#35296d",
-      emissiveIntensity: 0.45,
-      roughness: 0.72,
-    });
-    for (let pin = 0; pin < 4; pin += 1) {
-      box(profile, [0.42 + pin * 0.08, 0.025, 0.02], [-0.72 + pin * 0.47, 0.28 - pin * 0.18, 0.12], pin % 2 ? cyan : amber, {
-        emissive: pin % 2 ? cyan : amber,
-        emissiveIntensity: 0.85,
-      });
-    }
-    box(profile, [3.36, 0.09, 0.16], [0, 0.77, 0], "#3a484e", { metalness: 0.62 });
-    box(profile, [3.36, 0.09, 0.16], [0, -0.77, 0], "#3a484e", { metalness: 0.62 });
-    box(profile, [0.09, 1.62, 0.16], [-1.64, 0, 0], "#3a484e", { metalness: 0.62 });
-    box(profile, [0.09, 1.62, 0.16], [1.64, 0, 0], "#3a484e", { metalness: 0.62 });
-    const noteColors = ["#d4ccb7", "#8ec7cf", "#b9a3df"];
-    for (let noteIndex = 0; noteIndex < 3; noteIndex += 1) {
-      const note = box(profile, [0.64, 0.42, 0.025], [-0.87 + noteIndex * 0.86, -0.25 + (noteIndex % 2) * 0.18, 0.125], noteColors[noteIndex], { roughness: 0.92 });
-      note.rotation.z = (noteIndex - 1) * 0.05;
-      for (let noteLine = 0; noteLine < 3; noteLine += 1) {
-        box(profile, [0.38 - noteLine * 0.04, 0.012, 0.012], [-0.96 + noteIndex * 0.86, -0.18 + (noteIndex % 2) * 0.18 - noteLine * 0.08, 0.145], "#55666a", { roughness: 0.8 });
-      }
     }
 
     const cat = new THREE.Group();
-    cat.position.set(-0.1, 0.18, 1.65);
+    cat.position.set(-0.2, 0.24, 0.95);
+    cat.rotation.y = -0.32;
     room.add(cat);
-    const catBody = new THREE.Mesh(new THREE.SphereGeometry(0.32, 18, 14), material("#050607", { roughness: 0.9 }));
-    catBody.scale.set(1.45, 0.75, 0.8);
+    const catFur = material("#050607", { roughness: 0.92 });
+    const catBody = new THREE.Mesh(new THREE.SphereGeometry(0.34, 24, 18), catFur);
+    catBody.scale.set(1.5, 0.82, 0.86);
+    catBody.position.set(-0.12, 0.18, 0);
     cat.add(catBody);
-    const catHead = new THREE.Mesh(new THREE.SphereGeometry(0.23, 18, 14), material("#050607", { roughness: 0.9 }));
-    catHead.position.set(0.43, 0.15, 0);
+    const catHaunch = new THREE.Mesh(new THREE.SphereGeometry(0.31, 22, 16), catFur);
+    catHaunch.scale.set(0.9, 1.05, 1);
+    catHaunch.position.set(-0.43, 0.26, 0);
+    cat.add(catHaunch);
+    const catChest = new THREE.Mesh(new THREE.SphereGeometry(0.25, 22, 16), material("#0a0c0d", { roughness: 0.95 }));
+    catChest.scale.set(0.78, 1.34, 0.9);
+    catChest.position.set(0.25, 0.31, 0);
+    cat.add(catChest);
+    const catHead = new THREE.Mesh(new THREE.SphereGeometry(0.245, 24, 18), catFur);
+    catHead.scale.set(1.04, 1, 0.94);
+    catHead.position.set(0.45, 0.62, 0);
     cat.add(catHead);
     for (const side of [-1, 1]) {
       const ear = new THREE.Mesh(
-        new THREE.ConeGeometry(0.1, 0.22, 4),
-        material("#050607", { roughness: 0.9 }),
+        new THREE.ConeGeometry(0.105, 0.24, 4),
+        catFur,
       );
-      ear.position.set(0.43, 0.38, side * 0.12);
-      ear.rotation.x = Math.PI / 4;
+      ear.position.set(0.42, 0.86, side * 0.145);
+      ear.rotation.x = side * 0.14;
+      ear.rotation.z = -0.07;
       cat.add(ear);
+      const innerEar = new THREE.Mesh(
+        new THREE.ConeGeometry(0.055, 0.13, 4),
+        material("#3a252c", { roughness: 0.96 }),
+      );
+      innerEar.position.set(0.49, 0.845, side * 0.15);
+      innerEar.rotation.x = side * 0.14;
+      innerEar.rotation.z = -0.07;
+      cat.add(innerEar);
       const eye = new THREE.Mesh(
-        new THREE.SphereGeometry(0.025, 10, 8),
-        material("#9cf4bc", { emissive: "#4ea66b", emissiveIntensity: 1.4, roughness: 0.2 }),
+        new THREE.SphereGeometry(0.036, 12, 10),
+        material("#d8c75e", { emissive: "#8c7e2a", emissiveIntensity: 0.85, roughness: 0.22 }),
       );
-      eye.position.set(0.62, 0.2, side * 0.085);
+      eye.scale.set(0.45, 1, 0.8);
+      eye.position.set(0.66, 0.67, side * 0.09);
       cat.add(eye);
+      const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.015, 10, 8), material("#020303", { roughness: 0.35 }));
+      pupil.scale.set(0.38, 1, 0.65);
+      pupil.position.set(0.687, 0.67, side * 0.09);
+      cat.add(pupil);
     }
-    const tail = new THREE.Mesh(
-      new THREE.TorusGeometry(0.34, 0.055, 8, 26, Math.PI * 1.35),
-      material("#050607", { roughness: 0.9 }),
+    const muzzleMaterial = material("#151719", { roughness: 0.96 });
+    for (const side of [-1, 1]) {
+      const muzzle = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 10), muzzleMaterial);
+      muzzle.scale.set(1.1, 0.65, 0.9);
+      muzzle.position.set(0.67, 0.57, side * 0.055);
+      cat.add(muzzle);
+    }
+    const nose = new THREE.Mesh(
+      new THREE.SphereGeometry(0.035, 12, 8),
+      material("#8d6971", { roughness: 0.72 }),
     );
-    tail.rotation.x = Math.PI / 2;
-    tail.rotation.z = 0.35;
-    tail.position.set(-0.48, 0.14, -0.04);
-    cat.add(tail);
-    for (const z of [-0.18, 0.18]) {
+    nose.scale.set(0.6, 0.45, 0.72);
+    nose.position.set(0.735, 0.605, 0);
+    cat.add(nose);
+    const collar = new THREE.Mesh(
+      new THREE.TorusGeometry(0.185, 0.018, 8, 28),
+      material("#5d4aa3", { metalness: 0.22, roughness: 0.6 }),
+    );
+    collar.rotation.y = Math.PI / 2;
+    collar.scale.y = 0.86;
+    collar.position.set(0.31, 0.48, 0);
+    cat.add(collar);
+    const bell = new THREE.Mesh(
+      new THREE.SphereGeometry(0.04, 12, 10),
+      material(amber, { emissive: "#7d562a", emissiveIntensity: 0.35, metalness: 0.82, roughness: 0.25 }),
+    );
+    bell.position.set(0.46, 0.42, 0);
+    cat.add(bell);
+    for (const z of [-0.19, 0.19]) {
+      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.075, 0.32, 12), catFur);
+      leg.position.set(0.28, 0.08, z);
+      cat.add(leg);
       const paw = new THREE.Mesh(
-        new THREE.SphereGeometry(0.09, 12, 8),
-        material("#050607", { roughness: 0.92 }),
+        new THREE.SphereGeometry(0.085, 14, 10),
+        catFur,
       );
-      paw.scale.set(1.35, 0.46, 0.82);
-      paw.position.set(0.34, -0.16, z);
+      paw.scale.set(1.35, 0.48, 0.9);
+      paw.position.set(0.39, -0.08, z);
       cat.add(paw);
+    }
+    const tailCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.62, 0.2, -0.05),
+      new THREE.Vector3(-0.88, 0.16, -0.28),
+      new THREE.Vector3(-0.72, 0.11, -0.58),
+      new THREE.Vector3(-0.38, 0.13, -0.63),
+      new THREE.Vector3(-0.22, 0.23, -0.5),
+    ]);
+    const catTail = new THREE.Mesh(new THREE.TubeGeometry(tailCurve, 30, 0.055, 8, false), catFur);
+    catTail.name = "cat-tail-3d";
+    cat.add(catTail);
+    for (const side of [-1, 1]) {
+      for (let whiskerIndex = -1; whiskerIndex <= 1; whiskerIndex += 1) {
+        const start = new THREE.Vector3(0.72, 0.57 + whiskerIndex * 0.022, side * 0.075);
+        const end = new THREE.Vector3(0.78, 0.58 + whiskerIndex * 0.03, side * (0.25 + Math.abs(whiskerIndex) * 0.035));
+        const whisker = new THREE.Mesh(
+          new THREE.TubeGeometry(new THREE.LineCurve3(start, end), 6, 0.004, 5, false),
+          material("#a8abad", { metalness: 0.08, roughness: 0.58 }),
+        );
+        cat.add(whisker);
+      }
     }
 
     const floorRug = new THREE.Mesh(
@@ -629,7 +821,7 @@ export default function InteractiveRoom() {
       material("#121b22", { metalness: 0.02, roughness: 1 }),
     );
     floorRug.rotation.x = -Math.PI / 2;
-    floorRug.position.set(-0.1, 0.022, 1.7);
+    floorRug.position.set(-0.2, 0.022, 0.95);
     room.add(floorRug);
     for (let ring = 1; ring <= 3; ring += 1) {
       const rugRing = new THREE.Mesh(
@@ -637,7 +829,7 @@ export default function InteractiveRoom() {
         material(ring === 2 ? "#524580" : "#253b43", { roughness: 0.9 }),
       );
       rugRing.rotation.x = Math.PI / 2;
-      rugRing.position.set(-0.1, 0.03, 1.7);
+      rugRing.position.set(-0.2, 0.03, 0.95);
       room.add(rugRing);
     }
     for (let panel = 0; panel < 4; panel += 1) {
@@ -654,6 +846,7 @@ export default function InteractiveRoom() {
     });
     ceilingLight.rotation.x = 0.02;
 
+    room.updateMatrixWorld(true);
     const interactionMarkers = new Map<string, THREE.Mesh>();
     for (const [key, object] of objectByKey) {
       const markerMaterial = new THREE.MeshBasicMaterial({
@@ -665,7 +858,9 @@ export default function InteractiveRoom() {
       });
       const marker = new THREE.Mesh(new THREE.RingGeometry(0.52, 0.59, 36), markerMaterial);
       marker.rotation.x = -Math.PI / 2;
-      marker.position.set(object.position.x, 0.035, object.position.z);
+      const markerWorldPosition = object.getWorldPosition(new THREE.Vector3());
+      const markerLocalPosition = room.worldToLocal(markerWorldPosition.clone());
+      marker.position.set(markerLocalPosition.x, 0.035, markerLocalPosition.z);
       room.add(marker);
       interactionMarkers.set(key, marker);
     }
@@ -799,9 +994,10 @@ export default function InteractiveRoom() {
     resizeObserver.observe(host);
     resize();
 
-    const printerNozzle = room.getObjectByName("printer-nozzle");
+    const printerCarriage = room.getObjectByName("printer-head-carriage");
     const printerSpool = room.getObjectByName("printer-spool");
     const rackFans = [room.getObjectByName("rack-fan-0"), room.getObjectByName("rack-fan-1")];
+    const animatedCatTail = room.getObjectByName("cat-tail-3d");
     let previousTimestamp = performance.now();
     let frame = 0;
     const render = (timestamp = performance.now()) => {
@@ -810,8 +1006,9 @@ export default function InteractiveRoom() {
       previousTimestamp = timestamp;
       if (!reducedMotion) {
         cyanLight.intensity = 22 + Math.sin(elapsed * 1.4) * 2;
-        cat.position.y = 0.18 + Math.sin(elapsed * 1.15) * 0.015;
-        if (printerNozzle) printerNozzle.position.x = Math.sin(elapsed * 0.9) * 0.55;
+        cat.position.y = 0.24 + Math.sin(elapsed * 1.15) * 0.012;
+        if (animatedCatTail) animatedCatTail.rotation.y = Math.sin(elapsed * 0.72) * 0.11;
+        if (printerCarriage) printerCarriage.position.x = Math.sin(elapsed * 0.9) * 0.55;
         if (printerSpool) printerSpool.rotation.x += delta * 0.34;
         rackFans.forEach((fan, index) => {
           if (fan) fan.rotation.z += delta * (index ? -2.2 : 2.5);
@@ -896,6 +1093,7 @@ export default function InteractiveRoom() {
         if (Array.isArray(objectMaterial)) objectMaterial.forEach((item) => item.dispose());
         else objectMaterial.dispose();
       });
+      desktopTexture.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };

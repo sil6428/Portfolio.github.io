@@ -26,7 +26,7 @@ export default function Home() {
 
       <div className="immersive-status" aria-hidden="true">
         <span><i /> ROOM ONLINE</span>
-        <span>07 ACTIVE OBJECTS</span>
+        <span>08 ACTIVE OBJECTS</span>
         <span>OSHAWA / 43.8971 N</span>
       </div>
 
