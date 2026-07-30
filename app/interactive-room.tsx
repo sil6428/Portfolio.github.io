@@ -198,6 +198,45 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     cameraOffset: [0, 0.1, 3.05],
     targetOffset: [0, 0, 0],
   },
+  contact: {
+    number: "09",
+    directory: "Contact file",
+    label: "CONTACTS / PUBLIC LINKS",
+    title: "Contact Affan",
+    summary: "The public places where you can reach me or follow my current work.",
+    details: ["Email", "LinkedIn", "GitHub", "Phone"],
+    sections: [
+      {
+        heading: "Best way to reach me",
+        body: "Email or LinkedIn works best for project questions, collaboration, and opportunities. My GitHub contains the public source and learning history behind this portfolio.",
+      },
+    ],
+    links: [
+      { label: "Email", href: "mailto:ffaanshake@gmail.com" },
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/sil6428" },
+      { label: "GitHub", href: "https://github.com/sil6428" },
+      { label: "Phone", href: "tel:+16473091927" },
+    ],
+    cameraOffset: [0, 0.1, 3.05],
+    targetOffset: [0, 0, 0],
+  },
+  resume: {
+    number: "10",
+    directory: "Resume file",
+    label: "DOCUMENT / PDF",
+    title: "Resume",
+    summary: "My current networking, cybersecurity, development, experience, and education resume.",
+    details: ["Ontario Tech 2028", "Networking", "Cybersecurity", "Development"],
+    sections: [
+      {
+        heading: "Current direction",
+        body: "The resume covers my technical projects, networking and security skills, SSIK work, customer-facing experience, and community volunteering.",
+      },
+    ],
+    links: [{ label: "Open resume PDF", href: "/Affan_Shaikh_Resume.pdf" }],
+    cameraOffset: [0, 0.1, 3.05],
+    targetOffset: [0, 0, 0],
+  },
 };
 
 const DIRECTORY = Object.entries(ROOM_ENTRIES);
@@ -243,9 +282,9 @@ export default function InteractiveRoom() {
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x080a0f, 9, 19);
 
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
-    camera.position.set(7.7, 5.5, 9.4);
-    camera.lookAt(0, 1.35, 0);
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
+    camera.position.set(6.15, 4.6, 7.15);
+    camera.lookAt(0, 1.55, -0.55);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.65));
@@ -256,7 +295,7 @@ export default function InteractiveRoom() {
     host.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 1.25, 0);
+    controls.target.set(0, 1.55, -0.55);
     controls.enableDamping = true;
     controls.dampingFactor = 0.055;
     controls.enablePan = false;
@@ -376,25 +415,27 @@ export default function InteractiveRoom() {
       desktopContext.fillText("PROJECT DESKTOP   08:28", 994, 37);
       desktopContext.textAlign = "left";
       const files = [
-        { x: 165, color: "#77e7ff", title: "ARCHTECH", note: "project.file" },
-        { x: 505, color: "#9f91ff", title: "SSIK", note: "project.file" },
-        { x: 845, color: "#ffbd72", title: "ABOUT", note: "profile.doc" },
+        { x: 170, y: 102, width: 182, height: 188, color: "#77e7ff", title: "ARCHTECH", note: "project.file" },
+        { x: 512, y: 102, width: 182, height: 188, color: "#9f91ff", title: "SSIK", note: "project.file" },
+        { x: 854, y: 102, width: 182, height: 188, color: "#ffbd72", title: "ABOUT", note: "profile.doc" },
+        { x: 340, y: 340, width: 218, height: 150, color: "#68e0ae", title: "CONTACT", note: "links.file" },
+        { x: 684, y: 340, width: 218, height: 150, color: "#e7eceb", title: "RESUME", note: "resume.pdf" },
       ];
       for (const file of files) {
         desktopContext.fillStyle = "rgba(4,8,14,.74)";
-        desktopContext.fillRect(file.x - 104, 142, 208, 250);
+        desktopContext.fillRect(file.x - file.width / 2, file.y, file.width, file.height);
         desktopContext.strokeStyle = file.color;
-        desktopContext.strokeRect(file.x - 104, 142, 208, 250);
+        desktopContext.strokeRect(file.x - file.width / 2, file.y, file.width, file.height);
         desktopContext.fillStyle = file.color;
-        desktopContext.fillRect(file.x - 52, 190, 104, 84);
-        desktopContext.fillRect(file.x - 52, 174, 44, 22);
+        desktopContext.fillRect(file.x - 43, file.y + 38, 86, 62);
+        desktopContext.fillRect(file.x - 43, file.y + 26, 38, 18);
         desktopContext.fillStyle = "#eaf8fb";
-        desktopContext.font = "24px monospace";
+        desktopContext.font = "21px monospace";
         desktopContext.textAlign = "center";
-        desktopContext.fillText(file.title, file.x, 324);
+        desktopContext.fillText(file.title, file.x, file.y + file.height - 43);
         desktopContext.fillStyle = "#82949e";
-        desktopContext.font = "17px monospace";
-        desktopContext.fillText(file.note, file.x, 355);
+        desktopContext.font = "15px monospace";
+        desktopContext.fillText(file.note, file.x, file.y + file.height - 19);
       }
       desktopContext.fillStyle = "rgba(4,8,14,.78)";
       desktopContext.fillRect(250, 555, 524, 52);
@@ -415,23 +456,28 @@ export default function InteractiveRoom() {
     laptopLid.add(laptopScreen);
 
     const addDesktopFile = (
-      key: "archtech" | "ssik" | "profile",
+      key: "archtech" | "ssik" | "profile" | "contact" | "resume",
       label: string,
       x: number,
+      y: number,
+      width: number,
+      height: number,
       color: THREE.ColorRepresentation,
     ) => {
       const file = hotspot(key, label, laptopLid);
-      file.position.set(x, 1.1, 0.09);
+      file.position.set(x, y, 0.09);
       const hitArea = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.9, 1.05),
+        new THREE.PlaneGeometry(width, height),
         new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.035, depthWrite: false }),
       );
       file.add(hitArea);
       return file;
     };
-    addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.05, cyan);
-    addDesktopFile("ssik", "OPEN SSIK FILE", 0, violet);
-    addDesktopFile("profile", "OPEN ABOUT FILE", 1.05, amber);
+    addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.06, 1.34, 0.62, 0.6, cyan);
+    addDesktopFile("ssik", "OPEN SSIK FILE", 0, 1.34, 0.62, 0.6, violet);
+    addDesktopFile("profile", "OPEN ABOUT FILE", 1.06, 1.34, 0.62, 0.6, amber);
+    addDesktopFile("contact", "OPEN CONTACT FILE", -0.54, 0.66, 0.74, 0.48, "#68e0ae");
+    addDesktopFile("resume", "OPEN RESUME PDF", 0.54, 0.66, 0.74, 0.48, "#e7eceb");
 
     for (let row = 0; row < 4; row += 1) {
       for (let key = 0; key < 13; key += 1) {
@@ -483,50 +529,9 @@ export default function InteractiveRoom() {
     }
     box(rack, [0.1, 3.3, 0.1], [-0.72, 1.86, 0.79], "#53636a", { metalness: 0.88 });
     box(rack, [0.1, 3.3, 0.1], [0.72, 1.86, 0.79], "#53636a", { metalness: 0.88 });
-    for (let fanIndex = 0; fanIndex < 2; fanIndex += 1) {
-      const fan = new THREE.Group();
-      fan.name = `rack-fan-${fanIndex}`;
-      fan.position.set(-0.31 + fanIndex * 0.62, 3.42, 0.785);
-      box(fan, [0.5, 0.5, 0.035], [0, 0, 0], "#0d1216", { metalness: 0.58, roughness: 0.4 });
-      const hub = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.065, 0.065, 0.05, 14),
-        material("#53656c", { metalness: 0.72, roughness: 0.3 }),
-      );
-      hub.rotation.x = Math.PI / 2;
-      fan.add(hub);
-      for (let blade = 0; blade < 5; blade += 1) {
-        const pivot = new THREE.Group();
-        pivot.rotation.z = blade * (Math.PI * 2 / 5);
-        fan.add(pivot);
-        box(pivot, [0.07, 0.19, 0.025], [0, 0.13, 0.035], "#2f3e45", { metalness: 0.46, roughness: 0.4 });
-      }
-      rack.add(fan);
+    for (let vent = 0; vent < 10; vent += 1) {
+      box(rack, [0.82, 0.025, 0.025], [0, 3.27 + vent * 0.035, 0.79], "#415158", { metalness: 0.72, roughness: 0.34 });
     }
-    const cablePaths = [
-      [
-        new THREE.Vector3(-0.28, 2.3, 0.82),
-        new THREE.Vector3(-0.12, 2.18, 0.92),
-        new THREE.Vector3(0.18, 1.9, 0.92),
-        new THREE.Vector3(0.3, 1.43, 0.82),
-      ],
-      [
-        new THREE.Vector3(-0.15, 2.72, 0.82),
-        new THREE.Vector3(0.04, 2.55, 0.94),
-        new THREE.Vector3(0.4, 2.42, 0.9),
-        new THREE.Vector3(0.45, 2.28, 0.82),
-      ],
-    ];
-    cablePaths.forEach((points, index) => {
-      const cable = new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 20, 0.014, 6, false),
-        material(index ? "#77e7ff" : "#49d9a0", {
-          emissive: index ? "#235b66" : "#1d6048",
-          emissiveIntensity: 0.5,
-          roughness: 0.52,
-        }),
-      );
-      rack.add(cable);
-    });
 
     const printer = hotspot("printer", "3D PRINTER");
     printer.position.set(1.28, 1.45, -3.18);
@@ -535,15 +540,36 @@ export default function InteractiveRoom() {
     box(printer, [0.14, 2.5, 0.14], [0.9, 1.3, -0.68], "#202a31", { metalness: 0.62 });
     box(printer, [1.95, 0.14, 0.14], [0, 2.52, -0.68], "#202a31", { metalness: 0.62 });
     box(printer, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", { metalness: 0.38 });
-    box(printer, [0.58, 0.62, 0.58], [0, 0.6, 0], "#8f73ff", {
-      emissive: "#5637c9",
-      emissiveIntensity: 0.45,
-      roughness: 0.46,
+    const printedPiece = new THREE.Group();
+    printedPiece.name = "printer-cyber-helmet";
+    printedPiece.position.set(0, 0.28, 0);
+    printer.add(printedPiece);
+    const printMaterial = material("#252331", { roughness: 0.68 });
+    const printAccent = material("#7b65d1", { emissive: "#342768", emissiveIntensity: 0.28, roughness: 0.56 });
+    const printBase = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.42, 0.12, 8), printMaterial);
+    printBase.position.y = 0.06;
+    printedPiece.add(printBase);
+    const helmetDome = new THREE.Mesh(new THREE.SphereGeometry(0.29, 18, 12), printMaterial);
+    helmetDome.scale.set(1, 0.92, 0.88);
+    helmetDome.position.y = 0.36;
+    printedPiece.add(helmetDome);
+    box(printedPiece, [0.4, 0.22, 0.18], [0, 0.3, 0.23], "#171720", { roughness: 0.7 });
+    box(printedPiece, [0.09, 0.3, 0.05], [0, 0.55, 0.28], "#7b65d1", {
+      emissive: "#342768",
+      emissiveIntensity: 0.28,
+      roughness: 0.56,
     });
-    for (let layer = 0; layer < 7; layer += 1) {
-      box(printer, [0.62 - layer * 0.025, 0.018, 0.62 - layer * 0.025], [0, 0.33 + layer * 0.08, 0], layer % 2 ? "#7458e0" : "#9b82ff", {
-        emissive: "#39268a",
-        emissiveIntensity: 0.28,
+    for (const side of [-1, 1]) {
+      const horn = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.48, 6), printAccent);
+      horn.position.set(side * 0.24, 0.67, 0);
+      horn.rotation.z = side * -0.48;
+      printedPiece.add(horn);
+      const cheek = box(printedPiece, [0.12, 0.28, 0.12], [side * 0.22, 0.25, 0.22], "#302d42", { roughness: 0.66 });
+      cheek.rotation.z = side * 0.18;
+    }
+    for (let printLayer = 0; printLayer < 5; printLayer += 1) {
+      box(printedPiece, [0.78 - printLayer * 0.035, 0.012, 0.7 - printLayer * 0.035], [0, -0.01 + printLayer * 0.024, 0], "#51448a", {
+        roughness: 0.74,
       });
     }
     box(printer, [1.72, 0.08, 0.08], [0, 2.18, -0.28], "#68777d", { metalness: 0.9 });
@@ -581,14 +607,14 @@ export default function InteractiveRoom() {
     const bookshelf = new THREE.Group();
     bookshelf.position.set(-6.08, 0, 1.05);
     room.add(bookshelf);
-    box(bookshelf, [0.22, 3.65, 3.15], [-0.18, 1.88, 0], "#121a20", { metalness: 0.34, roughness: 0.62 });
+    box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#121a20", { metalness: 0.34, roughness: 0.62 });
     for (const z of [-1.5, 1.5]) {
-      box(bookshelf, [0.72, 3.72, 0.16], [0.1, 1.88, z], "#27343a", { metalness: 0.42, roughness: 0.54 });
+      box(bookshelf, [0.72, 2.45, 0.16], [0.1, 1.23, z], "#27343a", { metalness: 0.42, roughness: 0.54 });
     }
-    for (const y of [0.16, 1.17, 2.2, 3.62]) {
+    for (const y of [0.16, 1.17, 2.35]) {
       box(bookshelf, [0.72, 0.14, 3.15], [0.1, y, 0], "#27343a", { metalness: 0.42, roughness: 0.54 });
     }
-    for (let brace = 0; brace < 3; brace += 1) {
+    for (let brace = 0; brace < 2; brace += 1) {
       box(bookshelf, [0.08, 0.08, 2.76], [0.47, 0.66 + brace * 1.02, 0], "#52656d", { metalness: 0.72 });
     }
 
@@ -614,7 +640,7 @@ export default function InteractiveRoom() {
     box(books, [0.02, 0.11, 0.72], [0.23, 0.08, 0.9], "#d8d1bb", { roughness: 1 });
 
     const cameraGroup = hotspot("camera", "PHOTOGRAPHY");
-    cameraGroup.position.set(-5.62, 2.6, 0.02);
+    cameraGroup.position.set(-5.62, 2.8, 0.02);
     box(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", { metalness: 0.7, roughness: 0.34 });
     const lens = new THREE.Mesh(
       new THREE.CylinderGeometry(0.27, 0.34, 0.46, 24),
@@ -665,7 +691,7 @@ export default function InteractiveRoom() {
     cameraGroup.add(strap);
 
     const racket = hotspot("racket", "BADMINTON");
-    racket.position.set(-5.56, 2.08, 2.62);
+    racket.position.set(-5.56, 2.02, 2.92);
     racket.rotation.y = Math.PI / 2;
     racket.rotation.z = -0.14;
     const racketHead = new THREE.Mesh(
@@ -879,8 +905,8 @@ export default function InteractiveRoom() {
 
     room.updateMatrixWorld(true);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const overviewPosition = new THREE.Vector3(7.7, 5.5, 9.4);
-    const overviewTarget = new THREE.Vector3(0, 1.25, 0);
+    const overviewPosition = new THREE.Vector3(6.15, 4.6, 7.15);
+    const overviewTarget = new THREE.Vector3(0, 1.55, -0.55);
     const roomBaseRotation = -0.08;
     const pointerParallax = new THREE.Vector2();
     const pointerParallaxTarget = new THREE.Vector2();
@@ -920,6 +946,7 @@ export default function InteractiveRoom() {
     const focusObject = (key: string) => {
       if (key === "__overview") {
         focusedKey = null;
+        document.body.classList.remove("room-focus-active");
         beginCameraMove(overviewPosition.clone(), overviewTarget.clone(), null, "RETURNING TO ROOM OVERVIEW");
         return;
       }
@@ -932,7 +959,19 @@ export default function InteractiveRoom() {
       const target = object.localToWorld(new THREE.Vector3(...entry.targetOffset));
       const roomRotation = room.getWorldQuaternion(new THREE.Quaternion());
       const cameraOffset = new THREE.Vector3(...entry.cameraOffset).applyQuaternion(roomRotation);
-      beginCameraMove(target.clone().add(cameraOffset), target, key, `MOVING TO ${entry.directory.toUpperCase()}`);
+      const viewDirection = cameraOffset.clone().normalize().multiplyScalar(-1);
+      const cameraRight = new THREE.Vector3()
+        .crossVectors(viewDirection, new THREE.Vector3(0, 1, 0))
+        .normalize();
+      const compositionShift = cameraRight.multiplyScalar(window.innerWidth < 720 ? 0.3 : 0.78);
+      const composedTarget = target.clone().add(compositionShift);
+      document.body.classList.add("room-focus-active");
+      beginCameraMove(
+        target.clone().add(cameraOffset).add(compositionShift),
+        composedTarget,
+        key,
+        `MOVING TO ${entry.directory.toUpperCase()}`,
+      );
     };
     focusRef.current = focusObject;
     camera.position.copy(overviewPosition);
@@ -996,7 +1035,6 @@ export default function InteractiveRoom() {
 
     const printerCarriage = room.getObjectByName("printer-head-carriage");
     const printerSpool = room.getObjectByName("printer-spool");
-    const rackFans = [room.getObjectByName("rack-fan-0"), room.getObjectByName("rack-fan-1")];
     const animatedCatTail = room.getObjectByName("cat-tail-3d");
     let previousTimestamp = performance.now();
     let frame = 0;
@@ -1010,9 +1048,6 @@ export default function InteractiveRoom() {
         if (animatedCatTail) animatedCatTail.rotation.y = Math.sin(elapsed * 0.72) * 0.11;
         if (printerCarriage) printerCarriage.position.x = Math.sin(elapsed * 0.9) * 0.55;
         if (printerSpool) printerSpool.rotation.x += delta * 0.34;
-        rackFans.forEach((fan, index) => {
-          if (fan) fan.rotation.z += delta * (index ? -2.2 : 2.5);
-        });
       }
 
       if (!cameraMove && focusedKey === null) {
@@ -1086,6 +1121,7 @@ export default function InteractiveRoom() {
       renderer.domElement.removeEventListener("pointerup", handlePointerUp);
       renderer.domElement.removeEventListener("pointerleave", handlePointerLeave);
       focusRef.current = () => undefined;
+      document.body.classList.remove("room-focus-active");
       room.traverse((object) => {
         if (!(object instanceof THREE.Mesh)) return;
         object.geometry.dispose();
@@ -1123,15 +1159,14 @@ export default function InteractiveRoom() {
         <span>Select an object / inspect</span>
         <strong>{visitedKeys.length} / {DIRECTORY.length} viewed</strong>
       </div>
-      <nav className="room-directory" id="room-directory" aria-label="3D room directory">
+      <nav className="room-directory-accessible" aria-label="3D room objects">
         {DIRECTORY.map(([key, entry]) => (
           <button
             type="button"
-            className={visitedKeys.includes(key) ? "room-directory-visited" : ""}
             onClick={() => focusRef.current(key)}
             key={key}
           >
-            <span>{entry.number}</span>{entry.directory}<i aria-label={visitedKeys.includes(key) ? "Visited" : "Not visited"} />
+            Open {entry.directory}
           </button>
         ))}
       </nav>

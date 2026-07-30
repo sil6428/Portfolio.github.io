@@ -2845,6 +2845,11 @@ main {
   width: min(390px, calc(100vw - 44px));
   pointer-events: none;
   text-shadow: 0 3px 28px rgba(0,0,0,.95);
+  transition: opacity .4s ease, transform .52s cubic-bezier(.2,.75,.25,1);
+}
+body.room-focus-active .immersive-intro {
+  opacity: 0;
+  transform: translate(-22px,-8px);
 }
 .immersive-intro p {
   margin: 0 0 12px;
@@ -2894,7 +2899,7 @@ main {
 .room-fluid-hint {
   position: absolute;
   left: 20px;
-  bottom: 76px;
+  bottom: 20px;
   z-index: 10;
   width: 214px;
   padding: 12px;
@@ -2907,6 +2912,10 @@ main {
   font: 7px "DM Mono", monospace;
   letter-spacing: .08em;
   pointer-events: none;
+  transition: opacity .3s ease;
+}
+body.room-focus-active .room-fluid-hint {
+  opacity: 0;
 }
 .room-fluid-hint > span:first-child {
   color: #9bb2b7;
@@ -2926,51 +2935,17 @@ main {
   color: var(--topology-cyan);
   font-weight: 500;
 }
-.immersive-home .room-directory {
-  inset: auto clamp(160px,18vw,330px) 38px;
-  grid-template-columns: repeat(8,minmax(0,1fr));
-  border-color: rgba(119,231,255,.18);
-}
-.room-directory button {
-  position: relative;
-  min-width: 0;
-  padding: 10px 8px;
-  border: 0;
-  border-right: 1px solid rgba(119,231,255,.1);
-  border-bottom: 1px solid rgba(119,231,255,.1);
-  overflow: hidden;
-  color: #879ba2;
-  background: transparent;
-  font: 7px "DM Mono", monospace;
-  letter-spacing: .06em;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color .2s ease, background .2s ease;
-}
-.room-directory button:hover,
-.room-directory button:focus-visible {
-  color: #effcff;
-  outline: 0;
-  background: rgba(119,231,255,.09);
-}
-.room-directory button span { margin-right: 6px; color: var(--topology-cyan); }
-.room-directory button i {
+.room-directory-accessible {
   position: absolute;
-  right: 6px;
-  top: 50%;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #32454c;
-  transform: translateY(-50%);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-.room-directory button.room-directory-visited i {
-  background: #68e0ae;
-  box-shadow: 0 0 8px rgba(104,224,174,.8);
-}
-.room-directory button.room-directory-visited { color: #afc2c7; }
 .room-popup {
   position: absolute;
   right: clamp(22px,4vw,64px);
@@ -3125,7 +3100,7 @@ main {
 .immersive-footer span { margin-right: auto; }
 .immersive-footer a { color: #687b82; }
 .immersive-footer a:hover { color: white; }
-body:has(.immersive-home) .soundtrack-toggle { bottom: 92px; }
+body:has(.immersive-home) .soundtrack-toggle { bottom: 20px; }
 body:has(.room-has-popup) .soundtrack-toggle {
   opacity: 0;
   pointer-events: none;
@@ -3142,23 +3117,19 @@ body:has(.room-has-popup) .soundtrack-toggle {
   .immersive-intro { top: 88px; }
   .immersive-intro h1 { font-size: clamp(48px,14vw,76px); }
   .immersive-home .room-stage-bar { top: 66px; }
-  .immersive-home .room-directory {
-    inset: auto 12px 40px;
-    grid-template-columns: repeat(4,minmax(0,1fr));
-  }
   .room-fluid-hint {
-    bottom: 154px;
+    bottom: 20px;
     width: 178px;
   }
   .room-popup {
     top: auto;
     right: 12px;
-    bottom: 142px;
+    bottom: 20px;
     width: min(410px,calc(100vw - 24px));
     max-height: 56vh;
   }
   .immersive-status { display: none; }
-  body:has(.immersive-home) .soundtrack-toggle { bottom: 152px; }
+  body:has(.immersive-home) .soundtrack-toggle { bottom: 20px; }
 }
 
 @media (max-width: 560px) {
@@ -3166,19 +3137,18 @@ body:has(.room-has-popup) .soundtrack-toggle {
   .immersive-header nav a:last-child { display: none; }
   .immersive-intro > span { max-width: 270px; }
   .immersive-home .room-stage-bar { top: 70px; max-width: calc(100vw - 24px); }
-  .immersive-home .room-directory { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .room-fluid-hint {
     left: 12px;
-    bottom: 204px;
+    bottom: 12px;
     width: 146px;
     padding: 8px;
   }
   .room-fluid-hint > span:not(:first-child) { display: none; }
   .room-has-popup .room-fluid-hint { display: none; }
-  .room-popup { bottom: 202px; padding: 24px 20px 20px; max-height: 50vh; }
+  .room-popup { bottom: 12px; padding: 24px 20px 20px; max-height: 62vh; }
   .room-popup h2 { font-size: 40px; }
   .immersive-footer a { display: none; }
-  body:has(.immersive-home) .soundtrack-toggle { bottom: 212px; }
+  body:has(.immersive-home) .soundtrack-toggle { bottom: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

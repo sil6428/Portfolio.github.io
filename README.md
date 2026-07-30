@@ -16,7 +16,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Full-screen interactive 3D cyber lab and portfolio directory |
+| `/` | Full-screen interactive 3D cyber lab |
 | `/info` | Education, skills, experience, volunteer work, resume, and contact links |
 | `/interests` | Personal interests and interactive visual cards |
 | `/work/archtech` | Archtech case study and current work-in-progress status |
@@ -29,23 +29,25 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 
 ## Features
 
-- Responsive navigation for desktop, tablet, and mobile layouts
+- A focused, full-screen homepage without a conventional header, footer, or visible directory bar
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
-- Interactive laptop desktop with separate Archtech, SSIK, and About files
+- Interactive laptop desktop with separate Archtech, SSIK, About, Contact, and Resume files
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
-- Ambient systems including a synchronized printer carriage and nozzle, rotating rack fans, a moving 3D cat tail, pulsing lights, and responsive interaction markers
-- Curved camera transitions with smoother-step easing, object-relative positions, and centered, upright framing
-- Reorganized room with the desk against the wall, the printer on the desk, a wall bookshelf, a raised camera shelf, and the racket leaning beside the shelf
+- Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, pulsing lights, and responsive interaction markers
+- Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
+- Closer room framing plus a shorter wall bookshelf, camera on its top surface, and racket leaning clear of the shelf
+- A simplified server rack without decorative fans or loose wiring
+- A layered cyber-helmet print replacing the original printer cube
 - Refined procedural models for the laptop, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat
-- Eight expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, experience, and contact details
+- Ten expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, and the resume
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat
 - All main portfolio content stays inside the room instead of redirecting to internal pages
-- Accessible room directory, Escape-to-return behavior, touch support, and unlisted fallback routes
+- Screen-reader object controls, Escape-to-return behavior, touch support, and unlisted fallback routes
 - Section-specific Three.js network topology on the supporting pages
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns
