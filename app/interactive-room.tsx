@@ -413,6 +413,97 @@ export default function InteractiveRoom() {
     box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#111622");
     box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#0e1920");
 
+    const wallDecor = new THREE.Group();
+    wallDecor.name = "wall-decor-collection";
+    room.add(wallDecor);
+
+    const topologyFrame = new THREE.Group();
+    topologyFrame.name = "wall-network-topology-frame";
+    wallDecor.add(topologyFrame);
+    box(topologyFrame, [0.08, 1.48, 2.34], [-5.86, 3.32, -2.42], "#1a2230", {
+      metalness: 0.28,
+      roughness: 0.58,
+    });
+    box(topologyFrame, [0.12, 1.58, 0.065], [-5.81, 3.32, -3.62], "#596773", { metalness: 0.72, roughness: 0.3 });
+    box(topologyFrame, [0.12, 1.58, 0.065], [-5.81, 3.32, -1.22], "#596773", { metalness: 0.72, roughness: 0.3 });
+    box(topologyFrame, [0.12, 0.065, 2.46], [-5.81, 4.09, -2.42], "#596773", { metalness: 0.72, roughness: 0.3 });
+    box(topologyFrame, [0.12, 0.065, 2.46], [-5.81, 2.55, -2.42], "#596773", { metalness: 0.72, roughness: 0.3 });
+    const topologyPoints = [
+      new THREE.Vector3(-5.77, 3.62, -3.22),
+      new THREE.Vector3(-5.77, 3.05, -2.94),
+      new THREE.Vector3(-5.77, 3.72, -2.42),
+      new THREE.Vector3(-5.77, 2.9, -2.16),
+      new THREE.Vector3(-5.77, 3.48, -1.62),
+    ];
+    const topologyLinks = [[0, 1], [0, 2], [1, 2], [1, 3], [2, 3], [2, 4], [3, 4]];
+    for (const [startIndex, endIndex] of topologyLinks) {
+      const start = topologyPoints[startIndex];
+      const end = topologyPoints[endIndex];
+      const direction = end.clone().sub(start);
+      const link = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.012, 0.012, direction.length(), 6),
+        material("#77e7ff", { emissive: "#255765", emissiveIntensity: 0.7, metalness: 0.38, roughness: 0.32 }),
+      );
+      link.name = "wall-topology-link";
+      link.position.copy(start.clone().add(end).multiplyScalar(0.5));
+      link.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+      topologyFrame.add(link);
+    }
+    topologyPoints.forEach((point, index) => {
+      const nodeColor = ["#77e7ff", "#68e0ae", "#9f91ff", "#ffbd72", "#77e7ff"][index];
+      const node = new THREE.Mesh(
+        new THREE.SphereGeometry(index === 2 ? 0.095 : 0.07, 14, 10),
+        material(nodeColor, { emissive: nodeColor, emissiveIntensity: 0.9, metalness: 0.42, roughness: 0.26 }),
+      );
+      node.name = "wall-topology-node";
+      node.position.copy(point);
+      topologyFrame.add(node);
+    });
+    for (let bar = 0; bar < 3; bar += 1) {
+      box(topologyFrame, [0.025, 0.035, 0.34 - bar * 0.05], [-5.765, 3.88 - bar * 0.09, -3.2], bar === 0 ? "#ffbd72" : "#71818c", {
+        emissive: bar === 0 ? "#6e4022" : "#111820",
+        emissiveIntensity: 0.36,
+        roughness: 0.44,
+      });
+    }
+
+    const photoTriptych = new THREE.Group();
+    photoTriptych.name = "wall-photography-triptych";
+    wallDecor.add(photoTriptych);
+    const photoAccents = ["#77e7ff", "#9f91ff", "#ffbd72"];
+    [-0.35, 0.55, 1.45].forEach((z, index) => {
+      box(photoTriptych, [0.1, 1.12, 0.7], [-5.86, 3.42, z], "#303a46", { metalness: 0.5, roughness: 0.38 });
+      box(photoTriptych, [0.045, 0.92, 0.53], [-5.79, 3.42, z], "#d7d5cd", { metalness: 0.05, roughness: 0.86 });
+      box(photoTriptych, [0.026, 0.68, 0.39], [-5.755, 3.46, z], index === 1 ? "#24203a" : "#162b36", {
+        emissive: index === 1 ? "#241b4b" : "#102c39",
+        emissiveIntensity: 0.34,
+        roughness: 0.72,
+      });
+      const photoSun = new THREE.Mesh(
+        new THREE.CircleGeometry(0.105 + index * 0.015, 20),
+        material(photoAccents[index], {
+          emissive: photoAccents[index],
+          emissiveIntensity: 0.55,
+          metalness: 0.08,
+          roughness: 0.54,
+        }),
+      );
+      photoSun.name = "wall-photo-light";
+      photoSun.rotation.y = Math.PI / 2;
+      photoSun.position.set(-5.735, 3.61 - index * 0.08, z - 0.08 + index * 0.08);
+      photoTriptych.add(photoSun);
+      for (let skyline = 0; skyline < 3; skyline += 1) {
+        const height = 0.1 + ((skyline + index) % 3) * 0.075;
+        box(
+          photoTriptych,
+          [0.024, height, 0.065],
+          [-5.73, 3.17 + height / 2, z - 0.12 + skyline * 0.12],
+          skyline === index ? photoAccents[index] : "#71818c",
+          { emissive: skyline === index ? photoAccents[index] : "#111820", emissiveIntensity: 0.28, roughness: 0.5 },
+        );
+      }
+    });
+
     const grid = new THREE.GridHelper(12, 24, 0x254a57, 0x15232b);
     grid.position.y = 0.012;
     room.add(grid);
