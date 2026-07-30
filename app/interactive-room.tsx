@@ -195,13 +195,9 @@ export default function InteractiveRoom() {
   const hostRef = useRef<HTMLDivElement>(null);
   const [hoverLabel, setHoverLabel] = useState("");
   const [transitionLabel, setTransitionLabel] = useState("");
-  const [nearbyLabel, setNearbyLabel] = useState("");
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [visitedKeys, setVisitedKeys] = useState<string[]>([]);
   const focusRef = useRef<(key: string) => void>(() => undefined);
-  const driveRef = useRef<(action: "forward" | "backward" | "left" | "right", active: boolean) => void>(() => undefined);
-  const interactRef = useRef<() => void>(() => undefined);
-  const resetRef = useRef<() => void>(() => undefined);
   const activeEntry = activeKey ? ROOM_ENTRIES[activeKey] : null;
 
   useEffect(() => {
@@ -658,68 +654,6 @@ export default function InteractiveRoom() {
     });
     ceilingLight.rotation.x = 0.02;
 
-    const rover = new THREE.Group();
-    rover.position.set(0.25, 0.3, 3.25);
-    rover.rotation.y = 0;
-    room.add(rover);
-    box(rover, [1.05, 0.28, 1.5], [0, 0.22, 0], "#26343c", { metalness: 0.72, roughness: 0.32 });
-    box(rover, [0.78, 0.34, 0.72], [0, 0.5, -0.12], "#172229", { metalness: 0.64, roughness: 0.28 });
-    box(rover, [0.62, 0.24, 0.08], [0, 0.52, -0.5], "#85dce9", {
-      emissive: "#2b7580",
-      emissiveIntensity: 0.78,
-      roughness: 0.18,
-    });
-    box(rover, [0.78, 0.07, 0.88], [0, 0.69, -0.06], "#34464e", { metalness: 0.82, roughness: 0.22 });
-    box(rover, [0.08, 0.38, 0.08], [0, 0.91, 0.12], "#718289", { metalness: 0.9, roughness: 0.2 });
-    const antennaTip = new THREE.Mesh(
-      new THREE.SphereGeometry(0.07, 12, 10),
-      material(violet, { emissive: violet, emissiveIntensity: 1.5, roughness: 0.2 }),
-    );
-    antennaTip.position.set(0, 1.12, 0.12);
-    rover.add(antennaTip);
-    for (const x of [-0.35, 0.35]) {
-      const headlight = new THREE.Mesh(
-        new THREE.CircleGeometry(0.085, 16),
-        material("#e6fbff", { emissive: cyan, emissiveIntensity: 2.2, roughness: 0.12 }),
-      );
-      headlight.rotation.y = Math.PI;
-      headlight.position.set(x, 0.3, -0.756);
-      rover.add(headlight);
-      const tailLight = new THREE.Mesh(
-        new THREE.CircleGeometry(0.065, 16),
-        material("#ff5d72", { emissive: "#c92645", emissiveIntensity: 1.6, roughness: 0.18 }),
-      );
-      tailLight.position.set(x, 0.29, 0.756);
-      rover.add(tailLight);
-    }
-    const roverWheels: THREE.Mesh[] = [];
-    const frontWheelPivots: THREE.Group[] = [];
-    for (const x of [-0.62, 0.62]) {
-      for (const z of [-0.48, 0.5]) {
-        const pivot = new THREE.Group();
-        pivot.position.set(x, 0.08, z);
-        rover.add(pivot);
-        const wheel = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.22, 0.22, 0.18, 18),
-          material("#090d10", { metalness: 0.22, roughness: 0.88 }),
-        );
-        wheel.rotation.z = Math.PI / 2;
-        pivot.add(wheel);
-        const hub = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.085, 0.085, 0.19, 14),
-          material(x > 0 ? cyan : violet, { emissive: x > 0 ? "#245c66" : "#443586", emissiveIntensity: 0.5, metalness: 0.75 }),
-        );
-        hub.rotation.z = Math.PI / 2;
-        pivot.add(hub);
-        roverWheels.push(wheel);
-        if (z < 0) frontWheelPivots.push(pivot);
-      }
-    }
-    const roverLamp = new THREE.SpotLight(0x77e7ff, 24, 6.5, Math.PI / 7, 0.55, 1.4);
-    roverLamp.position.set(0, 0.48, -0.72);
-    roverLamp.target.position.set(0, 0.15, -3.5);
-    rover.add(roverLamp, roverLamp.target);
-
     const interactionMarkers = new Map<string, THREE.Mesh>();
     for (const [key, object] of objectByKey) {
       const markerMaterial = new THREE.MeshBasicMaterial({
@@ -750,12 +684,12 @@ export default function InteractiveRoom() {
 
     room.updateMatrixWorld(true);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const driveState = { forward: false, backward: false, left: false, right: false };
-    let roverHeading = 0;
-    let roverSpeed = 0;
-    let roverSteer = 0;
+    const overviewPosition = new THREE.Vector3(7.7, 5.5, 9.4);
+    const overviewTarget = new THREE.Vector3(0, 1.25, 0);
+    const roomBaseRotation = -0.08;
+    const pointerParallax = new THREE.Vector2();
+    const pointerParallaxTarget = new THREE.Vector2();
     let focusedKey: string | null = null;
-    let nearestKey: string | null = null;
     let cameraMove: {
       fromPosition: THREE.Vector3;
       toPosition: THREE.Vector3;
@@ -763,29 +697,9 @@ export default function InteractiveRoom() {
       toTarget: THREE.Vector3;
       startedAt: number;
       duration: number;
+      arcHeight: number;
       revealKey: string | null;
     } | null = null;
-
-    const getChasePose = () => {
-      const forward = new THREE.Vector3(Math.sin(roverHeading), 0, -Math.cos(roverHeading));
-      const cameraLocal = rover.position.clone().addScaledVector(forward, -4.35);
-      cameraLocal.y = 2.9;
-      const targetLocal = rover.position.clone().addScaledVector(forward, 1.05);
-      targetLocal.y = 0.58;
-      return {
-        position: room.localToWorld(cameraLocal),
-        target: room.localToWorld(targetLocal),
-      };
-    };
-
-    const findNearestObject = () => {
-      let result: { key: string; distance: number } | null = null;
-      for (const [key, object] of objectByKey) {
-        const distance = Math.hypot(rover.position.x - object.position.x, rover.position.z - object.position.z);
-        if (!result || distance < result.distance) result = { key, distance };
-      }
-      return result && result.distance < 2.25 ? result.key : null;
-    };
 
     const beginCameraMove = (
       toPosition: THREE.Vector3,
@@ -802,7 +716,8 @@ export default function InteractiveRoom() {
         fromTarget: controls.target.clone(),
         toTarget,
         startedAt: performance.now(),
-        duration: reducedMotion ? 1 : 920,
+        duration: reducedMotion ? 1 : 1180,
+        arcHeight: THREE.MathUtils.clamp(camera.position.distanceTo(toPosition) * 0.055, 0.18, 0.48),
         revealKey,
       };
     };
@@ -810,8 +725,7 @@ export default function InteractiveRoom() {
     const focusObject = (key: string) => {
       if (key === "__overview") {
         focusedKey = null;
-        const chase = getChasePose();
-        beginCameraMove(chase.position, chase.target, null, "RETURNING TO THE ROVER");
+        beginCameraMove(overviewPosition.clone(), overviewTarget.clone(), null, "RETURNING TO ROOM OVERVIEW");
         return;
       }
 
@@ -826,31 +740,9 @@ export default function InteractiveRoom() {
       beginCameraMove(target.clone().add(cameraOffset), target, key, `MOVING TO ${entry.directory.toUpperCase()}`);
     };
     focusRef.current = focusObject;
-    driveRef.current = (action, active) => {
-      driveState[action] = active;
-    };
-    interactRef.current = () => {
-      const key = findNearestObject();
-      if (key) focusObject(key);
-    };
-    resetRef.current = () => {
-      focusedKey = null;
-      rover.position.set(0.25, 0.3, 3.25);
-      roverHeading = 0;
-      rover.rotation.y = 0;
-      roverSpeed = 0;
-      roverSteer = 0;
-      Object.keys(driveState).forEach((key) => {
-        driveState[key as keyof typeof driveState] = false;
-      });
-      const chase = getChasePose();
-      beginCameraMove(chase.position, chase.target, null, "ROVER RESET");
-    };
-
-    const initialChase = getChasePose();
-    camera.position.copy(initialChase.position);
-    controls.target.copy(initialChase.target);
-    controls.enabled = false;
+    camera.position.copy(overviewPosition);
+    controls.target.copy(overviewTarget);
+    controls.enabled = true;
 
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
@@ -868,10 +760,9 @@ export default function InteractiveRoom() {
 
     const handlePointerMove = (event: PointerEvent) => {
       const next = pick(event);
+      pointerParallaxTarget.copy(pointer);
       if (next === hovered) return;
-      if (hovered) hovered.scale.setScalar(1);
       hovered = next;
-      if (hovered) hovered.scale.setScalar(1.035);
       renderer.domElement.style.cursor = hovered ? "pointer" : "grab";
       setHoverLabel(hovered?.userData.label ?? "");
     };
@@ -886,47 +777,16 @@ export default function InteractiveRoom() {
       if (selected?.userData.key) focusObject(selected.userData.key);
     };
 
-    const handlePointerLeave = () => setHoverLabel("");
+    const handlePointerLeave = () => {
+      hovered = null;
+      pointerParallaxTarget.set(0, 0);
+      renderer.domElement.style.cursor = "grab";
+      setHoverLabel("");
+    };
     renderer.domElement.addEventListener("pointermove", handlePointerMove);
     renderer.domElement.addEventListener("pointerdown", handlePointerDown);
     renderer.domElement.addEventListener("pointerup", handlePointerUp);
     renderer.domElement.addEventListener("pointerleave", handlePointerLeave);
-
-    const driveKeyMap: Record<string, keyof typeof driveState> = {
-      w: "forward",
-      arrowup: "forward",
-      s: "backward",
-      arrowdown: "backward",
-      a: "left",
-      arrowleft: "left",
-      d: "right",
-      arrowright: "right",
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
-      const driveAction = driveKeyMap[key];
-      if (driveAction) {
-        driveState[driveAction] = true;
-        event.preventDefault();
-        return;
-      }
-      if ((key === "enter" || key === "e") && !event.repeat) {
-        interactRef.current();
-        event.preventDefault();
-      }
-      if (key === "r" && !event.repeat) {
-        resetRef.current();
-        event.preventDefault();
-      }
-    };
-    const handleKeyUp = (event: KeyboardEvent) => {
-      const driveAction = driveKeyMap[event.key.toLowerCase()];
-      if (!driveAction) return;
-      driveState[driveAction] = false;
-      event.preventDefault();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
 
     const resize = () => {
       const width = host.clientWidth;
@@ -939,19 +799,6 @@ export default function InteractiveRoom() {
     resizeObserver.observe(host);
     resize();
 
-    const movementBlockers = [
-      { type: "box" as const, minX: -4.5, maxX: 2.0, minZ: -2.7, maxZ: 0.48 },
-      { type: "circle" as const, x: 3.55, z: -2.65, radius: 1.28 },
-      { type: "circle" as const, x: 2.65, z: 1.6, radius: 1.28 },
-      { type: "circle" as const, x: -4.35, z: 1.7, radius: 1.02 },
-    ];
-    const collides = (position: THREE.Vector3) =>
-      movementBlockers.some((blocker) => {
-        if (blocker.type === "box") {
-          return position.x > blocker.minX && position.x < blocker.maxX && position.z > blocker.minZ && position.z < blocker.maxZ;
-        }
-        return Math.hypot(position.x - blocker.x, position.z - blocker.z) < blocker.radius;
-      });
     const printerNozzle = room.getObjectByName("printer-nozzle");
     const printerSpool = room.getObjectByName("printer-spool");
     const rackFans = [room.getObjectByName("rack-fan-0"), room.getObjectByName("rack-fan-1")];
@@ -964,7 +811,6 @@ export default function InteractiveRoom() {
       if (!reducedMotion) {
         cyanLight.intensity = 22 + Math.sin(elapsed * 1.4) * 2;
         cat.position.y = 0.18 + Math.sin(elapsed * 1.15) * 0.015;
-        antennaTip.position.y = 1.12 + Math.sin(elapsed * 3.2) * 0.025;
         if (printerNozzle) printerNozzle.position.x = Math.sin(elapsed * 0.9) * 0.55;
         if (printerSpool) printerSpool.rotation.x += delta * 0.34;
         rackFans.forEach((fan, index) => {
@@ -972,67 +818,46 @@ export default function InteractiveRoom() {
         });
       }
 
-      const driveActive = !cameraMove && focusedKey === null;
-      if (driveActive) {
-        const throttle = Number(driveState.forward) - Number(driveState.backward);
-        const steering = Number(driveState.left) - Number(driveState.right);
-        const targetSpeed = throttle * 2.55;
-        roverSpeed = THREE.MathUtils.lerp(roverSpeed, targetSpeed, 1 - Math.pow(0.0015, delta));
-        roverSteer = THREE.MathUtils.lerp(roverSteer, steering, 1 - Math.pow(0.006, delta));
-        if (Math.abs(roverSpeed) < 0.008) roverSpeed = 0;
-        roverHeading += roverSteer * (0.55 + Math.abs(roverSpeed) * 0.34) * delta * (roverSpeed < -0.05 ? -1 : 1);
-        const forward = new THREE.Vector3(Math.sin(roverHeading), 0, -Math.cos(roverHeading));
-        const candidate = rover.position.clone().addScaledVector(forward, roverSpeed * delta);
-        candidate.x = THREE.MathUtils.clamp(candidate.x, -5.65, 5.65);
-        candidate.z = THREE.MathUtils.clamp(candidate.z, -3.65, 3.7);
-        if (!collides(candidate)) {
-          rover.position.x = candidate.x;
-          rover.position.z = candidate.z;
-        } else {
-          roverSpeed *= -0.14;
-        }
-        rover.rotation.y = roverHeading;
-        roverWheels.forEach((wheel) => {
-          wheel.rotation.x -= roverSpeed * delta * 4.4;
-        });
-        frontWheelPivots.forEach((pivot) => {
-          pivot.rotation.y = roverSteer * 0.34;
-        });
+      if (!cameraMove && focusedKey === null) {
+        const parallaxEase = reducedMotion ? 1 : 1 - Math.pow(0.0008, delta);
+        pointerParallax.lerp(pointerParallaxTarget, parallaxEase);
+        room.rotation.y = THREE.MathUtils.lerp(
+          room.rotation.y,
+          roomBaseRotation + pointerParallax.x * 0.028,
+          parallaxEase,
+        );
+        cyanLight.position.x = THREE.MathUtils.lerp(cyanLight.position.x, -1.3 + pointerParallax.x * 0.75, parallaxEase);
+        cyanLight.position.y = THREE.MathUtils.lerp(cyanLight.position.y, 3.3 + pointerParallax.y * 0.22, parallaxEase);
+        violetLight.position.z = THREE.MathUtils.lerp(violetLight.position.z, 2.2 - pointerParallax.x * 0.45, parallaxEase);
+      }
 
-        const chase = getChasePose();
-        const cameraEase = reducedMotion ? 1 : 1 - Math.pow(0.018, delta);
-        const targetEase = reducedMotion ? 1 : 1 - Math.pow(0.006, delta);
-        camera.position.lerp(chase.position, cameraEase);
-        controls.target.lerp(chase.target, targetEase);
-
-        const nextNearestKey = findNearestObject();
-        if (nextNearestKey !== nearestKey) {
-          nearestKey = nextNearestKey;
-          setNearbyLabel(nextNearestKey ? ROOM_ENTRIES[nextNearestKey].directory : "");
-        }
-      } else if (nearestKey !== null) {
-        nearestKey = null;
-        setNearbyLabel("");
+      const scaleEase = reducedMotion ? 1 : 1 - Math.pow(0.00015, delta);
+      for (const object of clickable) {
+        const isHovered = object === hovered;
+        const isFocused = object.userData.key === focusedKey;
+        const breathing = isFocused && !reducedMotion ? Math.sin(elapsed * 2.1) * 0.006 : 0;
+        const targetScale = (isHovered ? 1.045 : isFocused ? 1.018 : 1) + breathing;
+        const nextScale = THREE.MathUtils.lerp(object.scale.x, targetScale, scaleEase);
+        object.scale.setScalar(nextScale);
       }
 
       for (const [key, marker] of interactionMarkers) {
-        const near = key === nearestKey;
+        const active = key === hovered?.userData.key || key === focusedKey;
         const pulse = 1 + Math.sin(elapsed * 2.3 + Number(ROOM_ENTRIES[key].number)) * 0.06;
-        marker.scale.setScalar((near ? 1.3 : 1) * pulse);
+        marker.scale.setScalar((active ? 1.22 : 1) * pulse);
         const markerMaterial = marker.material as THREE.MeshBasicMaterial;
-        markerMaterial.opacity = near ? 0.78 : 0.2 + Math.sin(elapsed * 1.5) * 0.06;
+        markerMaterial.opacity = active ? 0.72 : 0.16 + Math.sin(elapsed * 1.5) * 0.045;
       }
       if (cameraMove) {
         const progress = Math.min(1, (timestamp - cameraMove.startedAt) / cameraMove.duration);
-        const eased = progress < 0.5
-          ? 4 * progress * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        const eased = progress * progress * progress * (progress * (progress * 6 - 15) + 10);
         camera.position.lerpVectors(cameraMove.fromPosition, cameraMove.toPosition, eased);
+        camera.position.y += Math.sin(progress * Math.PI) * cameraMove.arcHeight;
         controls.target.lerpVectors(cameraMove.fromTarget, cameraMove.toTarget, eased);
         if (progress >= 1) {
           const revealKey = cameraMove.revealKey;
           cameraMove = null;
-          controls.enabled = false;
+          controls.enabled = revealKey === null;
           setTransitionLabel("");
           setActiveKey(revealKey);
           if (revealKey) {
@@ -1063,12 +888,7 @@ export default function InteractiveRoom() {
       renderer.domElement.removeEventListener("pointerdown", handlePointerDown);
       renderer.domElement.removeEventListener("pointerup", handlePointerUp);
       renderer.domElement.removeEventListener("pointerleave", handlePointerLeave);
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
       focusRef.current = () => undefined;
-      driveRef.current = () => undefined;
-      interactRef.current = () => undefined;
-      resetRef.current = () => undefined;
       room.traverse((object) => {
         if (!(object instanceof THREE.Mesh)) return;
         object.geometry.dispose();
@@ -1094,66 +914,16 @@ export default function InteractiveRoom() {
       <div className="room-stage-bar">
         <span>AFFAN_LAB / ROOM_01</span>
         <strong aria-live="polite">
-          {transitionLabel || hoverLabel || (activeEntry ? activeEntry.title.toUpperCase() : "WASD / ARROWS TO DRIVE")}
+          {transitionLabel || hoverLabel || (activeEntry ? activeEntry.title.toUpperCase() : "MOVE / DRAG / SELECT")}
         </strong>
       </div>
       <div className="room-canvas" ref={hostRef} />
-      <div className="room-drive-hud" aria-label="Cyber rover controls">
-        <span className="room-drive-status"><i /> CYBER ROVER / ONLINE</span>
-        <span>{visitedKeys.length} / {DIRECTORY.length} stations logged</span>
-        <span>WASD or arrows / drive</span>
-        <span>E or Enter / inspect</span>
-        <button type="button" onClick={() => resetRef.current()}>R / reset</button>
-        {nearbyLabel && !activeEntry && (
-          <button className="room-nearby-action" type="button" onClick={() => interactRef.current()}>
-            Inspect {nearbyLabel}
-          </button>
-        )}
-      </div>
-      <div className="rover-pad" aria-label="Touch controls">
-        <button
-          type="button"
-          className="rover-pad-forward"
-          aria-label="Drive forward"
-          onPointerDown={() => driveRef.current("forward", true)}
-          onPointerUp={() => driveRef.current("forward", false)}
-          onPointerCancel={() => driveRef.current("forward", false)}
-          onPointerLeave={() => driveRef.current("forward", false)}
-        >▲</button>
-        <button
-          type="button"
-          className="rover-pad-left"
-          aria-label="Turn left"
-          onPointerDown={() => driveRef.current("left", true)}
-          onPointerUp={() => driveRef.current("left", false)}
-          onPointerCancel={() => driveRef.current("left", false)}
-          onPointerLeave={() => driveRef.current("left", false)}
-        >◀</button>
-        <button
-          type="button"
-          className="rover-pad-back"
-          aria-label="Drive backward"
-          onPointerDown={() => driveRef.current("backward", true)}
-          onPointerUp={() => driveRef.current("backward", false)}
-          onPointerCancel={() => driveRef.current("backward", false)}
-          onPointerLeave={() => driveRef.current("backward", false)}
-        >▼</button>
-        <button
-          type="button"
-          className="rover-pad-right"
-          aria-label="Turn right"
-          onPointerDown={() => driveRef.current("right", true)}
-          onPointerUp={() => driveRef.current("right", false)}
-          onPointerCancel={() => driveRef.current("right", false)}
-          onPointerLeave={() => driveRef.current("right", false)}
-        >▶</button>
-        <button
-          type="button"
-          className="rover-pad-inspect"
-          aria-label={nearbyLabel ? `Inspect ${nearbyLabel}` : "Drive near a glowing station to inspect it"}
-          disabled={!nearbyLabel}
-          onClick={() => interactRef.current()}
-        >E</button>
+      <div className="room-fluid-hint" aria-hidden="true">
+        <span><i /> SCENE RESPONSIVE</span>
+        <span>Move pointer / shift perspective</span>
+        <span>Drag / orbit gently</span>
+        <span>Select an object / inspect</span>
+        <strong>{visitedKeys.length} / {DIRECTORY.length} viewed</strong>
       </div>
       <nav className="room-directory" id="room-directory" aria-label="3D room directory">
         {DIRECTORY.map(([key, entry]) => (

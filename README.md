@@ -10,7 +10,7 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 The site presents my technical work, education, experience, and interests without relying on a profile photo. The homepage is a full-screen Three.js cyber lab where each object represents part of my work or personality.
 
-Visitors pilot a small cyber rover through the room with WASD, arrow keys, or touch controls. Driving into a glowing station reveals an interaction prompt. Selecting it moves the camera into a composed close-up and opens the complete file without leaving the scene. Earlier focused routes remain available as unlisted fallbacks.
+Visitors move the pointer to subtly shift the diorama, drag to orbit within a restrained range, and select any object directly. Each selection follows a curved, eased camera path into a composed close-up before opening the complete file without leaving the scene. Earlier focused routes remain available as unlisted fallbacks.
 
 ## Pages
 
@@ -33,15 +33,16 @@ Visitors pilot a small cyber rover through the room with WASD, arrow keys, or to
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
-- Controllable cyber rover with acceleration, steering, collision boundaries, animated wheels, headlights, and a damped chase camera
-- Proximity-based stations, pulsing floor markers, keyboard interaction, reset controls, and a mobile directional pad
+- Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
+- Constrained orbit controls with damping for smooth, predictable mouse and touch movement
+- Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including moving printer parts, rotating rack fans, pulsing lights, and responsive interaction markers
-- Animated camera pans with object-relative positions and centered, upright framing
+- Curved camera transitions with smoother-step easing, object-relative positions, and centered, upright framing
 - More detailed workstation, server rack, 3D printer, books, camera, badminton, profile-board, room, and cat models
 - Seven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, experience, and contact details
 - All main portfolio content stays inside the room instead of redirecting to internal pages
-- Accessible room directory, keyboard controls, Escape-to-return behavior, and unlisted fallback routes
+- Accessible room directory, Escape-to-return behavior, touch support, and unlisted fallback routes
 - Section-specific Three.js network topology on the supporting pages
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns
@@ -63,9 +64,11 @@ Visitors pilot a small cyber rover through the room with WASD, arrow keys, or to
 - ESLint
 - Node.js test runner
 
-## Interaction reference
+## Interaction references
 
-The game-like navigation direction was informed by [Bruno Simon's portfolio](https://bruno-simon.com/) and the architecture documented in the [MIT-licensed Folio 2025 source](https://github.com/brunosimon/folio-2025). This portfolio uses its own cyber-lab concept, code, models, copy, interface, and controls. No models, textures, music, or other visual assets from Folio 2025 are included.
+[Ida's Gameboy](https://idas-gameboy.netlify.app/) and [Jesse's Ramen](https://www.jesse-zhou.com/) informed the scene-first direction, subtle pointer response, and fluid transitions between a shared 3D world and its interface. [Bruno Simon's portfolio](https://bruno-simon.com/) informed an earlier game-control experiment, which remains preserved only on the backup branch `backup/rover-world-v6-2026-07-29`.
+
+The current portfolio uses an original cyber-lab concept, code, procedural models, copy, interface, and interaction system. No source code, models, textures, music, or other visual assets from these reference sites are included.
 
 ## Local development
 

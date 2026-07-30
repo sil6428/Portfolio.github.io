@@ -3079,12 +3079,12 @@ main {
   background: rgba(5,9,13,.58);
 }
 .immersive-home .room-stage-bar > span { display: none; }
-.room-drive-hud {
+.room-fluid-hint {
   position: absolute;
   left: 20px;
   bottom: 76px;
   z-index: 10;
-  width: 200px;
+  width: 214px;
   padding: 12px;
   display: grid;
   gap: 7px;
@@ -3094,14 +3094,14 @@ main {
   backdrop-filter: blur(16px);
   font: 7px "DM Mono", monospace;
   letter-spacing: .08em;
-  pointer-events: auto;
+  pointer-events: none;
 }
-.room-drive-status {
+.room-fluid-hint > span:first-child {
   color: #9bb2b7;
   padding-bottom: 7px;
   border-bottom: 1px solid rgba(119,231,255,.1);
 }
-.room-drive-status i {
+.room-fluid-hint i {
   display: inline-block;
   width: 5px;
   height: 5px;
@@ -3110,30 +3110,10 @@ main {
   background: #68e0ae;
   box-shadow: 0 0 10px #68e0ae;
 }
-.room-drive-hud button {
-  min-height: 28px;
-  border: 1px solid rgba(119,231,255,.14);
-  color: #7f949b;
-  background: rgba(119,231,255,.025);
-  font: inherit;
-  letter-spacing: inherit;
-  text-align: left;
-  cursor: pointer;
+.room-fluid-hint strong {
+  color: var(--topology-cyan);
+  font-weight: 500;
 }
-.room-drive-hud button:hover,
-.room-drive-hud button:focus-visible {
-  color: white;
-  border-color: rgba(119,231,255,.38);
-  outline: 0;
-}
-.room-drive-hud .room-nearby-action {
-  padding: 0 9px;
-  color: #dffaff;
-  border-color: rgba(119,231,255,.42);
-  background: rgba(119,231,255,.1);
-  animation: room-nearby-pulse 1.8s ease-in-out infinite;
-}
-.rover-pad { display: none; }
 .immersive-home .room-directory {
   inset: auto clamp(160px,18vw,330px) 38px;
   grid-template-columns: repeat(7,minmax(0,1fr));
@@ -3344,10 +3324,6 @@ body:has(.room-has-popup) .soundtrack-toggle {
   to { opacity: 1; transform: translateX(0); filter: blur(0); }
 }
 
-@keyframes room-nearby-pulse {
-  50% { border-color: rgba(119,231,255,.8); box-shadow: 0 0 22px rgba(119,231,255,.12); }
-}
-
 @media (max-width: 900px) {
   .immersive-header { padding-inline: 14px; }
   .immersive-identity span { display: none; }
@@ -3358,7 +3334,7 @@ body:has(.room-has-popup) .soundtrack-toggle {
     inset: auto 12px 40px;
     grid-template-columns: repeat(4,minmax(0,1fr));
   }
-  .room-drive-hud {
+  .room-fluid-hint {
     bottom: 154px;
     width: 178px;
   }
@@ -3379,46 +3355,14 @@ body:has(.room-has-popup) .soundtrack-toggle {
   .immersive-intro > span { max-width: 270px; }
   .immersive-home .room-stage-bar { top: 70px; max-width: calc(100vw - 24px); }
   .immersive-home .room-directory { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .room-drive-hud {
-    left: auto;
-    right: 12px;
-    bottom: 276px;
-    width: 132px;
+  .room-fluid-hint {
+    left: 12px;
+    bottom: 204px;
+    width: 146px;
     padding: 8px;
   }
-  .room-drive-hud > span:not(.room-drive-status),
-  .room-drive-hud > button:not(.room-nearby-action) { display: none; }
-  .rover-pad {
-    position: absolute;
-    left: 12px;
-    bottom: 206px;
-    z-index: 12;
-    width: 132px;
-    height: 104px;
-    display: grid;
-    grid-template: repeat(2,48px) / repeat(3,40px);
-    gap: 6px;
-    pointer-events: auto;
-    touch-action: none;
-  }
-  .rover-pad button {
-    border: 1px solid rgba(119,231,255,.2);
-    border-radius: 5px;
-    color: #99afb5;
-    background: rgba(5,9,13,.82);
-    backdrop-filter: blur(12px);
-    font: 13px "DM Mono", monospace;
-    touch-action: none;
-  }
-  .rover-pad button:active { color: white; background: rgba(119,231,255,.16); }
-  .rover-pad button:disabled { opacity: .28; }
-  .rover-pad-forward { grid-area: 1 / 2; }
-  .rover-pad-left { grid-area: 2 / 1; }
-  .rover-pad-back { grid-area: 2 / 2; }
-  .rover-pad-right { grid-area: 2 / 3; }
-  .rover-pad-inspect { grid-area: 1 / 3; color: var(--topology-cyan) !important; }
-  .room-has-popup .rover-pad,
-  .room-has-popup .room-drive-hud { display: none; }
+  .room-fluid-hint > span:not(:first-child) { display: none; }
+  .room-has-popup .room-fluid-hint { display: none; }
   .room-popup { bottom: 202px; padding: 24px 20px 20px; max-height: 50vh; }
   .room-popup h2 { font-size: 40px; }
   .immersive-footer a { display: none; }
@@ -3427,5 +3371,4 @@ body:has(.room-has-popup) .soundtrack-toggle {
 
 @media (prefers-reduced-motion: reduce) {
   .room-popup { animation-duration: .01ms; }
-  .room-drive-hud .room-nearby-action { animation: none; }
 }
