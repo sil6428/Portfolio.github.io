@@ -62,6 +62,12 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Refined server faceplates, network ports, rack screws and status badge without restoring the removed wires or decorative server fans
 - Camera focus rings, coated lens glass, viewfinder, rear display and controls, plus book covers, page blocks, page lines, shelf fasteners, racket throat, grommets, and denser strings
 - More expressive cat details including modeled whiskers, mouth, and paw toes
+- Adaptive model fidelity that adds desktop-only micro-details while using a lighter geometry path on touch and narrow-screen devices
+- Filmic colour mapping, higher desktop pixel density, tuned soft shadows, and studio fill lighting for better depth and material separation
+- Physically based glass, coated optics, and lacquer materials on the PC tower, camera lens, racket frame, and katana scabbard
+- Additional PC internals including CPU block, graphics card, RGB memory, fan blades, and front ventilation
+- Printer bed springs, X-axis belt, stepper motors, extruder grille and fan blades, plus higher-resolution chess-piece layers on desktop
+- Server handles and perforated rails, camera aperture and lens glint, labelled book spines, a katana scabbard with grip diamonds, and more expressive cat eyes and fur
 - Wall decor built directly into the Three.js room, including a framed network-topology display and a three-piece photography-inspired gallery above the bookshelf
 - Eleven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, the resume, and design inspiration
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat

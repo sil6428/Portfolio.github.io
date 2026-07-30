@@ -321,9 +321,17 @@ export default function InteractiveRoom() {
     camera.position.set(5.2, 4.3, 6.5);
     camera.lookAt(0, 1.55, -0.7);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.65));
+    const highDetail = window.matchMedia("(min-width: 901px) and (pointer: fine)").matches;
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance",
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, highDetail ? 2 : 1.45));
     renderer.setClearColor(0x080a0f, 0.82);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.domElement.setAttribute("aria-hidden", "true");
@@ -367,6 +375,32 @@ export default function InteractiveRoom() {
         roughness: options.roughness ?? 0.72,
         emissive: options.emissive ?? 0x000000,
         emissiveIntensity: options.emissiveIntensity ?? 0,
+      });
+
+    const physicalMaterial = (
+      color: THREE.ColorRepresentation,
+      options: {
+        metalness?: number;
+        roughness?: number;
+        emissive?: THREE.ColorRepresentation;
+        emissiveIntensity?: number;
+        clearcoat?: number;
+        clearcoatRoughness?: number;
+        transmission?: number;
+        opacity?: number;
+      } = {},
+    ) =>
+      new THREE.MeshPhysicalMaterial({
+        color,
+        metalness: options.metalness ?? 0.08,
+        roughness: options.roughness ?? 0.3,
+        emissive: options.emissive ?? 0x000000,
+        emissiveIntensity: options.emissiveIntensity ?? 0,
+        clearcoat: options.clearcoat ?? 0.55,
+        clearcoatRoughness: options.clearcoatRoughness ?? 0.18,
+        transmission: options.transmission ?? 0,
+        transparent: (options.opacity ?? 1) < 1 || (options.transmission ?? 0) > 0,
+        opacity: options.opacity ?? 1,
       });
 
     const box = (
@@ -434,6 +468,16 @@ export default function InteractiveRoom() {
     room.add(floor);
     box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#111622");
     box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#0e1920");
+    const rearBaseboard = roundedBox(room, [11.75, 0.16, 0.1], [0, 0.08, -4.16], "#26323b", 0.035, {
+      metalness: 0.4,
+      roughness: 0.46,
+    });
+    rearBaseboard.name = "room-rear-baseboard";
+    const sideBaseboard = roundedBox(room, [0.1, 0.16, 8.25], [-5.86, 0.08, 0], "#26323b", 0.035, {
+      metalness: 0.4,
+      roughness: 0.46,
+    });
+    sideBaseboard.name = "room-side-baseboard";
 
     const wallDecor = new THREE.Group();
     wallDecor.name = "wall-decor-collection";
@@ -537,6 +581,24 @@ export default function InteractiveRoom() {
       roughness: 0.48,
     });
     deskTop.name = "beveled-desk-top";
+    const deskGrommet = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.16, 0.16, 0.04, 28),
+      material("#13191e", { metalness: 0.48, roughness: 0.34 }),
+    );
+    deskGrommet.name = "desk-cable-grommet";
+    deskGrommet.position.set(-3.8, 1.46, -3.82);
+    desk.add(deskGrommet);
+    for (const x of [-4.92, 2.28]) {
+      for (const z of [-4.02, -2.3]) {
+        const deskFoot = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.13, 0.11, 0.055, 16),
+          material("#080b0e", { metalness: 0.56, roughness: 0.44 }),
+        );
+        deskFoot.name = "desk-adjustable-foot";
+        deskFoot.position.set(x, 0.03, z);
+        desk.add(deskFoot);
+      }
+    }
     for (const x of [-4.92, 2.28]) {
       for (const z of [-4.02, -2.3]) {
         box(desk, [0.17, 1.35, 0.17], [x, 0.68, z], "#141c22", { metalness: 0.62 });
@@ -749,13 +811,22 @@ export default function InteractiveRoom() {
     });
     desktopTower.name = "desktop-tower-beveled-case";
     box(workstation, [0.035, 1.02, 0.7], [1.23, 0.6, -0.32], "#263640", { metalness: 0.38, roughness: 0.24 });
-    const towerGlass = roundedBox(workstation, [0.018, 0.92, 0.62], [1.205, 0.6, -0.32], "#17303b", 0.015, {
-      metalness: 0.2,
-      roughness: 0.12,
-      emissive: "#0d2733",
-      emissiveIntensity: 0.42,
-    });
+    const towerGlass = new THREE.Mesh(
+      new RoundedBoxGeometry(0.018, 0.92, 0.62, 3, 0.008),
+      physicalMaterial("#17303b", {
+        roughness: 0.08,
+        clearcoat: 1,
+        clearcoatRoughness: 0.08,
+        transmission: 0.14,
+        opacity: 0.68,
+        emissive: "#0d2733",
+        emissiveIntensity: 0.24,
+      }),
+    );
     towerGlass.name = "desktop-tower-glass";
+    towerGlass.position.set(1.205, 0.6, -0.32);
+    towerGlass.castShadow = true;
+    workstation.add(towerGlass);
     const motherboard = box(workstation, [0.018, 0.58, 0.52], [1.185, 0.6, -0.3], "#20504c", {
       metalness: 0.22,
       roughness: 0.58,
@@ -787,6 +858,54 @@ export default function InteractiveRoom() {
       pcFanHub.rotation.z = Math.PI / 2;
       pcFanHub.position.set(1.155, y, -0.33);
       workstation.add(pcFanHub);
+      if (highDetail) {
+        for (let blade = 0; blade < 5; blade += 1) {
+          const fanBlade = roundedBox(
+            workstation,
+            [0.008, 0.04, 0.105],
+            [1.15, y, -0.33],
+            "#4c6973",
+            0.01,
+            { metalness: 0.44, roughness: 0.28 },
+          );
+          fanBlade.name = "desktop-case-fan-blade";
+          fanBlade.rotation.x = (blade / 5) * Math.PI * 2 + 0.32;
+        }
+      }
+    }
+    const cpuBlock = roundedBox(workstation, [0.025, 0.18, 0.18], [1.145, 0.57, -0.3], "#8b9498", 0.018, {
+      metalness: 0.82,
+      roughness: 0.22,
+    });
+    cpuBlock.name = "desktop-cpu-block";
+    const graphicsCard = roundedBox(workstation, [0.035, 0.13, 0.43], [1.14, 0.34, -0.28], "#171f24", 0.022, {
+      metalness: 0.62,
+      roughness: 0.34,
+    });
+    graphicsCard.name = "desktop-graphics-card";
+    for (let ramIndex = 0; ramIndex < 2; ramIndex += 1) {
+      const ramStick = roundedBox(
+        workstation,
+        [0.02, 0.28, 0.035],
+        [1.14, 0.62, -0.09 + ramIndex * 0.06],
+        ramIndex === 0 ? "#9f91ff" : "#77e7ff",
+        0.008,
+        { emissive: ramIndex === 0 ? "#30285f" : "#225766", emissiveIntensity: 0.42, metalness: 0.42, roughness: 0.3 },
+      );
+      ramStick.name = "desktop-rgb-memory";
+    }
+    if (highDetail) {
+      for (let vent = 0; vent < 8; vent += 1) {
+        const towerVent = roundedBox(
+          workstation,
+          [0.26, 0.015, 0.012],
+          [1.48, 0.3 + vent * 0.075, 0.112],
+          "#52636b",
+          0.004,
+          { metalness: 0.68, roughness: 0.32 },
+        );
+        towerVent.name = "desktop-tower-front-vent";
+      }
     }
     box(workstation, [0.03, 0.88, 0.055], [1.225, 0.62, -0.34], "#77e7ff", {
       emissive: "#255765",
@@ -856,6 +975,17 @@ export default function InteractiveRoom() {
         screw.position.set(x, 0.55 + unit * 0.44, 0.785);
         rack.add(screw);
       }
+      for (const x of [-0.55, 0.55]) {
+        const unitHandle = roundedBox(
+          rack,
+          [0.16, 0.055, 0.045],
+          [x, 0.55 + unit * 0.44, 0.795],
+          "#89969b",
+          0.012,
+          { metalness: 0.86, roughness: 0.24 },
+        );
+        unitHandle.name = "server-rack-unit-handle";
+      }
     }
     box(rack, [0.1, 3.3, 0.1], [-0.72, 1.86, 0.79], "#53636a", { metalness: 0.88 });
     box(rack, [0.1, 3.3, 0.1], [0.72, 1.86, 0.79], "#53636a", { metalness: 0.88 });
@@ -869,6 +999,20 @@ export default function InteractiveRoom() {
       emissiveIntensity: 0.25,
     });
     rackBadge.name = "server-rack-status-badge";
+    if (highDetail) {
+      for (const x of [-0.72, 0.72]) {
+        for (let hole = 0; hole < 17; hole += 1) {
+          const railHole = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.012, 0.012, 0.018, 8),
+            material("#11171b", { metalness: 0.35, roughness: 0.56 }),
+          );
+          railHole.name = "server-rack-rail-hole";
+          railHole.rotation.x = Math.PI / 2;
+          railHole.position.set(x, 0.38 + hole * 0.185, 0.802);
+          rack.add(railHole);
+        }
+      }
+    }
     const serverBeacon = easterHotspot("signal", "PRESS SERVER BEACON", rack);
     serverBeacon.position.set(0.69, 3.38, 0.81);
     const serverBeaconMaterial = material("#68e0ae", {
@@ -932,6 +1076,14 @@ export default function InteractiveRoom() {
           roughness: 0.24,
         });
         bedClip.name = "printer-bed-clip";
+        const bedSpring = new THREE.Mesh(
+          new THREE.TorusKnotGeometry(0.034, 0.006, highDetail ? 34 : 18, 5, 2, 5),
+          material("#89979b", { metalness: 0.86, roughness: 0.26 }),
+        );
+        bedSpring.name = "printer-bed-spring";
+        bedSpring.scale.set(0.65, 0.65, 0.65);
+        bedSpring.position.set(x, 0.19, z);
+        printBedAssembly.add(bedSpring);
       }
     }
     const printedChessSet = new THREE.Group();
@@ -1044,7 +1196,7 @@ export default function InteractiveRoom() {
         const progress = relativeY / pieceHeight;
         const radius = pieceRadius(kind, progress);
         const pieceLayer = new THREE.Mesh(
-          new THREE.CylinderGeometry(radius, radius, chessLayerHeight * 0.82, 14),
+          new THREE.CylinderGeometry(radius, radius, chessLayerHeight * 0.82, highDetail ? 20 : 12),
           pieceMaterial,
         );
         pieceLayer.name = `chess-${kind}-layer`;
@@ -1137,6 +1289,35 @@ export default function InteractiveRoom() {
     printerGantry.add(printHead);
     box(printHead, [0.5, 0.34, 0.44], [0, -0.08, 0.02], "#151d23", { metalness: 0.72, roughness: 0.32 });
     box(printHead, [0.32, 0.11, 0.455], [0, 0.11, 0.025], "#303e44", { metalness: 0.78, roughness: 0.26 });
+    const extruderFan = new THREE.Mesh(
+      new THREE.TorusGeometry(0.105, 0.014, 8, highDetail ? 28 : 18),
+      material("#7f8f95", { metalness: 0.72, roughness: 0.28 }),
+    );
+    extruderFan.name = "printer-extruder-fan-grille";
+    extruderFan.position.set(0, -0.08, 0.247);
+    printHead.add(extruderFan);
+    const extruderFanHub = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.025, 0.025, 0.018, 12),
+      material("#20292e", { metalness: 0.55, roughness: 0.34 }),
+    );
+    extruderFanHub.name = "printer-extruder-fan-hub";
+    extruderFanHub.rotation.x = Math.PI / 2;
+    extruderFanHub.position.set(0, -0.08, 0.257);
+    printHead.add(extruderFanHub);
+    if (highDetail) {
+      for (let blade = 0; blade < 6; blade += 1) {
+        const extruderBlade = roundedBox(
+          printHead,
+          [0.022, 0.078, 0.01],
+          [0, -0.08, 0.258],
+          "#45565d",
+          0.006,
+          { metalness: 0.45, roughness: 0.34 },
+        );
+        extruderBlade.name = "printer-extruder-fan-blade";
+        extruderBlade.rotation.z = (blade / 6) * Math.PI * 2;
+      }
+    }
     const nozzle = new THREE.Mesh(
       new THREE.CylinderGeometry(0.035, 0.075, 0.24, 10),
       material("#d49a54", { metalness: 0.88, roughness: 0.28 }),
@@ -1144,6 +1325,26 @@ export default function InteractiveRoom() {
     nozzle.position.set(0, -0.34, 0.12);
     printHead.add(nozzle);
     box(printHead, [0.14, 0.12, 0.18], [0, -0.2, 0.1], "#c28b4d", { metalness: 0.86, roughness: 0.26 });
+    const xAxisBelt = box(printerGantry, [1.48, 0.022, 0.035], [0, 0.055, -0.31], "#111417", {
+      metalness: 0.16,
+      roughness: 0.76,
+    });
+    xAxisBelt.name = "printer-x-axis-belt";
+    for (const x of [-0.81, 0.81]) {
+      const stepperMotor = roundedBox(printer, [0.25, 0.25, 0.25], [x, 0.36, -0.65], "#303a40", 0.028, {
+        metalness: 0.74,
+        roughness: 0.3,
+      });
+      stepperMotor.name = "printer-stepper-motor";
+      const motorCap = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.055, 0.055, 0.035, 14),
+        material("#a4afb2", { metalness: 0.92, roughness: 0.18 }),
+      );
+      motorCap.name = "printer-stepper-shaft";
+      motorCap.rotation.x = Math.PI / 2;
+      motorCap.position.set(x, 0.36, -0.5);
+      printer.add(motorCap);
+    }
     const createPrinterSpool = (name: string, color: string, emissive: string, x: number) => {
       const spoolGroup = new THREE.Group();
       spoolGroup.name = name;
@@ -1284,6 +1485,33 @@ export default function InteractiveRoom() {
     const shelfBlade = new THREE.Mesh(katanaBladeGeometry, shelfSwordBladeMaterial);
     shelfBlade.name = "shelf-katana-unified-curved-blade";
     shelfSword.add(shelfBlade);
+    const katanaScabbardCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0.19, -0.055, -0.42),
+      new THREE.Vector3(0.2, -0.05, 0.2),
+      new THREE.Vector3(0.22, -0.04, 0.92),
+      new THREE.Vector3(0.26, -0.025, 1.54),
+    ]);
+    const katanaScabbard = new THREE.Mesh(
+      new THREE.TubeGeometry(katanaScabbardCurve, highDetail ? 42 : 24, 0.068, highDetail ? 12 : 8, false),
+      physicalMaterial("#101318", {
+        metalness: 0.24,
+        roughness: 0.16,
+        clearcoat: 0.92,
+        clearcoatRoughness: 0.12,
+        emissive: "#17142b",
+        emissiveIntensity: 0.2,
+      }),
+    );
+    katanaScabbard.name = "shelf-katana-lacquered-scabbard";
+    shelfSword.add(katanaScabbard);
+    const scabbardCollar = new THREE.Mesh(
+      new THREE.TorusGeometry(0.072, 0.012, 7, 18),
+      shelfSwordHiltMaterial,
+    );
+    scabbardCollar.name = "shelf-katana-scabbard-collar";
+    scabbardCollar.rotation.x = Math.PI / 2;
+    scabbardCollar.position.set(0.19, -0.055, -0.42);
+    shelfSword.add(scabbardCollar);
     const katanaHabaki = new THREE.Mesh(
       new THREE.BoxGeometry(0.13, 0.07, 0.14),
       shelfSwordDarkMaterial,
@@ -1315,6 +1543,18 @@ export default function InteractiveRoom() {
       gripWrap.rotation.x = Math.PI / 2;
       gripWrap.position.set(0, 0.025, -0.59 - wrap * 0.09);
       shelfSword.add(gripWrap);
+    }
+    for (let diamond = 0; diamond < 4; diamond += 1) {
+      for (const side of [-1, 1]) {
+        const gripDiamond = new THREE.Mesh(
+          new THREE.OctahedronGeometry(0.028, 0),
+          material("#d4d0c3", { metalness: 0.08, roughness: 0.76 }),
+        );
+        gripDiamond.name = "shelf-katana-grip-diamond";
+        gripDiamond.scale.set(0.42, 0.45, 1);
+        gripDiamond.position.set(side * 0.052, 0.025, -0.63 - diamond * 0.09);
+        shelfSword.add(gripDiamond);
+      }
     }
     const shelfPommel = new THREE.Mesh(
       new THREE.CylinderGeometry(0.07, 0.06, 0.07, 14),
@@ -1360,6 +1600,17 @@ export default function InteractiveRoom() {
         );
         pageLine.name = "book-page-line";
       }
+      for (const labelOffset of [-0.17, 0.12]) {
+        const spineBand = roundedBox(
+          books,
+          [0.012, 0.045, width * 0.72],
+          [-0.226, height / 2 + labelOffset, bookZ],
+          index % 2 ? "#f0c66f" : "#8eead2",
+          0.006,
+          { emissive: index % 2 ? "#6f4a22" : "#245c54", emissiveIntensity: 0.2, roughness: 0.62 },
+        );
+        spineBand.name = "book-spine-label-band";
+      }
       box(books, [0.455, 0.035, width * 0.92], [0, height - 0.1, bookZ], index % 2 ? cyan : amber, {
         emissive: index % 2 ? "#2b626c" : "#815c2e",
         emissiveIntensity: 0.25,
@@ -1398,12 +1649,36 @@ export default function InteractiveRoom() {
     }
     const glass = new THREE.Mesh(
       new THREE.CircleGeometry(0.22, 36),
-      material("#4b77a5", { emissive: "#1d3857", emissiveIntensity: 0.55, roughness: 0.12 }),
+      physicalMaterial("#4b77a5", {
+        emissive: "#1d3857",
+        emissiveIntensity: 0.38,
+        roughness: 0.04,
+        clearcoat: 1,
+        clearcoatRoughness: 0.04,
+        transmission: 0.16,
+        opacity: 0.86,
+      }),
     );
     glass.name = "camera-coated-lens-glass";
     glass.rotation.y = Math.PI / 2;
     glass.position.x = 0.67;
     cameraGroup.add(glass);
+    const aperture = new THREE.Mesh(
+      new THREE.CircleGeometry(0.105, highDetail ? 24 : 16),
+      material("#030506", { metalness: 0.26, roughness: 0.2 }),
+    );
+    aperture.name = "camera-lens-aperture";
+    aperture.rotation.y = Math.PI / 2;
+    aperture.position.x = 0.677;
+    cameraGroup.add(aperture);
+    const lensGlint = new THREE.Mesh(
+      new THREE.CircleGeometry(0.026, 14),
+      material("#b9efff", { emissive: "#73d9ff", emissiveIntensity: 1.25, roughness: 0.08 }),
+    );
+    lensGlint.name = "camera-lens-glint";
+    lensGlint.rotation.y = Math.PI / 2;
+    lensGlint.position.set(0.682, 0.07, -0.08);
+    cameraGroup.add(lensGlint);
     roundedBox(cameraGroup, [0.44, 0.28, 0.38], [-0.03, 0.4, -0.3], "#222b31", 0.045, { metalness: 0.68, roughness: 0.3 });
     roundedBox(cameraGroup, [0.42, 0.18, 0.28], [-0.02, 0.44, 0.35], "#252f35", 0.04, { metalness: 0.66, roughness: 0.28 });
     const cameraGrip = roundedBox(cameraGroup, [0.52, 0.5, 0.24], [0, -0.08, 0.5], "#11171b", 0.055, { roughness: 0.42 });
@@ -1443,7 +1718,26 @@ export default function InteractiveRoom() {
       );
       dial.position.set(-0.12, 0.5, -0.15 + dialIndex * 0.42);
       cameraGroup.add(dial);
+      if (highDetail) {
+        for (let notch = 0; notch < 12; notch += 1) {
+          const angle = (notch / 12) * Math.PI * 2;
+          const dialNotch = roundedBox(
+            cameraGroup,
+            [0.018, 0.035, 0.018],
+            [-0.12 + Math.cos(angle) * 0.105, 0.5 + Math.sin(angle) * 0.105, -0.15 + dialIndex * 0.42],
+            "#8b989d",
+            0.004,
+            { metalness: 0.8, roughness: 0.22 },
+          );
+          dialNotch.name = "camera-dial-knurl";
+        }
+      }
     }
+    const hotShoe = roundedBox(cameraGroup, [0.16, 0.025, 0.18], [-0.02, 0.555, 0.1], "#889397", 0.008, {
+      metalness: 0.9,
+      roughness: 0.2,
+    });
+    hotShoe.name = "camera-hot-shoe";
     const strap = new THREE.Mesh(
       new THREE.TubeGeometry(
         new THREE.CatmullRomCurve3([
@@ -1478,7 +1772,12 @@ export default function InteractiveRoom() {
     }
     const racketHead = new THREE.Mesh(
       new THREE.TorusGeometry(0.58, 0.052, 12, 52),
-      material("#dce7e9", { metalness: 0.55, roughness: 0.32 }),
+      physicalMaterial("#dce7e9", {
+        metalness: 0.55,
+        roughness: 0.25,
+        clearcoat: 0.82,
+        clearcoatRoughness: 0.14,
+      }),
     );
     racketHead.name = "racket-aero-frame";
     racketHead.scale.y = 1.28;
@@ -1489,6 +1788,14 @@ export default function InteractiveRoom() {
     );
     shaft.position.y = -1.03;
     racket.add(shaft);
+    const racketJoint = new THREE.Mesh(
+      new THREE.SphereGeometry(0.075, 18, 12),
+      physicalMaterial("#dce7e9", { metalness: 0.5, roughness: 0.24, clearcoat: 0.75 }),
+    );
+    racketJoint.name = "racket-t-joint";
+    racketJoint.scale.set(0.8, 1.1, 0.72);
+    racketJoint.position.y = -0.69;
+    racket.add(racketJoint);
     for (const side of [-1, 1]) {
       const throatStart = new THREE.Vector3(side * 0.29, -0.5, 0);
       const throatEnd = new THREE.Vector3(side * 0.055, -0.68, 0);
@@ -1596,7 +1903,38 @@ export default function InteractiveRoom() {
       pupil.scale.set(0.38, 1, 0.65);
       pupil.position.set(0.687, 0.67, side * 0.09);
       cat.add(pupil);
+      const eyeGlint = new THREE.Mesh(
+        new THREE.SphereGeometry(0.006, 8, 6),
+        material("#f5ffff", { emissive: "#d8fbff", emissiveIntensity: 1.2, roughness: 0.05 }),
+      );
+      eyeGlint.name = "cat-eye-glint";
+      eyeGlint.position.set(0.699, 0.683, side * 0.083);
+      cat.add(eyeGlint);
+      const brow = new THREE.Mesh(
+        new THREE.TubeGeometry(
+          new THREE.QuadraticBezierCurve3(
+            new THREE.Vector3(0.655, 0.737, side * 0.055),
+            new THREE.Vector3(0.675, 0.758, side * 0.09),
+            new THREE.Vector3(0.65, 0.742, side * 0.13),
+          ),
+          8,
+          0.006,
+          5,
+          false,
+        ),
+        material("#25282a", { roughness: 0.9 }),
+      );
+      brow.name = "cat-brow-fur";
+      cat.add(brow);
     }
+    const catChestPatch = new THREE.Mesh(
+      new THREE.SphereGeometry(0.13, highDetail ? 22 : 14, highDetail ? 16 : 10),
+      material("#15191b", { roughness: 0.98 }),
+    );
+    catChestPatch.name = "cat-chest-fur-patch";
+    catChestPatch.scale.set(0.34, 1.1, 0.72);
+    catChestPatch.position.set(0.45, 0.34, 0);
+    cat.add(catChestPatch);
     const muzzleMaterial = material("#151719", { roughness: 0.96 });
     for (const side of [-1, 1]) {
       const muzzle = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 10), muzzleMaterial);
@@ -1878,6 +2216,10 @@ export default function InteractiveRoom() {
     const cyanLight = new THREE.PointLight(0x77e7ff, 27, 10, 2);
     cyanLight.position.set(-1.3, 3.3, -0.2);
     cyanLight.castShadow = true;
+    cyanLight.shadow.mapSize.set(highDetail ? 2048 : 1024, highDetail ? 2048 : 1024);
+    cyanLight.shadow.bias = -0.00035;
+    cyanLight.shadow.normalBias = 0.035;
+    cyanLight.shadow.radius = highDetail ? 4 : 2;
     scene.add(cyanLight);
     const violetLight = new THREE.PointLight(0x9f91ff, 22, 9, 2);
     violetLight.position.set(3.1, 3.8, 2.2);
@@ -1885,7 +2227,22 @@ export default function InteractiveRoom() {
     const warmLight = new THREE.PointLight(0xffbd72, 14, 7, 2);
     warmLight.position.set(-4.2, 2.8, 1.5);
     scene.add(warmLight);
+    const studioFill = new THREE.DirectionalLight(0xdcecff, 1.25);
+    studioFill.name = "room-studio-fill-light";
+    studioFill.position.set(5.5, 7.5, 5.2);
+    scene.add(studioFill);
 
+    room.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      const surfaceMaterials = Array.isArray(object.material) ? object.material : [object.material];
+      const hasLitSurface = surfaceMaterials.some((surface) => surface instanceof THREE.MeshStandardMaterial);
+      if (!hasLitSurface) return;
+      const hasTransparentSurface = surfaceMaterials.some(
+        (surface) => surface.transparent || ("transmission" in surface && Number(surface.transmission) > 0.05),
+      );
+      object.castShadow = !hasTransparentSurface;
+      object.receiveShadow = true;
+    });
     room.updateMatrixWorld(true);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const overviewPosition = new THREE.Vector3(5.2, 4.3, 6.5);
