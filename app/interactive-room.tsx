@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { playSiteSfx } from "./site-sfx";
 
 type HotspotData = {
   key?: string;
@@ -1585,6 +1586,7 @@ export default function InteractiveRoom() {
 
     const focusObject = (key: string) => {
       if (key === "__overview") {
+        playSiteSfx("close");
         focusedKey = null;
         document.body.classList.remove("room-focus-active");
         document.body.classList.remove("room-default-view");
@@ -1601,6 +1603,7 @@ export default function InteractiveRoom() {
       const entry = ROOM_ENTRIES[key];
       const object = objectByKey.get(key);
       if (!entry || !object) return;
+      playSiteSfx("open");
       focusedKey = key;
       document.body.classList.remove("room-default-view");
       object.updateWorldMatrix(true, true);
@@ -1622,6 +1625,7 @@ export default function InteractiveRoom() {
       );
     };
     const dismissObjectFile = () => {
+      playSiteSfx("close");
       cameraMove = null;
       focusedKey = null;
       setActiveKey(null);
@@ -1657,6 +1661,7 @@ export default function InteractiveRoom() {
       roomSecretTimeout = window.setTimeout(() => setRoomSecret(""), 3200);
     };
     const activateRoomSecret = (easterEgg: HotspotData["easterEgg"]) => {
+      playSiteSfx(easterEgg === "cat" ? "cat" : "secret");
       if (easterEgg === "palette") {
         paletteSecretUntil = performance.now() + 12_000;
         showRoomSecret("LIGHT OVERRIDE / SUNROOM PALETTE UNLOCKED");
@@ -1832,6 +1837,7 @@ export default function InteractiveRoom() {
       }
       if (printProgress >= 1 && printCompletedAt === 0) {
         printCompletedAt = timestamp;
+        playSiteSfx("complete");
         showRoomSecret("FIVE-MINUTE PRINT COMPLETE / DAGGER READY");
       }
       printCompletionLight.intensity =

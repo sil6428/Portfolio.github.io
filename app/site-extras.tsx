@@ -2,6 +2,7 @@
 
 import { FormEvent, type ChangeEvent, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { getSiteSfxEnabled, playSiteSfx, setSiteSfxEnabled } from "./site-sfx";
 
 const PLAYLIST_STORAGE_KEY = "affan-portfolio-spotify-playlist-v2";
 const DEFAULT_PLAYLIST_ID = "1whuIX2zMB3aYGf5oEdCGs";
@@ -155,6 +156,7 @@ export default function SiteExtras() {
   const [playlistInput, setPlaylistInput] = useState("");
   const [playlistError, setPlaylistError] = useState("");
   const [localTrack, setLocalTrack] = useState<{ name: string; url: string } | null>(null);
+  const [sfxEnabled, setSfxEnabledState] = useState(true);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalInput, setTerminalInput] = useState("");
   const [terminalPage, setTerminalPage] = useState<"console" | "eggs">("console");
@@ -171,7 +173,10 @@ export default function SiteExtras() {
   useEffect(() => {
     const storedPlaylist =
       window.localStorage.getItem(PLAYLIST_STORAGE_KEY) ?? DEFAULT_PLAYLIST_ID;
-    const update = window.setTimeout(() => setPlaylistId(storedPlaylist), 0);
+    const update = window.setTimeout(() => {
+      setPlaylistId(storedPlaylist);
+      setSfxEnabledState(getSiteSfxEnabled());
+    }, 0);
     return () => window.clearTimeout(update);
   }, []);
 
@@ -195,6 +200,7 @@ export default function SiteExtras() {
         target?.isContentEditable;
 
       if (event.key === "Escape") {
+        playSiteSfx("close");
         setTerminalOpen(false);
         setSoundtrackOpen(false);
         return;
@@ -202,7 +208,10 @@ export default function SiteExtras() {
 
       if (!isTyping && event.key === "`") {
         event.preventDefault();
-        setTerminalOpen((current) => !current);
+        setTerminalOpen((current) => {
+          playSiteSfx(current ? "close" : "open");
+          return !current;
+        });
         return;
       }
 
@@ -213,6 +222,7 @@ export default function SiteExtras() {
         sequencePosition.current += 1;
         if (sequencePosition.current === KONAMI_SEQUENCE.length) {
           sequencePosition.current = 0;
+          playSiteSfx("secret");
           setEasterMode(true);
           window.setTimeout(() => setEasterMode(false), 8000);
         }
@@ -273,6 +283,7 @@ export default function SiteExtras() {
     event.preventDefault();
     const command = terminalInput.trim();
     if (!command) return;
+    playSiteSfx("click");
     const normalized = command.toLowerCase();
 
     if (normalized === "clear") {
@@ -289,6 +300,13 @@ export default function SiteExtras() {
     setTerminalInput("");
   }
 
+  function toggleSfx() {
+    const next = !sfxEnabled;
+    setSiteSfxEnabled(next);
+    setSfxEnabledState(next);
+    if (next) playSiteSfx("open");
+  }
+
   return (
     <div className="site-extras">
       <MobileNavigationTransitions />
@@ -297,7 +315,10 @@ export default function SiteExtras() {
         type="button"
         aria-expanded={soundtrackOpen}
         aria-controls="soundtrack-panel"
-        onClick={() => setSoundtrackOpen((current) => !current)}
+        onClick={() => {
+          playSiteSfx(soundtrackOpen ? "close" : "open");
+          setSoundtrackOpen((current) => !current);
+        }}
       >
         <span className="soundtrack-bars" aria-hidden="true">
           <i />
@@ -314,7 +335,14 @@ export default function SiteExtras() {
               <span>FULL PLAYLIST</span>
               <strong>Your soundtrack</strong>
             </div>
-            <button type="button" aria-label="Close soundtrack" onClick={() => setSoundtrackOpen(false)}>
+            <button
+              type="button"
+              aria-label="Close soundtrack"
+              onClick={() => {
+                playSiteSfx("close");
+                setSoundtrackOpen(false);
+              }}
+            >
               ×
             </button>
           </div>
@@ -364,6 +392,15 @@ export default function SiteExtras() {
             </form>
           )}
           <small>No embedded preview. The playlist opens directly in Spotify.</small>
+          <div className="sfx-settings">
+            <div>
+              <span>INTERFACE SFX</span>
+              <p>Original procedural sounds generated in your browser. No downloaded recordings or third-party audio.</p>
+            </div>
+            <button type="button" aria-pressed={sfxEnabled} onClick={toggleSfx}>
+              {sfxEnabled ? "ON" : "OFF"}
+            </button>
+          </div>
           <div className="local-audio">
             <div className="local-audio-heading">
               <span>LOCAL AUDIO</span>
@@ -386,7 +423,14 @@ export default function SiteExtras() {
       )}
 
       {terminalOpen && (
-        <div className="terminal-overlay" role="presentation" onMouseDown={() => setTerminalOpen(false)}>
+        <div
+          className="terminal-overlay"
+          role="presentation"
+          onMouseDown={() => {
+            playSiteSfx("close");
+            setTerminalOpen(false);
+          }}
+        >
           <section
             className="secret-terminal"
             role="dialog"
@@ -416,7 +460,15 @@ export default function SiteExtras() {
                   Easter eggs
                 </button>
               </div>
-              <button className="terminal-close" type="button" aria-label="Close terminal" onClick={() => setTerminalOpen(false)}>
+              <button
+                className="terminal-close"
+                type="button"
+                aria-label="Close terminal"
+                onClick={() => {
+                  playSiteSfx("close");
+                  setTerminalOpen(false);
+                }}
+              >
                 ×
               </button>
             </div>
@@ -461,7 +513,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>04</code>
-                    <div><strong>Laptop files</strong><p>Archtech, SSIK, About, Contact, and Resume are separate selectable desktop objects.</p></div>
+                    <div><strong>Laptop files</strong><p>Archtech, SSIK, About, Contact, Resume, and Inspiration are separate selectable desktop objects.</p></div>
                   </li>
                   <li>
                     <code>05</code>
@@ -482,6 +534,10 @@ export default function SiteExtras() {
                   <li>
                     <code>09</code>
                     <div><strong>Terminal room controls</strong><p>Try lights, cat, relic, signal, and print in the hidden terminal.</p></div>
+                  </li>
+                  <li>
+                    <code>10</code>
+                    <div><strong>Original sound effects</strong><p>Room interactions use procedural Web Audio tones generated at runtime. No third-party sound recordings are included.</p></div>
                   </li>
                 </ol>
               </div>

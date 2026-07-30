@@ -57,7 +57,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Removed the front shelf braces that crossed through the book models
 - Refined procedural models for the laptop, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat with a bandana, tag, yarn ball, toy mouse, and water bowl
 - Wall decor built directly into the Three.js room, including a framed network-topology display and a three-piece photography-inspired gallery above the bookshelf
-- Ten expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, and the resume
+- Eleven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, the resume, and design inspiration
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat
 - All main portfolio content stays inside the room instead of redirecting to internal pages
 - Screen-reader object controls, Escape-to-return behavior, touch support, and unlisted fallback routes
@@ -65,6 +65,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Section-specific Three.js network topology on the supporting pages
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns
+- Original runtime-generated Web Audio sound effects for file interactions, Easter eggs, the room cat, and print completion, with a device-saved on/off control and no third-party recordings
 - Hidden interactions for petting the cat, charging the shelf sword, activating a server beacon, changing the room palette, animating the racket, and controlling room secrets from the terminal
 - GitHub, LinkedIn, VSCO, email, phone, and resume links
 - Metadata, Open Graph images, robots rules, and a generated sitemap
@@ -136,3 +137,5 @@ The production site is deployed to Cloudflare Workers:
 Copyright © 2026 Archtech. All rights reserved.
 
 The source is public for portfolio review. Reuse, redistribution, modification, or publication requires prior written permission. See [LICENSE](LICENSE).
+
+Interface sound-effect provenance is documented in [SOUND_EFFECTS.md](SOUND_EFFECTS.md).

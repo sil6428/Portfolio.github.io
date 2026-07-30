@@ -152,6 +152,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /Hidden things and how to find them/);
   assert.match(source, /Laptop files/);
   assert.match(source, /Five-minute print/);
+  assert.match(source, /Original sound effects/);
+  assert.match(source, /procedural Web Audio tones/);
+  assert.match(source, /sfx-settings/);
   assert.match(source, /Cat trust/);
   assert.match(source, /Printed relic/);
   assert.match(source, /Server beacon/);
@@ -163,6 +166,13 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.doesNotMatch(source, /PortfolioCat/);
   assert.doesNotMatch(source, /portfolio-cat-swat/);
   assert.doesNotMatch(source, /cat-is-home/);
+  const sfx = await import("node:fs/promises").then(({ readFile }) =>
+    readFile(new URL("../app/site-sfx.ts", import.meta.url), "utf8"),
+  );
+  assert.match(sfx, /new AudioContext/);
+  assert.match(sfx, /affan-portfolio-sfx/);
+  assert.match(sfx, /effect === "complete"/);
+  assert.match(sfx, /effect === "cat"/);
   assert.doesNotMatch(source, /cat-play-badminton/);
   assert.match(source, /usePathname/);
   assert.match(source, /MobileNavigationTransitions/);
@@ -241,6 +251,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /PRINT_DURATION_MS = 300_000/);
   assert.match(room, /drawPrinterDisplay/);
   assert.match(room, /FIVE-MINUTE PRINT COMPLETE/);
+  assert.match(room, /playSiteSfx\("complete"\)/);
+  assert.match(room, /playSiteSfx\("open"\)/);
   assert.doesNotMatch(room, /cat\.jpg/i);
   assert.match(room, /bottom-shelf-printed-katana/);
   assert.match(room, /shelf-katana-unified-curved-blade/);
