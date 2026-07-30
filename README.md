@@ -8,15 +8,15 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 ## Overview
 
-The site presents my technical work, education, experience, and interests without relying on a profile photo. Its visual direction is built around an interactive Three.js network topology that reacts to pointer movement, scrolling, and the current section.
+The site presents my technical work, education, experience, and interests without relying on a profile photo. The homepage is a full-screen Three.js cyber lab where each object represents part of my work or personality.
 
-The portfolio is designed as a set of focused pages instead of one long landing page. Project and interest cards lead to expanded pages with more context.
+Visitors can drag to look around, select an object, watch the camera move toward it, and read its file in an on-screen panel. Focused project and interest pages remain available as direct links and accessible fallbacks.
 
 ## Pages
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Selected work and project overview |
+| `/` | Full-screen interactive 3D cyber lab and portfolio directory |
 | `/info` | Education, skills, experience, volunteer work, resume, and contact links |
 | `/interests` | Personal interests and interactive visual cards |
 | `/work/archtech` | Archtech case study and current work-in-progress status |
@@ -32,9 +32,11 @@ The portfolio is designed as a set of focused pages instead of one long landing 
 - Responsive navigation for desktop, tablet, and mobile layouts
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
-- Interactive Three.js topology with section-specific visual states
-- Interactive Three.js cyber-lab with draggable camera controls and clickable objects
-- Accessible room directory linking the workstation, server rack, printer, racket, books, camera, and wall board
+- Full-screen Three.js cyber lab with draggable camera controls and selectable objects
+- Animated camera pans that frame each object before revealing its content panel
+- Seven object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, and profile details
+- Accessible room directory, keyboard controls, Escape-to-return behavior, and direct fallback pages
+- Section-specific Three.js network topology on the supporting pages
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns
 - GitHub, LinkedIn, VSCO, email, phone, and resume links

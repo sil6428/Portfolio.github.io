@@ -184,7 +184,9 @@ export default function TopologyScene() {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [section]);
+  }, [pathname, section]);
+
+  if (pathname === "/") return null;
 
   return (
     <div className={`topology-scene topology-scene-${section}`} ref={hostRef} aria-hidden="true">

@@ -13,25 +13,24 @@ async function render(path = "/") {
   );
 }
 
-test("renders the work portfolio", async () => {
+test("renders the full-screen interactive portfolio", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Affan Shaikh/);
-  assert.match(html, /I learn systems by taking them apart/);
-  assert.match(html, /Selected systems/);
-  assert.match(html, /Work I can explain from the inside out/);
-  assert.match(html, /AFFAN_LAB \/ ROOM_01/);
+  assert.match(html, /AFFAN_OS \/ INTERACTIVE PORTFOLIO/);
+  assert.match(html, /Enter the lab/);
+  assert.match(html, /Direct page navigation/);
+  assert.match(html, /Interactive 3D portfolio/);
   assert.match(html, /3D room directory/);
-  assert.match(html, /Archtech/);
-  assert.match(html, /SSIK Website/);
-  assert.match(html, /independently designed and built the public website for SSIK/);
-  assert.match(html, /https:\/\/sil6428\.github\.io\/SSIK-website\/index\.html/);
-  assert.match(html, /Source code/);
-  assert.match(html, /Read case study/);
-  assert.match(html, /href="\/work\/archtech"/);
-  assert.match(html, /href="\/work\/ssik"/);
-  assert.match(html, /CYBERSECURITY \/ 2028/);
+  assert.match(html, /Workstation/);
+  assert.match(html, /Server rack/);
+  assert.match(html, /3D printer/);
+  assert.match(html, /Wall board/);
+  assert.match(html, /07 ACTIVE OBJECTS/);
+  assert.match(html, /href="\/info"/);
+  assert.match(html, /href="\/interests"/);
+  assert.match(html, /Affan_Shaikh_Resume\.pdf/);
   assert.match(html, /Soundtrack/);
   assert.doesNotMatch(html, /Arch Narrative/i);
 });
@@ -188,4 +187,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /PHOTOGRAPHY/);
   assert.match(room, /ABOUT AFFAN/);
   assert.match(room, /raycaster\.intersectObjects/);
+  assert.match(room, /beginCameraMove/);
+  assert.match(room, /focusObject/);
+  assert.match(room, /room-popup/);
+  assert.match(room, /setActiveKey/);
+  assert.match(room, /RETURN TO ROOM/);
 });
