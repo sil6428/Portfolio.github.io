@@ -60,7 +60,7 @@ function runTerminalCommand(command: string) {
     status: ["ONLINE", "Currently turning old computers into a Proxmox server."],
     lights: ["Sending a colour override to the 3D room..."],
     cat: ["Sending three approved pets to the room cat..."],
-    print: ["The helmet print takes exactly 03:00.", "Watch the printer display for live progress."],
+    print: ["The dagger print takes exactly 03:00.", "Watch the printer display for live progress."],
     eggs: ["Opening easter-eggs.md..."],
   };
 
@@ -461,7 +461,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>05</code>
-                    <div><strong>Three-minute print</strong><p>The printer starts when the room loads. Watch its display and the helmet grow until it finishes at 03:00.</p></div>
+                    <div><strong>Three-minute print</strong><p>The printer starts when the room loads. Watch its display and the fantasy dagger grow from pommel to blade tip until it finishes at 03:00.</p></div>
                   </li>
                   <li>
                     <code>06</code>

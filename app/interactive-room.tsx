@@ -93,7 +93,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "3D printer",
     label: "MAKING / DESIGN",
     title: "3D printing",
-    summary: "From digital models to finished props. In the room, a biker helmet prints from the build plate upward over three minutes.",
+    summary: "From digital models to finished props. In the room, a stylized fantasy dagger prints from pommel to blade tip over three minutes.",
     details: ["Live 03:00 print", "Slicing", "Assembly", "Sanding + finishing"],
     sections: [
       {
@@ -630,174 +630,154 @@ export default function InteractiveRoom() {
     printer.add(printBedAssembly);
     box(printBedAssembly, [1.72, 0.1, 1.35], [0, 0.25, 0], "#29363d", { metalness: 0.38 });
     const printedPiece = new THREE.Group();
-    printedPiece.name = "printer-biker-helmet";
+    printedPiece.name = "printer-fantasy-dagger";
     printedPiece.position.set(0, 0.28, 0);
+    printedPiece.rotation.y = 0.18;
     printBedAssembly.add(printedPiece);
     const printableParts: THREE.Object3D[] = [];
-    const helmetHeight = 1.18;
-    const helmetLayerHeight = 0.024;
-    const shellMaterial = material("#557d8d", {
-      emissive: "#142c36",
-      emissiveIntensity: 0.2,
-      metalness: 0.38,
-      roughness: 0.34,
+    const daggerHeight = 1.42;
+    const daggerLayerHeight = 0.022;
+    const bladeMaterial = material("#a8c2ca", {
+      emissive: "#1b3841",
+      emissiveIntensity: 0.18,
+      metalness: 0.72,
+      roughness: 0.22,
     });
-    const crownMaterial = material("#8aa5ad", { metalness: 0.48, roughness: 0.28 });
-    const stripeMaterial = material("#ef7d4d", {
+    const bladeEdgeMaterial = material("#d9eef0", {
+      metalness: 0.82,
+      roughness: 0.16,
+    });
+    const fullerMaterial = material("#243d49", {
+      emissive: "#142c36",
+      emissiveIntensity: 0.22,
+      metalness: 0.6,
+      roughness: 0.28,
+    });
+    const gripMaterial = material("#4f3a77", {
+      emissive: "#24173f",
+      emissiveIntensity: 0.18,
+      roughness: 0.52,
+    });
+    const accentMaterial = material("#ef7d4d", {
       emissive: "#682713",
       emissiveIntensity: 0.34,
-      metalness: 0.16,
+      metalness: 0.28,
       roughness: 0.32,
     });
-    const visorMaterial = material("#071820", {
-      emissive: "#16485b",
-      emissiveIntensity: 0.42,
-      metalness: 0.82,
-      roughness: 0.08,
-    });
-    const trimMaterial = material("#d6e5e6", { metalness: 0.72, roughness: 0.22 });
+    const darkMetalMaterial = material("#17232b", { metalness: 0.78, roughness: 0.26 });
     const addPrintablePart = (part: THREE.Object3D, printHeight: number) => {
       part.visible = false;
       part.userData.printHeight = printHeight;
       printableParts.push(part);
       printedPiece.add(part);
     };
-    const helmetSliceGeometry = (width: number, backDepth: number, frontDepth: number) => {
+    const daggerBladeSliceGeometry = (halfWidth: number, halfDepth: number) => {
       const profile = new THREE.Shape();
-      profile.moveTo(0, -backDepth);
-      profile.bezierCurveTo(
-        width * 0.72,
-        -backDepth,
-        width,
-        -backDepth * 0.52,
-        width,
-        0,
-      );
-      profile.bezierCurveTo(
-        width,
-        frontDepth * 0.56,
-        width * 0.56,
-        frontDepth,
-        0,
-        frontDepth,
-      );
-      profile.bezierCurveTo(
-        -width * 0.56,
-        frontDepth,
-        -width,
-        frontDepth * 0.56,
-        -width,
-        0,
-      );
-      profile.bezierCurveTo(
-        -width,
-        -backDepth * 0.52,
-        -width * 0.72,
-        -backDepth,
-        0,
-        -backDepth,
-      );
+      profile.moveTo(0, halfDepth);
+      profile.lineTo(halfWidth, 0);
+      profile.lineTo(0, -halfDepth);
+      profile.lineTo(-halfWidth, 0);
+      profile.closePath();
       const geometry = new THREE.ExtrudeGeometry(profile, {
-        depth: helmetLayerHeight,
+        depth: daggerLayerHeight,
         bevelEnabled: false,
-        curveSegments: 10,
+        curveSegments: 1,
         steps: 1,
       });
       geometry.rotateX(Math.PI / 2);
-      geometry.translate(0, helmetLayerHeight / 2, 0);
+      geometry.translate(0, daggerLayerHeight / 2, 0);
       return geometry;
     };
-    for (let layer = 0; layer < 49; layer += 1) {
-      const y = 0.012 + layer * helmetLayerHeight;
-      const normalized = y / helmetHeight;
-      const dome = Math.sqrt(Math.max(0.08, 1 - Math.pow((normalized - 0.48) / 0.62, 2)));
-      const width = 0.14 + dome * 0.31;
-      const backDepth = 0.14 + dome * 0.27;
-      const frontDepth =
-        normalized < 0.34
-          ? 0.48 - normalized * 0.08
-          : 0.16 + dome * 0.25;
-      const isCrown = normalized > 0.83;
-      const isLowerStripe = normalized > 0.2 && normalized < 0.27;
-      const shellLayer = new THREE.Mesh(
-        helmetSliceGeometry(width, backDepth, frontDepth),
-        isLowerStripe ? stripeMaterial : isCrown ? crownMaterial : shellMaterial,
-      );
-      shellLayer.name = "helmet-contoured-shell";
-      shellLayer.position.y = y;
-      addPrintablePart(shellLayer, y);
-
-      if (normalized >= 0.08 && normalized <= 0.34) {
-        const chinWidth = 0.31 + Math.sin(((normalized - 0.08) / 0.26) * Math.PI) * 0.08;
-        const chinLayer = new THREE.Mesh(
-          new THREE.BoxGeometry(chinWidth * 2, helmetLayerHeight * 0.86, 0.2),
-          isLowerStripe ? stripeMaterial : shellMaterial,
+    const daggerLayerCount = Math.ceil(daggerHeight / daggerLayerHeight);
+    for (let layer = 0; layer < daggerLayerCount; layer += 1) {
+      const y = 0.011 + layer * daggerLayerHeight;
+      if (y < 0.17) {
+        const pommelProgress = y / 0.17;
+        const radius = 0.075 + Math.sin(pommelProgress * Math.PI) * 0.065;
+        const pommelLayer = new THREE.Mesh(
+          new THREE.CylinderGeometry(radius, radius, daggerLayerHeight * 0.86, 18),
+          layer % 3 === 0 ? accentMaterial : darkMetalMaterial,
         );
-        chinLayer.name = "helmet-chin-guard";
-        chinLayer.position.set(0, y, 0.39);
-        addPrintablePart(chinLayer, y);
+        pommelLayer.name = "dagger-pommel-layer";
+        pommelLayer.position.y = y;
+        addPrintablePart(pommelLayer, y);
+        continue;
       }
 
-      if (normalized >= 0.39 && normalized <= 0.68) {
-        const visorLayer = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.415, 0.415, helmetLayerHeight * 0.82, 30, 1, true, -1.08, 2.16),
-          visorMaterial,
+      if (y < 0.58) {
+        const gripLayer = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.088, 0.088, daggerLayerHeight * 0.88, 16),
+          layer % 4 === 0 ? accentMaterial : gripMaterial,
         );
-        visorLayer.name = "helmet-curved-visor";
-        visorLayer.position.set(0, y, 0.015);
-        visorLayer.scale.x = 1.04;
-        addPrintablePart(visorLayer, y);
-      }
-
-      if (normalized >= 0.14 && normalized <= 0.23 && layer % 2 === 0) {
-        for (const x of [-0.16, 0, 0.16]) {
-          const vent = new THREE.Mesh(
-            new THREE.BoxGeometry(0.085, helmetLayerHeight * 0.7, 0.018),
-            visorMaterial,
+        gripLayer.name = "dagger-wrapped-grip";
+        gripLayer.position.y = y;
+        addPrintablePart(gripLayer, y);
+        if (layer % 5 === 0) {
+          const gripRing = new THREE.Mesh(
+            new THREE.TorusGeometry(0.09, 0.012, 6, 18),
+            darkMetalMaterial,
           );
-          vent.name = "helmet-chin-vent";
-          vent.position.set(x, y, 0.505);
-          addPrintablePart(vent, y);
+          gripRing.name = "dagger-grip-ring";
+          gripRing.rotation.x = Math.PI / 2;
+          gripRing.position.y = y;
+          addPrintablePart(gripRing, y);
         }
+        continue;
       }
 
-      if (normalized >= 0.86) {
-        const crownRidge = new THREE.Mesh(
-          new THREE.BoxGeometry(0.08, helmetLayerHeight * 0.82, 0.28 * (1 - (normalized - 0.86) / 0.14)),
-          stripeMaterial,
+      if (y < 0.7) {
+        const guardProgress = (y - 0.58) / 0.12;
+        const guardHalfWidth = 0.3 + Math.sin(guardProgress * Math.PI) * 0.2;
+        const guardLayer = new THREE.Mesh(
+          new THREE.BoxGeometry(guardHalfWidth * 2, daggerLayerHeight * 0.86, 0.16),
+          guardProgress > 0.34 && guardProgress < 0.68 ? accentMaterial : darkMetalMaterial,
         );
-        crownRidge.name = "helmet-crown-ridge";
-        crownRidge.position.set(0, y, -0.025);
-        addPrintablePart(crownRidge, y);
+        guardLayer.name = "dagger-crossguard";
+        guardLayer.position.y = y;
+        addPrintablePart(guardLayer, y);
+        for (const side of [-1, 1]) {
+          const guardTip = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.065, 0.065, daggerLayerHeight * 0.86, 12),
+            accentMaterial,
+          );
+          guardTip.name = "dagger-guard-tip";
+          guardTip.position.set(side * guardHalfWidth, y, 0);
+          addPrintablePart(guardTip, y);
+        }
+        continue;
       }
-    }
-    for (const side of [-1, 1]) {
-      const pivotHousing = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.085, 0.085, 0.045, 20),
-        stripeMaterial,
+
+      const bladeProgress = Math.min(1, (y - 0.7) / (daggerHeight - 0.7));
+      const halfWidth = Math.max(0.012, 0.27 * (1 - Math.pow(bladeProgress, 1.15)));
+      const halfDepth = Math.max(0.018, 0.105 * (1 - bladeProgress * 0.58));
+      const bladeLayer = new THREE.Mesh(
+        daggerBladeSliceGeometry(halfWidth, halfDepth),
+        bladeProgress > 0.94 ? bladeEdgeMaterial : bladeMaterial,
       );
-      pivotHousing.name = "helmet-visor-pivot";
-      pivotHousing.rotation.z = Math.PI / 2;
-      pivotHousing.position.set(side * 0.4, 0.51, 0.06);
-      addPrintablePart(pivotHousing, 0.51);
-      const pivotCap = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.042, 0.042, 0.052, 18),
-        trimMaterial,
-      );
-      pivotCap.rotation.z = Math.PI / 2;
-      pivotCap.position.set(side * 0.422, 0.51, 0.06);
-      addPrintablePart(pivotCap, 0.51);
-    }
-    for (const y of [0.375, 0.675]) {
-      const visorTrim = new THREE.Mesh(
-        new THREE.TorusGeometry(0.417, 0.015, 6, 28, 2.16),
-        trimMaterial,
-      );
-      visorTrim.name = "helmet-visor-trim";
-      visorTrim.rotation.x = Math.PI / 2;
-      visorTrim.rotation.z = -1.08;
-      visorTrim.position.set(0, y, 0.015);
-      addPrintablePart(visorTrim, y);
+      bladeLayer.name = "dagger-faceted-blade";
+      bladeLayer.position.y = y;
+      addPrintablePart(bladeLayer, y);
+
+      if (bladeProgress < 0.86) {
+        const fuller = new THREE.Mesh(
+          new THREE.BoxGeometry(Math.max(0.025, halfWidth * 0.56), daggerLayerHeight * 0.64, 0.016),
+          fullerMaterial,
+        );
+        fuller.name = "dagger-blade-fuller";
+        fuller.position.set(0, y, halfDepth * 0.72);
+        addPrintablePart(fuller, y);
+      }
+
+      for (const side of [-1, 1]) {
+        const edge = new THREE.Mesh(
+          new THREE.BoxGeometry(0.014, daggerLayerHeight * 0.68, Math.max(0.022, halfDepth * 1.05)),
+          bladeEdgeMaterial,
+        );
+        edge.name = "dagger-blade-edge";
+        edge.position.set(side * halfWidth * 0.82, y, 0);
+        edge.rotation.y = side * 0.34;
+        addPrintablePart(edge, y);
+      }
     }
     printableParts.sort((a, b) => Number(a.userData.printHeight) - Number(b.userData.printHeight));
 
@@ -860,7 +840,7 @@ export default function InteractiveRoom() {
       printerDisplayContext.fillText(progress >= 1 ? "COMPLETE" : `PRINT ${`${percent}`.padStart(3, "0")}%`, 12, 35);
       printerDisplayContext.fillStyle = "#dcece5";
       printerDisplayContext.font = "19px monospace";
-      printerDisplayContext.fillText(progress >= 1 ? "HELMET READY" : `ETA ${minutes}:${seconds}`, 12, 70);
+      printerDisplayContext.fillText(progress >= 1 ? "DAGGER READY" : `ETA ${minutes}:${seconds}`, 12, 70);
       printerDisplayTexture.needsUpdate = true;
     };
     drawPrinterDisplay(0);
@@ -1404,7 +1384,7 @@ export default function InteractiveRoom() {
       const printProgress = Math.min(1, Math.max(0, (timestamp - printStartedAt) / PRINT_DURATION_MS));
       const printPercent = Math.round(printProgress * 100);
       previousTimestamp = timestamp;
-      const currentPrintHeight = printProgress * helmetHeight;
+      const currentPrintHeight = printProgress * daggerHeight;
       for (const part of printableParts) {
         part.visible = Number(part.userData.printHeight) <= currentPrintHeight;
       }
@@ -1414,7 +1394,7 @@ export default function InteractiveRoom() {
       }
       if (printProgress >= 1 && printCompletedAt === 0) {
         printCompletedAt = timestamp;
-        showRoomSecret("THREE-MINUTE PRINT COMPLETE / HELMET READY");
+        showRoomSecret("THREE-MINUTE PRINT COMPLETE / DAGGER READY");
       }
       printCompletionLight.intensity =
         printCompletedAt > 0 && timestamp - printCompletedAt < 8000
@@ -1442,7 +1422,7 @@ export default function InteractiveRoom() {
         if (printerCarriage) printerCarriage.position.x = printProgress < 1 ? Math.sin(elapsed * 1.9) * 0.55 : 0;
         if (printerSpool && printProgress < 1) printerSpool.rotation.x += delta * 0.34;
         printBedAssembly.position.z = printProgress < 1 ? Math.sin(elapsed * 1.35) * 0.24 : 0;
-        printerGantry.position.y = 0.84 + printProgress * helmetHeight;
+        printerGantry.position.y = 0.84 + printProgress * daggerHeight;
         const smashActive = document.body.classList.contains("easter-mode");
         racket.rotation.z = THREE.MathUtils.lerp(
           racket.rotation.z,
