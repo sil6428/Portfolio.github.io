@@ -1988,16 +1988,51 @@ export default function InteractiveRoom() {
     racket.position.set(-4.35, 3.52, -4.08);
     racket.rotation.z = -0.14;
     const racketMount = new THREE.Group();
-    racketMount.position.set(-4.35, 2.7, -4.12);
+    racketMount.position.set(-4.35, 2.42, -4.16);
     room.add(racketMount);
-    box(racketMount, [0.68, 0.1, 0.08], [0, 0, 0], "#3a465e", { metalness: 0.62, roughness: 0.42 });
-    for (const x of [-0.2, 0.2]) {
-      box(racketMount, [0.075, 0.22, 0.18], [x, 0.08, 0.08], "#9f91ff", {
-        emissive: "#493c86",
-        emissiveIntensity: 0.46,
-        metalness: 0.58,
-        roughness: 0.34,
-      });
+    const racketWallPlate = roundedBox(racketMount, [0.4, 0.12, 0.06], [0, 0, 0], "#303a46", 0.025, {
+      metalness: 0.62,
+      roughness: 0.42,
+    });
+    racketWallPlate.name = "racket-wall-mount-plate";
+    for (const x of [-0.08, 0.08]) {
+      const mountArm = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.018, 0.018, 0.18, 12),
+        material("#7b69bb", {
+          emissive: "#332966",
+          emissiveIntensity: 0.3,
+          metalness: 0.62,
+          roughness: 0.32,
+        }),
+      );
+      mountArm.name = "racket-wall-hook-arm";
+      mountArm.rotation.x = Math.PI / 2;
+      mountArm.position.set(x, 0, 0.1);
+      racketMount.add(mountArm);
+      const hookTip = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.021, 0.021, 0.12, 12),
+        material("#7b69bb", {
+          emissive: "#332966",
+          emissiveIntensity: 0.3,
+          metalness: 0.62,
+          roughness: 0.32,
+        }),
+      );
+      hookTip.name = "racket-wall-hook-tip";
+      hookTip.position.set(x, 0.055, 0.19);
+      racketMount.add(hookTip);
+      const hookCap = new THREE.Mesh(
+        new THREE.SphereGeometry(0.023, 10, 7),
+        material("#9f91ff", {
+          emissive: "#493c86",
+          emissiveIntensity: 0.4,
+          metalness: 0.5,
+          roughness: 0.3,
+        }),
+      );
+      hookCap.name = "racket-wall-hook-cap";
+      hookCap.position.set(x, 0.115, 0.19);
+      racketMount.add(hookCap);
     }
     const racketHead = new THREE.Mesh(
       new THREE.TorusGeometry(0.58, 0.052, 12, 52),
@@ -2012,32 +2047,27 @@ export default function InteractiveRoom() {
     racketHead.scale.y = 1.28;
     racket.add(racketHead);
     const shaft = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.035, 0.045, 0.92, 12),
+      new THREE.CylinderGeometry(0.032, 0.042, 0.78, 16),
       material("#b9c8cc", { metalness: 0.74, roughness: 0.3 }),
     );
-    shaft.position.y = -1.03;
+    shaft.name = "racket-single-shaft";
+    shaft.position.y = -1.15;
     racket.add(shaft);
-    const racketJoint = new THREE.Mesh(
-      new THREE.SphereGeometry(0.075, 18, 12),
+    const shaftFerrule = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.052, 0.036, 0.16, 18),
       physicalMaterial("#dce7e9", { metalness: 0.5, roughness: 0.24, clearcoat: 0.75 }),
     );
-    racketJoint.name = "racket-t-joint";
-    racketJoint.scale.set(0.8, 1.1, 0.72);
-    racketJoint.position.y = -0.69;
-    racket.add(racketJoint);
-    for (const side of [-1, 1]) {
-      const throatStart = new THREE.Vector3(side * 0.29, -0.5, 0);
-      const throatEnd = new THREE.Vector3(side * 0.055, -0.68, 0);
-      const throatDirection = throatEnd.clone().sub(throatStart);
-      const throat = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.028, 0.035, throatDirection.length(), 12),
-        material("#c5d6da", { metalness: 0.7, roughness: 0.3 }),
-      );
-      throat.name = "racket-throat";
-      throat.position.copy(throatStart.clone().add(throatEnd).multiplyScalar(0.5));
-      throat.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), throatDirection.normalize());
-      racket.add(throat);
-    }
+    shaftFerrule.name = "racket-tapered-shaft-ferrule";
+    shaftFerrule.position.y = -0.84;
+    racket.add(shaftFerrule);
+    const ferruleCollar = new THREE.Mesh(
+      new THREE.TorusGeometry(0.039, 0.006, 6, 18),
+      material("#8ca0a6", { metalness: 0.78, roughness: 0.28 }),
+    );
+    ferruleCollar.name = "racket-shaft-collar";
+    ferruleCollar.rotation.x = Math.PI / 2;
+    ferruleCollar.position.y = -0.92;
+    racket.add(ferruleCollar);
     const grip = new THREE.Mesh(
       new THREE.CylinderGeometry(0.065, 0.078, 0.62, 12),
       material("#7046b7", { roughness: 0.62 }),

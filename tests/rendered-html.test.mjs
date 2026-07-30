@@ -340,9 +340,15 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /book-rounded-cover/);
   assert.match(room, /book-page-block/);
   assert.match(room, /book-spine-label-band/);
-  assert.match(room, /racket-throat/);
+  assert.match(room, /racket-single-shaft/);
+  assert.match(room, /racket-tapered-shaft-ferrule/);
+  assert.match(room, /racket-shaft-collar/);
+  assert.match(room, /racket-wall-mount-plate/);
+  assert.match(room, /racket-wall-hook-arm/);
+  assert.match(room, /racket-wall-hook-tip/);
   assert.match(room, /racket-string-grommet/);
-  assert.match(room, /racket-t-joint/);
+  assert.doesNotMatch(room, /racket-throat/);
+  assert.doesNotMatch(room, /racket-t-joint/);
   assert.match(room, /cat-tail-3d/);
   assert.match(room, /cat-patterned-bandana/);
   assert.match(room, /cat-name-tag/);

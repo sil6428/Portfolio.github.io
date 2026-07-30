@@ -60,7 +60,8 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Beveled monitor, keyboard, mouse, and glass-sided PC tower with visible motherboard traces, internal lighting, cooling rings, webcam, and individual rounded keycaps
 - Detailed printer mechanics including twin threaded Z screws, gantry wheels, bed clips, separated rimmed spools, and a beveled chessboard with ringed piece bases
 - Refined server faceplates, network ports, rack screws and status badge without restoring the removed wires or decorative server fans
-- Camera focus rings, coated lens glass, viewfinder, rear display and controls, plus book covers, page blocks, page lines, shelf fasteners, racket throat, grommets, and denser strings
+- Camera focus rings, coated lens glass, viewfinder, rear display and controls, plus book covers, page blocks, page lines, shelf fasteners, racket grommets, and denser strings
+- Corrected badminton-racket construction with one slim shaft, a tapered frame ferrule, collar, and compact wall hooks positioned behind the shaft instead of a tennis-style double throat
 - More expressive cat details including modeled whiskers, mouth, and paw toes
 - Adaptive model fidelity that adds desktop-only micro-details while using a lighter geometry path on touch and narrow-screen devices
 - Filmic colour mapping, higher desktop pixel density, tuned soft shadows, and studio fill lighting for better depth and material separation
