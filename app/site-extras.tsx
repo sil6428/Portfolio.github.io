@@ -469,7 +469,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>06</code>
-                    <div><strong>Cat trust</strong><p>Find the black cat and pet it three times. The terminal command cat also works.</p></div>
+                    <div><strong>Cat trust</strong><p>Find the black cat among its rug toys and pet it three times. The yarn ball reacts too. The terminal command cat also works.</p></div>
                   </li>
                   <li>
                     <code>07</code>

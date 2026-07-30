@@ -39,7 +39,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
 - Device-local discovery progress that marks each inspected station without creating an account
-- Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, pulsing lights, and responsive interaction markers
+- Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, animated yarn ball, pulsing lights, and responsive interaction markers
 - A real three-minute printer sequence with a slimmer black-and-white dagger, removable hilt supports, a height-tracking print head, live percentage, ETA, completion message, and finish glow
 - Curved camera transitions with smoother-step easing, object-relative positions, and offset framing that reserves space for the object file
 - Closer room framing plus a shorter wall bookshelf, camera on its top surface, and a mounted badminton racket on the back wall
@@ -54,7 +54,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Tighter room boundaries, a more centered overview, and reduced close-up camera offset
 - Brighter ambient lighting with cyan, violet, amber, and mint accents across the desk, rug, shelf, and wall
 - Removed the front shelf braces that crossed through the book models
-- Refined procedural models for the laptop, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat
+- Refined procedural models for the laptop, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat with a bandana, tag, yarn ball, toy mouse, and water bowl
 - Ten expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, and the resume
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat
 - All main portfolio content stays inside the room instead of redirecting to internal pages

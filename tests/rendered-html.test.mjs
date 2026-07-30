@@ -243,6 +243,12 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /READING SHELF/);
   assert.match(room, /PHOTOGRAPHY/);
   assert.match(room, /cat-tail-3d/);
+  assert.match(room, /cat-patterned-bandana/);
+  assert.match(room, /cat-name-tag/);
+  assert.match(room, /cat-rug-yarn-ball/);
+  assert.match(room, /cat-rug-loose-yarn/);
+  assert.match(room, /cat-rug-toy-mouse/);
+  assert.match(room, /cat-rug-water-bowl/);
   assert.match(room, /TubeGeometry/);
   assert.match(room, /raycaster\.intersectObjects/);
   assert.match(room, /beginCameraMove/);

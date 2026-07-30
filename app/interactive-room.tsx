@@ -1180,6 +1180,46 @@ export default function InteractiveRoom() {
     );
     bell.position.set(0.46, 0.42, 0);
     cat.add(bell);
+    const bandanaShape = new THREE.Shape();
+    bandanaShape.moveTo(-0.17, 0.11);
+    bandanaShape.lineTo(0.17, 0.11);
+    bandanaShape.lineTo(0, -0.22);
+    bandanaShape.closePath();
+    const bandana = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(bandanaShape, {
+        depth: 0.018,
+        bevelEnabled: true,
+        bevelSegments: 2,
+        bevelSize: 0.012,
+        bevelThickness: 0.008,
+      }),
+      material("#7256c7", { emissive: "#241b46", emissiveIntensity: 0.2, roughness: 0.72 }),
+    );
+    bandana.name = "cat-patterned-bandana";
+    bandana.rotation.y = Math.PI / 2;
+    bandana.position.set(0.49, 0.43, -0.009);
+    cat.add(bandana);
+    for (const side of [-1, 1]) {
+      const bandanaDot = new THREE.Mesh(
+        new THREE.SphereGeometry(0.022, 10, 8),
+        material(side === -1 ? "#77e7ff" : "#ffbd72", {
+          emissive: side === -1 ? "#2e7183" : "#7d562a",
+          emissiveIntensity: 0.35,
+          roughness: 0.45,
+        }),
+      );
+      bandanaDot.scale.set(0.45, 1, 1);
+      bandanaDot.position.set(0.505, 0.43, side * 0.065);
+      cat.add(bandanaDot);
+    }
+    const catNameTag = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.038, 0.038, 0.014, 14),
+      material("#77e7ff", { emissive: "#245d6c", emissiveIntensity: 0.45, metalness: 0.62, roughness: 0.28 }),
+    );
+    catNameTag.name = "cat-name-tag";
+    catNameTag.rotation.z = Math.PI / 2;
+    catNameTag.position.set(0.51, 0.39, 0.055);
+    cat.add(catNameTag);
     for (const z of [-0.19, 0.19]) {
       const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.075, 0.32, 12), catFur);
       leg.position.set(0.28, 0.08, z);
@@ -1213,6 +1253,98 @@ export default function InteractiveRoom() {
         cat.add(whisker);
       }
     }
+
+    const yarnBall = new THREE.Group();
+    yarnBall.name = "cat-rug-yarn-ball";
+    yarnBall.position.set(0.7, 0.16, 1.58);
+    room.add(yarnBall);
+    const yarnCore = new THREE.Mesh(
+      new THREE.SphereGeometry(0.145, 18, 14),
+      material("#e87842", { emissive: "#6f2918", emissiveIntensity: 0.2, roughness: 0.88 }),
+    );
+    yarnBall.add(yarnCore);
+    for (let wrap = 0; wrap < 4; wrap += 1) {
+      const yarnWrap = new THREE.Mesh(
+        new THREE.TorusGeometry(0.135, 0.012, 6, 24),
+        material(wrap % 2 === 0 ? "#ff9a5f" : "#c94d34", { roughness: 0.9 }),
+      );
+      yarnWrap.rotation.set(wrap * 0.62, wrap * 0.38, wrap * 0.76);
+      yarnBall.add(yarnWrap);
+    }
+    const looseYarnCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0.7, 0.08, 1.58),
+      new THREE.Vector3(0.44, 0.035, 1.72),
+      new THREE.Vector3(0.13, 0.035, 1.62),
+      new THREE.Vector3(-0.06, 0.035, 1.78),
+    ]);
+    const looseYarn = new THREE.Mesh(
+      new THREE.TubeGeometry(looseYarnCurve, 28, 0.011, 6, false),
+      material("#e87842", { roughness: 0.9 }),
+    );
+    looseYarn.name = "cat-rug-loose-yarn";
+    room.add(looseYarn);
+
+    const toyMouse = new THREE.Group();
+    toyMouse.name = "cat-rug-toy-mouse";
+    toyMouse.position.set(-1.05, 0.13, 1.56);
+    toyMouse.rotation.y = -0.35;
+    room.add(toyMouse);
+    const mouseBody = new THREE.Mesh(
+      new THREE.SphereGeometry(0.13, 16, 12),
+      material("#9ba4aa", { roughness: 0.94 }),
+    );
+    mouseBody.scale.set(1.4, 0.65, 0.82);
+    toyMouse.add(mouseBody);
+    const mouseNose = new THREE.Mesh(
+      new THREE.SphereGeometry(0.025, 10, 8),
+      material("#e87842", { emissive: "#6f2918", emissiveIntensity: 0.2, roughness: 0.72 }),
+    );
+    mouseNose.position.set(0.19, 0, 0);
+    toyMouse.add(mouseNose);
+    for (const side of [-1, 1]) {
+      const mouseEar = new THREE.Mesh(
+        new THREE.SphereGeometry(0.045, 10, 8),
+        material("#c5ccd0", { roughness: 0.92 }),
+      );
+      mouseEar.scale.set(0.45, 1, 1);
+      mouseEar.position.set(0.06, 0.075, side * 0.07);
+      toyMouse.add(mouseEar);
+    }
+    const mouseTailCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.16, 0, 0),
+      new THREE.Vector3(-0.28, -0.01, -0.05),
+      new THREE.Vector3(-0.35, -0.02, 0.04),
+      new THREE.Vector3(-0.46, -0.03, 0.02),
+    ]);
+    const mouseTail = new THREE.Mesh(
+      new THREE.TubeGeometry(mouseTailCurve, 20, 0.009, 6, false),
+      material("#b9858b", { roughness: 0.9 }),
+    );
+    toyMouse.add(mouseTail);
+
+    const waterBowl = new THREE.Group();
+    waterBowl.name = "cat-rug-water-bowl";
+    waterBowl.position.set(0.57, 0.065, 0.35);
+    room.add(waterBowl);
+    const bowlBase = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.16, 0.205, 0.09, 24),
+      material("#252b33", { metalness: 0.72, roughness: 0.3 }),
+    );
+    waterBowl.add(bowlBase);
+    const bowlRim = new THREE.Mesh(
+      new THREE.TorusGeometry(0.18, 0.018, 7, 28),
+      material("#77e7ff", { emissive: "#285f6d", emissiveIntensity: 0.35, metalness: 0.58, roughness: 0.3 }),
+    );
+    bowlRim.rotation.x = Math.PI / 2;
+    bowlRim.position.y = 0.055;
+    waterBowl.add(bowlRim);
+    const waterSurface = new THREE.Mesh(
+      new THREE.CircleGeometry(0.15, 24),
+      material("#3e8eac", { emissive: "#1c4b5e", emissiveIntensity: 0.3, metalness: 0.12, roughness: 0.18 }),
+    );
+    waterSurface.rotation.x = -Math.PI / 2;
+    waterSurface.position.y = 0.058;
+    waterBowl.add(waterSurface);
 
     const floorRug = new THREE.Mesh(
       new THREE.CircleGeometry(1.45, 48),
@@ -1505,6 +1637,8 @@ export default function InteractiveRoom() {
     const printerSpool = room.getObjectByName("printer-spool");
     const printerSecondarySpool = room.getObjectByName("printer-spool-secondary");
     const animatedCatTail = room.getObjectByName("cat-tail-3d");
+    const catYarnBall = room.getObjectByName("cat-rug-yarn-ball");
+    const catToyMouse = room.getObjectByName("cat-rug-toy-mouse");
     const printStartedAt = performance.now();
     let lastPrintPercent = -1;
     let printCompletedAt = 0;
@@ -1570,6 +1704,17 @@ export default function InteractiveRoom() {
           : 0.24 + Math.sin(elapsed * 1.15) * 0.012;
         cat.rotation.y = catSecretActive ? -0.32 + Math.sin(elapsed * 5) * 0.5 : -0.32;
         if (animatedCatTail) animatedCatTail.rotation.y = Math.sin(elapsed * 0.72) * 0.11;
+        if (catYarnBall) {
+          catYarnBall.position.y = catSecretActive
+            ? 0.16 + Math.abs(Math.sin(elapsed * 8.5)) * 0.11
+            : 0.16;
+          catYarnBall.rotation.z = catSecretActive ? elapsed * 4.2 : Math.sin(elapsed * 0.7) * 0.08;
+        }
+        if (catToyMouse) {
+          catToyMouse.rotation.y = catSecretActive
+            ? -0.35 + Math.sin(elapsed * 7.5) * 0.22
+            : -0.35;
+        }
         if (printerCarriage) printerCarriage.position.x = printProgress < 1 ? Math.sin(elapsed * 1.9) * 0.55 : 0;
         if (printerSpool && printProgress < 1) printerSpool.rotation.x += delta * 0.34;
         if (printerSecondarySpool && printProgress < 1) printerSecondarySpool.rotation.x -= delta * 0.28;
