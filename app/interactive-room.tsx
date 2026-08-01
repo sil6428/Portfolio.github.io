@@ -683,7 +683,7 @@ export default function InteractiveRoom() {
     desktopCanvas.width = 1024;
     desktopCanvas.height = 640;
     const desktopContext = desktopCanvas.getContext("2d");
-    const drawDesktopEnvironment = () => {
+    const drawDesktopHandoff = () => {
       if (!desktopContext) return;
       const background = desktopContext.createLinearGradient(0, 0, 1024, 640);
       background.addColorStop(0, "#080d15");
@@ -761,6 +761,10 @@ export default function InteractiveRoom() {
         desktopContext.font = "14px monospace";
         desktopContext.fillText(file.note, file.x, file.y + file.height - 22);
       }
+      // The texture is uploaded after this function returns. Replacing the retired
+      // desktop frame here keeps the monitor on the completed boot screen until
+      // the current AFFAN_OS interface mounts over the canvas.
+      drawDesktopBoot(1);
     };
     const drawDesktopOff = () => {
       if (!desktopContext) return;
@@ -2642,7 +2646,7 @@ export default function InteractiveRoom() {
       queueBootFrame(300, 0.36);
       queueBootFrame(650, 0.71);
       desktopBootTimers.push(window.setTimeout(() => {
-        drawDesktopEnvironment();
+        drawDesktopHandoff();
         desktopTexture.needsUpdate = true;
         desktopPowerTarget.visible = true;
         desktopPowerTarget.userData.label = "OPEN AFFAN_OS DESKTOP";

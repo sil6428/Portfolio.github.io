@@ -44,6 +44,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A functional AFFAN_OS terminal that opens from the taskbar or backtick key, navigates folders and documents, opens the resume, reports portfolio status, and controls room Easter eggs
 - Full shutdown behavior: leaving AFFAN_OS turns off the monitor and PC power light, returns to the 3D room, and runs the boot sequence again on the next startup
 - One computer interaction marker replaces the retired cluster of six overlapping desktop-file markers
+- A continuous boot handoff keeps the monitor on its completed loading frame until the current AFFAN_OS interface is mounted, preventing the retired desktop from flashing between states
 - Keyboard-friendly buttons, focus management, live announcements, Escape behavior, readable mobile windows, and a screen-reader power control
 - An Inspiration file that credits Bruno Simon, Ida's Gameboy, and Jesse Zhou, with direct links and notes on what each site influenced
 - Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
