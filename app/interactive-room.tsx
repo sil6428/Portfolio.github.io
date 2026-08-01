@@ -8,6 +8,7 @@ import { playSiteSfx } from "./site-sfx";
 
 type HotspotData = {
   key?: string;
+  action?: "desktop-power";
   easterEgg?: "cat" | "palette" | "relic" | "signal";
   label: string;
 };
@@ -277,7 +278,7 @@ const PRINT_DURATION_MS = 180_000;
 function findHotspot(object: THREE.Object3D | null): THREE.Object3D | null {
   let current = object;
   while (current) {
-    if (current.userData.key || current.userData.easterEgg) return current;
+    if (current.userData.key || current.userData.action || current.userData.easterEgg) return current;
     current = current.parent;
   }
   return null;
@@ -293,6 +294,7 @@ export default function InteractiveRoom() {
   const focusRef = useRef<(key: string) => void>(() => undefined);
   const dismissRef = useRef<() => void>(() => undefined);
   const activeEntry = activeKey ? ROOM_ENTRIES[activeKey] : null;
+  const desktopActive = activeKey === "__desktop";
 
   useEffect(() => {
     let frame = 0;
@@ -674,7 +676,8 @@ export default function InteractiveRoom() {
     desktopCanvas.width = 1024;
     desktopCanvas.height = 640;
     const desktopContext = desktopCanvas.getContext("2d");
-    if (desktopContext) {
+    const drawDesktopEnvironment = () => {
+      if (!desktopContext) return;
       const background = desktopContext.createLinearGradient(0, 0, 1024, 640);
       background.addColorStop(0, "#080d15");
       background.addColorStop(0.52, "#101827");
@@ -751,7 +754,41 @@ export default function InteractiveRoom() {
         desktopContext.font = "14px monospace";
         desktopContext.fillText(file.note, file.x, file.y + file.height - 22);
       }
-    }
+    };
+    const drawDesktopOff = () => {
+      if (!desktopContext) return;
+      desktopContext.fillStyle = "#020406";
+      desktopContext.fillRect(0, 0, desktopCanvas.width, desktopCanvas.height);
+      desktopContext.fillStyle = "rgba(70, 104, 119, 0.08)";
+      desktopContext.fillRect(0, desktopCanvas.height - 3, desktopCanvas.width, 3);
+    };
+    const drawDesktopBoot = (progress: number) => {
+      if (!desktopContext) return;
+      const clampedProgress = THREE.MathUtils.clamp(progress, 0, 1);
+      desktopContext.fillStyle = "#02070b";
+      desktopContext.fillRect(0, 0, desktopCanvas.width, desktopCanvas.height);
+      const glow = desktopContext.createRadialGradient(512, 280, 0, 512, 280, 350);
+      glow.addColorStop(0, "rgba(77, 190, 216, .15)");
+      glow.addColorStop(1, "rgba(77, 190, 216, 0)");
+      desktopContext.fillStyle = glow;
+      desktopContext.fillRect(0, 0, desktopCanvas.width, desktopCanvas.height);
+      desktopContext.textAlign = "center";
+      desktopContext.fillStyle = "#e3edf0";
+      desktopContext.font = "bold 42px monospace";
+      desktopContext.fillText("AFFAN_OS", 512, 252);
+      desktopContext.fillStyle = "#73909c";
+      desktopContext.font = "17px monospace";
+      desktopContext.fillText("INITIALIZING DESKTOP", 512, 294);
+      desktopContext.fillStyle = "#15232b";
+      desktopContext.fillRect(312, 334, 400, 12);
+      desktopContext.fillStyle = "#68e0ae";
+      desktopContext.fillRect(312, 334, 400 * clampedProgress, 12);
+      desktopContext.fillStyle = "#77e7ff";
+      desktopContext.font = "14px monospace";
+      desktopContext.fillText(`${Math.round(clampedProgress * 100).toString().padStart(3, "0")}%`, 512, 382);
+      desktopContext.textAlign = "left";
+    };
+    drawDesktopOff();
     const desktopTexture = new THREE.CanvasTexture(desktopCanvas);
     desktopTexture.colorSpace = THREE.SRGBColorSpace;
     desktopTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
@@ -761,6 +798,24 @@ export default function InteractiveRoom() {
     );
     desktopScreen.position.set(0, 0.97, 0.071);
     desktopMonitor.add(desktopScreen);
+
+    const desktopPowerTarget = new THREE.Group();
+    desktopPowerTarget.name = "desktop-screen-power-target";
+    desktopPowerTarget.userData = {
+      action: "desktop-power",
+      label: "CLICK SCREEN TO POWER ON AFFAN_OS",
+    } satisfies HotspotData;
+    const desktopPowerHitArea = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.92, 1.62),
+      new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.012, depthWrite: false }),
+    );
+    desktopPowerHitArea.position.set(0, 0.97, 0.094);
+    desktopPowerTarget.add(desktopPowerHitArea);
+    desktopMonitor.add(desktopPowerTarget);
+    clickable.push(desktopPowerTarget);
+
+    const desktopFileTargets: THREE.Group[] = [];
+    const desktopFileHitAreas: THREE.Mesh[] = [];
 
     const addDesktopFile = (
       key: "archtech" | "ssik" | "profile" | "contact" | "resume" | "inspiration",
@@ -777,7 +832,11 @@ export default function InteractiveRoom() {
         new THREE.PlaneGeometry(width, height),
         new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.035, depthWrite: false }),
       );
+      hitArea.layers.disable(0);
       file.add(hitArea);
+      file.visible = false;
+      desktopFileTargets.push(file);
+      desktopFileHitAreas.push(hitArea);
       return file;
     };
     addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.16, 1.46, 0.53, 0.48, cyan);
@@ -786,6 +845,9 @@ export default function InteractiveRoom() {
     addDesktopFile("inspiration", "OPEN INSPIRATION FILE", 0.91, 1.46, 0.57, 0.48, "#d6b85d");
     addDesktopFile("contact", "OPEN CONTACT FILE", -0.81, 0.84, 0.57, 0.47, "#68e0ae");
     addDesktopFile("resume", "OPEN RESUME PDF", 0, 0.84, 0.57, 0.47, "#e7eceb");
+    let desktopPowered = false;
+    let desktopBooting = false;
+    const desktopBootTimers: number[] = [];
 
     for (let row = 0; row < 4; row += 1) {
       for (let key = 0; key < 13; key += 1) {
@@ -924,9 +986,10 @@ export default function InteractiveRoom() {
       emissiveIntensity: 0.86,
       roughness: 0.24,
     });
+    const pcPowerMaterial = material("#26343a", { emissive: "#000000", emissiveIntensity: 0 });
     const pcPower = new THREE.Mesh(
       new THREE.SphereGeometry(0.025, 10, 8),
-      material(cyan, { emissive: cyan, emissiveIntensity: 2.2 }),
+      pcPowerMaterial,
     );
     pcPower.name = "desktop-pc-power";
     pcPower.position.set(1.49, 1.02, 0.115);
@@ -2554,7 +2617,65 @@ export default function InteractiveRoom() {
       };
     };
 
+    const focusDesktop = () => {
+      desktopMonitor.updateWorldMatrix(true, true);
+      const target = desktopMonitor.localToWorld(new THREE.Vector3(0, 0.97, 0.08));
+      const roomRotation = room.getWorldQuaternion(new THREE.Quaternion());
+      const cameraOffset = new THREE.Vector3(
+        0,
+        window.innerWidth < 720 ? 0.08 : 0.02,
+        window.innerWidth < 720 ? 3.35 : 2.72,
+      ).applyQuaternion(roomRotation);
+      focusedKey = "__desktop";
+      document.body.classList.remove("room-default-view");
+      document.body.classList.add("room-focus-active");
+      beginCameraMove(
+        target.clone().add(cameraOffset),
+        target,
+        "__desktop",
+        desktopPowered ? "OPENING AFFAN_OS" : "POWERING ON AFFAN_OS",
+      );
+    };
+
+    const powerOnDesktop = () => {
+      playSiteSfx("open");
+      focusDesktop();
+      if (desktopPowered || desktopBooting) return;
+      desktopBooting = true;
+      desktopPowerTarget.userData.label = "AFFAN_OS IS BOOTING";
+      pcPowerMaterial.color.set("#68e0ae");
+      pcPowerMaterial.emissive.set("#68e0ae");
+      pcPowerMaterial.emissiveIntensity = 2.2;
+      drawDesktopBoot(0.08);
+      desktopTexture.needsUpdate = true;
+
+      const queueBootFrame = (delay: number, progress: number) => {
+        desktopBootTimers.push(window.setTimeout(() => {
+          drawDesktopBoot(progress);
+          desktopTexture.needsUpdate = true;
+        }, reducedMotion ? 1 : delay));
+      };
+      queueBootFrame(300, 0.36);
+      queueBootFrame(650, 0.71);
+      desktopBootTimers.push(window.setTimeout(() => {
+        drawDesktopEnvironment();
+        desktopTexture.needsUpdate = true;
+        desktopFileTargets.forEach((target) => { target.visible = true; });
+        desktopFileHitAreas.forEach((hitArea) => { hitArea.layers.enable(0); });
+        desktopPowerTarget.visible = false;
+        desktopPowerHitArea.layers.disable(0);
+        desktopBooting = false;
+        desktopPowered = true;
+        setHoverLabel("AFFAN_OS READY / SELECT A FILE");
+        playSiteSfx("complete");
+      }, reducedMotion ? 1 : 980));
+    };
+
     const focusObject = (key: string) => {
+      if (key === "__desktop") {
+        powerOnDesktop();
+        return;
+      }
       if (key === "__overview") {
         playSiteSfx("close");
         focusedKey = null;
@@ -2725,7 +2846,9 @@ export default function InteractiveRoom() {
     const handlePointerUp = (event: PointerEvent) => {
       if (Math.hypot(event.clientX - pressedAt.x, event.clientY - pressedAt.y) > 7) return;
       const selected = pick(event);
-      if (selected?.userData.easterEgg) {
+      if (selected?.userData.action === "desktop-power") {
+        powerOnDesktop();
+      } else if (selected?.userData.easterEgg) {
         activateRoomSecret(selected.userData.easterEgg);
       } else if (selected?.userData.key) {
         focusObject(selected.userData.key);
@@ -2925,7 +3048,7 @@ export default function InteractiveRoom() {
           setActiveKey(revealKey);
           if (revealKey === null) document.body.classList.add("room-default-view");
           else document.body.classList.remove("room-default-view");
-          if (revealKey) {
+          if (revealKey && revealKey in ROOM_ENTRIES) {
             setVisitedKeys((current) => {
               if (current.includes(revealKey)) return current;
               const next = [...current, revealKey];
@@ -2960,6 +3083,7 @@ export default function InteractiveRoom() {
       window.removeEventListener("affan-room-signal", handleSignalCommand);
       window.removeEventListener("affan-room-cat", handleCatCommand);
       window.clearTimeout(roomSecretTimeout);
+      desktopBootTimers.forEach((timer) => window.clearTimeout(timer));
       focusRef.current = () => undefined;
       dismissRef.current = () => undefined;
       document.body.classList.remove("room-focus-active");
@@ -2987,14 +3111,23 @@ export default function InteractiveRoom() {
   }, [activeKey]);
 
   return (
-    <section className={`room-stage ${activeEntry ? "room-has-popup" : ""}`} aria-label="Interactive 3D portfolio">
+    <section className={`room-stage ${activeEntry ? "room-has-popup" : ""} ${desktopActive ? "room-desktop-active" : ""}`} aria-label="Interactive 3D portfolio">
       <div className="room-stage-bar">
         <span>AFFAN_LAB / ROOM_01</span>
         <strong aria-live="polite">
-          {transitionLabel || hoverLabel || (activeEntry ? activeEntry.title.toUpperCase() : "MOVE / DRAG / SELECT")}
+          {transitionLabel || hoverLabel || (activeEntry ? activeEntry.title.toUpperCase() : desktopActive ? "AFFAN_OS / DESKTOP READY" : "MOVE / DRAG / SELECT")}
         </strong>
       </div>
       <div className="room-canvas" ref={hostRef} />
+      {desktopActive && (
+        <button
+          className="room-desktop-exit"
+          type="button"
+          onClick={() => focusRef.current("__overview")}
+        >
+          Exit desktop
+        </button>
+      )}
       <div className="room-fluid-hint" aria-hidden="true">
         <span><i /> SCENE RESPONSIVE</span>
         <span>Move pointer / shift perspective</span>
@@ -3005,6 +3138,9 @@ export default function InteractiveRoom() {
       </div>
       {roomSecret && <div className="room-secret-toast" role="status">{roomSecret}</div>}
       <nav className="room-directory-accessible" aria-label="3D room objects">
+        <button type="button" onClick={() => focusRef.current("__desktop")}>
+          Power on computer desktop
+        </button>
         {DIRECTORY.map(([key, entry]) => (
           <button
             type="button"

@@ -235,6 +235,11 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /desktop-monitor-rounded-bezel/);
   assert.match(room, /desktop-monitor-rear-stand/);
   assert.match(room, /desktop-monitor-rear-hinge/);
+  assert.match(room, /desktop-screen-power-target/);
+  assert.match(room, /CLICK SCREEN TO POWER ON AFFAN_OS/);
+  assert.match(room, /INITIALIZING DESKTOP/);
+  assert.match(room, /Power on computer desktop/);
+  assert.match(room, /Exit desktop/);
   assert.match(room, /desktop-keycap/);
   assert.match(room, /desktop-tower-glass/);
   assert.match(room, /desktop-motherboard/);

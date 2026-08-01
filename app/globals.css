@@ -2933,6 +2933,29 @@ body.room-default-view .immersive-intro {
   background: rgba(5,9,13,.58);
 }
 .immersive-home .room-stage-bar > span { display: none; }
+.room-desktop-exit {
+  position: absolute;
+  top: 108px;
+  right: 18px;
+  z-index: 11;
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid rgba(119,231,255,.24);
+  color: #cce5ea;
+  background: rgba(5,9,13,.78);
+  box-shadow: 0 10px 34px rgba(0,0,0,.28);
+  backdrop-filter: blur(14px);
+  font: 8px "DM Mono", monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.room-desktop-exit:hover,
+.room-desktop-exit:focus-visible {
+  border-color: rgba(104,224,174,.7);
+  color: #68e0ae;
+  outline: none;
+}
 .room-fluid-hint {
   position: absolute;
   left: 20px;
