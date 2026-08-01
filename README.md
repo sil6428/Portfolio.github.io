@@ -87,6 +87,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - All main portfolio content stays inside the room instead of redirecting to internal pages
 - Screen-reader object controls, Escape-to-return behavior, touch support, and unlisted fallback routes
 - Mobile-only camera framing, expanded coarse-pointer hit testing, scroll-safe soundtrack and object panels, and 44-pixel phone controls without changing the desktop composition
+- Touch-specific room navigation with one-finger camera panning and two-finger orbit plus pinch zoom, while desktop left-drag, right-drag, wheel, and trackpad controls remain unchanged
 - Section-specific Three.js network topology on the supporting pages
 - Uneven systems-map layout that gives major projects different visual weight
 - Spotify playlist link plus device-local audio playback for files the visitor owns

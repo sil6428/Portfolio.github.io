@@ -397,6 +397,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /controls\.enableZoom = true/);
   assert.match(room, /controls\.minDistance = 2\.1/);
   assert.match(room, /controls\.mouseButtons\.RIGHT = THREE\.MOUSE\.PAN/);
+  assert.match(room, /controls\.touches\.ONE = THREE\.TOUCH\.PAN/);
+  assert.match(room, /controls\.touches\.TWO = THREE\.TOUCH\.DOLLY_ROTATE/);
+  assert.match(room, /coarsePointer/);
   assert.match(room, /Right drag \/ move camera/);
   assert.match(room, /contextmenu/);
   assert.match(room, /cameraOffset/);
@@ -461,6 +464,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(styles, /affan-os-desktop-groups/);
   assert.match(styles, /affan-os-resume-viewer/);
   assert.match(styles, /affan-os-terminal-history/);
+  assert.match(styles, /@media \(pointer: coarse\)/);
+  assert.match(styles, /\.room-canvas canvas \{ touch-action: none; \}/);
   assert.match(styles, /room-directory-accessible/);
   assert.match(styles, /room-secret-toast/);
   assert.match(styles, /body\.room-default-view \.immersive-intro/);

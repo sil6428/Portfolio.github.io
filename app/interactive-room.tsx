@@ -350,6 +350,13 @@ export default function InteractiveRoom() {
     controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
     controls.mouseButtons.MIDDLE = THREE.MOUSE.DOLLY;
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    if (coarsePointer) {
+      controls.touches.ONE = THREE.TOUCH.PAN;
+      controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
+      controls.panSpeed = 0.9;
+      controls.rotateSpeed = 0.72;
+    }
     controls.enableZoom = true;
     controls.minDistance = 2.1;
     controls.maxDistance = 13;

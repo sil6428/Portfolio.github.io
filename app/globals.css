@@ -2772,6 +2772,9 @@ main {
   display: block;
   touch-action: pan-y;
 }
+@media (pointer: coarse) {
+  .room-canvas canvas { touch-action: none; }
+}
 .room-directory {
   position: absolute;
   inset: auto 14px 14px;
