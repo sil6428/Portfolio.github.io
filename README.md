@@ -40,7 +40,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Nested project files for Archtech, SSIK, the portfolio, Password Manager, and Event Planner, alongside degree, certification, employment, volunteer, lab, profile, skills, public contact, photography, reading, and reference files
 - An in-system PDF reader for the complete resume, with full-size and download controls
 - A functional AFFAN_OS terminal that opens from the taskbar or backtick key, navigates folders and documents, opens the resume, reports portfolio status, and controls room Easter eggs
-- Persistent powered-monitor behavior: leaving AFFAN_OS returns to the 3D room, while the monitor remains one selectable AFFAN_OS entry point instead of exposing the retired six-file screen interaction
+- Full shutdown behavior: leaving AFFAN_OS turns off the monitor and PC power light, returns to the 3D room, keeps the retired six-file interaction disabled, and runs the boot sequence again on the next startup
 - Keyboard-friendly buttons, focus management, live announcements, Escape behavior, readable mobile windows, and a screen-reader power control
 - An Inspiration file that credits Bruno Simon, Ida's Gameboy, and Jesse Zhou, with direct links and notes on what each site influenced
 - Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar

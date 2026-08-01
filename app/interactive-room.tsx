@@ -2673,7 +2673,28 @@ export default function InteractiveRoom() {
       }, reducedMotion ? 1 : 980));
     };
 
+    const powerOffDesktop = () => {
+      desktopBootTimers.forEach((timer) => window.clearTimeout(timer));
+      desktopBootTimers.length = 0;
+      desktopPowered = false;
+      desktopBooting = false;
+      drawDesktopOff();
+      desktopTexture.needsUpdate = true;
+      desktopPowerTarget.visible = true;
+      desktopPowerTarget.userData.label = "CLICK SCREEN TO POWER ON AFFAN_OS";
+      desktopPowerHitArea.layers.enable(0);
+      pcPowerMaterial.color.set("#26343a");
+      pcPowerMaterial.emissive.set("#000000");
+      pcPowerMaterial.emissiveIntensity = 0;
+      setHoverLabel("");
+    };
+
     const focusObject = (key: string) => {
+      if (key === "__desktop-off") {
+        powerOffDesktop();
+        focusObject("__overview");
+        return;
+      }
       if (key === "__desktop") {
         powerOnDesktop();
         return;
@@ -3106,7 +3127,9 @@ export default function InteractiveRoom() {
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && activeKey) focusRef.current("__overview");
+      if (event.key === "Escape" && activeKey) {
+        focusRef.current(activeKey === "__desktop" ? "__desktop-off" : "__overview");
+      }
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
@@ -3121,7 +3144,7 @@ export default function InteractiveRoom() {
         </strong>
       </div>
       <div className="room-canvas" ref={hostRef} />
-      {desktopActive && <DesktopOs onExit={() => focusRef.current("__overview")} />}
+      {desktopActive && <DesktopOs onExit={() => focusRef.current("__desktop-off")} />}
       <div className="room-fluid-hint" aria-hidden="true">
         <span><i /> SCENE RESPONSIVE</span>
         <span>Move pointer / shift perspective</span>

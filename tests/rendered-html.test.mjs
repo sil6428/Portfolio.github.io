@@ -245,6 +245,11 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /INITIALIZING DESKTOP/);
   assert.match(room, /OPEN AFFAN_OS DESKTOP/);
   assert.match(room, /AFFAN_OS READY \/ CLICK SCREEN TO OPEN/);
+  assert.match(room, /const powerOffDesktop/);
+  assert.match(room, /drawDesktopOff\(\)/);
+  assert.match(room, /pcPowerMaterial\.emissiveIntensity = 0/);
+  assert.match(room, /focusRef\.current\("__desktop-off"\)/);
+  assert.match(room, /activeKey === "__desktop" \? "__desktop-off" : "__overview"/);
   assert.doesNotMatch(room, /desktopPowerTarget\.visible = false/);
   assert.doesNotMatch(room, /desktopFileHitAreas/);
   assert.match(room, /Power on computer desktop/);
