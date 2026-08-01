@@ -150,7 +150,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /KONAMI_SEQUENCE/);
   assert.match(source, /AFFAN_OS/);
   assert.match(source, /Hidden things and how to find them/);
-  assert.match(source, /Desktop files/);
+  assert.match(source, /AFFAN_OS files/);
   assert.match(source, /Three-minute print/);
   assert.match(source, /Original sound effects/);
   assert.match(source, /procedural Web Audio tones/);
@@ -163,6 +163,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(source, /affan-room-cat/);
   assert.match(source, /affan-room-relic/);
   assert.match(source, /affan-room-signal/);
+  assert.match(source, /affan-os-terminal-toggle/);
+  assert.match(source, /document\.querySelector\("\.affan-os"\)/);
   assert.doesNotMatch(source, /PortfolioCat/);
   assert.doesNotMatch(source, /portfolio-cat-swat/);
   assert.doesNotMatch(source, /cat-is-home/);
@@ -421,6 +423,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /Search files and apps/);
   assert.match(desktopOs, /Projects/);
   assert.match(desktopOs, /Network Labs/);
+  assert.match(desktopOs, /Education/);
+  assert.match(desktopOs, /Experience/);
+  assert.match(desktopOs, /Interests/);
   assert.match(desktopOs, /Contact/);
   assert.match(desktopOs, /Inspiration/);
   assert.match(desktopOs, /Archtech\.project/);
@@ -428,6 +433,18 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /Password Manager\.py/);
   assert.match(desktopOs, /Event Planner\.js/);
   assert.match(desktopOs, /Resume\.pdf/);
+  assert.match(desktopOs, /Affan_Shaikh_Resume\.pdf#view=FitH/);
+  assert.match(desktopOs, /Affan Shaikh resume PDF/);
+  assert.match(desktopOs, /Ontario Tech\.txt/);
+  assert.match(desktopOs, /Security\+\.plan/);
+  assert.match(desktopOs, /Work Experience\.txt/);
+  assert.match(desktopOs, /Volunteer Work\.txt/);
+  assert.match(desktopOs, /Badminton\.txt/);
+  assert.match(desktopOs, /3D Printing\.txt/);
+  assert.match(desktopOs, /affan-os-terminal-input/);
+  assert.match(desktopOs, /submitTerminal/);
+  assert.match(desktopOs, /affan-os-terminal-toggle/);
+  assert.match(desktopOs, /iconOrder/);
   assert.match(desktopOs, /Minimize/);
   assert.match(desktopOs, /Maximize/);
   assert.match(desktopOs, /Return to 3D room/);
@@ -437,6 +454,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(styles, /affan-os-file-grid/);
   assert.match(styles, /affan-os-launcher/);
   assert.match(styles, /affan-os-taskbar/);
+  assert.match(styles, /affan-os-desktop-groups/);
+  assert.match(styles, /affan-os-resume-viewer/);
+  assert.match(styles, /affan-os-terminal-history/);
   assert.match(styles, /room-directory-accessible/);
   assert.match(styles, /room-secret-toast/);
   assert.match(styles, /body\.room-default-view \.immersive-intro/);

@@ -208,6 +208,12 @@ export default function SiteExtras() {
 
       if (!isTyping && event.key === "`") {
         event.preventDefault();
+        if (document.querySelector(".affan-os")) {
+          setTerminalOpen(false);
+          playSiteSfx("open");
+          window.dispatchEvent(new Event("affan-os-terminal-toggle"));
+          return;
+        }
         setTerminalOpen((current) => {
           playSiteSfx(current ? "close" : "open");
           return !current;
@@ -501,7 +507,7 @@ export default function SiteExtras() {
                 <ol>
                   <li>
                     <code>01</code>
-                    <div><strong>Hidden terminal</strong><p>Press the backtick key anywhere outside a text field. Press Escape to close it.</p></div>
+                    <div><strong>Integrated terminal</strong><p>Press the backtick key anywhere outside a text field. Inside AFFAN_OS it opens the operating system terminal. Elsewhere it opens this compact terminal.</p></div>
                   </li>
                   <li>
                     <code>02</code>
@@ -513,7 +519,7 @@ export default function SiteExtras() {
                   </li>
                   <li>
                     <code>04</code>
-                    <div><strong>Desktop files</strong><p>Archtech, SSIK, About, Contact, Resume, and Inspiration are separate selectable files on the room&apos;s PC.</p></div>
+                    <div><strong>AFFAN_OS files</strong><p>Power on the room&apos;s PC to browse categorized project, education, experience, interests, networking, contact, resume, and inspiration files.</p></div>
                   </li>
                   <li>
                     <code>05</code>

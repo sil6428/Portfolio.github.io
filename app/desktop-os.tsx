@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-type FolderId = "home" | "projects" | "networking" | "contact" | "inspiration";
+type FolderId = "home" | "projects" | "networking" | "education" | "experience" | "interests" | "contact" | "inspiration";
 type DocumentId =
   | "about"
   | "archtech"
@@ -11,10 +11,19 @@ type DocumentId =
   | "password-manager"
   | "event-planner"
   | "skills"
+  | "education"
+  | "certification"
+  | "work-experience"
+  | "volunteer"
   | "learning-log"
   | "vlan-lab"
   | "proxmox"
   | "reading"
+  | "badminton"
+  | "3d-printing"
+  | "photography"
+  | "home-lab"
+  | "resume"
   | "terminal";
 
 type OsView =
@@ -45,11 +54,14 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
     items: [
       { id: "projects", label: "Projects", meta: "5 items", icon: "folder", view: { kind: "folder", id: "projects" } },
       { id: "networking", label: "Network Labs", meta: "2 files", icon: "folder", view: { kind: "folder", id: "networking" } },
+      { id: "education", label: "Education", meta: "2 files", icon: "folder", view: { kind: "folder", id: "education" } },
+      { id: "experience", label: "Experience", meta: "2 files", icon: "folder", view: { kind: "folder", id: "experience" } },
+      { id: "interests", label: "Interests", meta: "5 files", icon: "folder", view: { kind: "folder", id: "interests" } },
       { id: "contact", label: "Contact", meta: "5 links", icon: "folder", view: { kind: "folder", id: "contact" } },
       { id: "inspiration", label: "Inspiration", meta: "3 links", icon: "folder", view: { kind: "folder", id: "inspiration" } },
       { id: "about", label: "About.txt", meta: "Text document", icon: "text", view: { kind: "document", id: "about" } },
       { id: "skills", label: "Skills.md", meta: "Markdown", icon: "code", view: { kind: "document", id: "skills" } },
-      { id: "resume", label: "Resume.pdf", meta: "PDF document", icon: "pdf", href: "/Affan_Shaikh_Resume.pdf" },
+      { id: "resume", label: "Resume.pdf", meta: "PDF document", icon: "pdf", view: { kind: "document", id: "resume" } },
       { id: "learning-log", label: "Learning Log.url", meta: "GitHub link", icon: "link", view: { kind: "document", id: "learning-log" } },
       { id: "reading", label: "Reading-list.txt", meta: "Text document", icon: "text", view: { kind: "document", id: "reading" } },
     ],
@@ -71,6 +83,33 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
     items: [
       { id: "vlan", label: "VLAN Lab.md", meta: "Cisco IOS notes", icon: "text", view: { kind: "document", id: "vlan-lab" } },
       { id: "proxmox", label: "Proxmox-plan.md", meta: "Home-lab plan", icon: "text", view: { kind: "document", id: "proxmox" } },
+    ],
+  },
+  education: {
+    title: "Education",
+    path: "/home/affan/Education",
+    items: [
+      { id: "university", label: "Ontario Tech.txt", meta: "Degree and coursework", icon: "text", view: { kind: "document", id: "education" } },
+      { id: "security-plus", label: "Security+.plan", meta: "In progress", icon: "text", view: { kind: "document", id: "certification" } },
+    ],
+  },
+  experience: {
+    title: "Experience",
+    path: "/home/affan/Experience",
+    items: [
+      { id: "work", label: "Work Experience.txt", meta: "2 positions", icon: "text", view: { kind: "document", id: "work-experience" } },
+      { id: "volunteer", label: "Volunteer Work.txt", meta: "430 hours", icon: "text", view: { kind: "document", id: "volunteer" } },
+    ],
+  },
+  interests: {
+    title: "Interests",
+    path: "/home/affan/Interests",
+    items: [
+      { id: "badminton", label: "Badminton.txt", meta: "Regional competitor", icon: "text", view: { kind: "document", id: "badminton" } },
+      { id: "printing", label: "3D Printing.txt", meta: "Design and fabrication", icon: "text", view: { kind: "document", id: "3d-printing" } },
+      { id: "reading", label: "Reading-list.txt", meta: "Current books", icon: "text", view: { kind: "document", id: "reading" } },
+      { id: "photography", label: "Photography.url", meta: "VSCO gallery", icon: "link", view: { kind: "document", id: "photography" } },
+      { id: "home-lab", label: "Home Lab.md", meta: "Proxmox project", icon: "code", view: { kind: "document", id: "home-lab" } },
     ],
   },
   contact: {
@@ -144,6 +183,54 @@ const documents: Record<DocumentId, DocumentContent> = {
     intro: "Tools and concepts I have worked with through school, labs, and personal projects.",
     bullets: ["IPv4 and IPv6, VLANs, trunking, DHCP, DNS, NAT, STP, and inter-VLAN routing", "Python, TypeScript, JavaScript, React, Next.js, HTML, and CSS", "Linux, Windows Server, Wireshark, Packet Tracer, Git, GitHub, and Cloudflare Workers", "Authentication, access control, hashing, encryption, and vulnerability analysis fundamentals"],
   },
+  education: {
+    title: "Ontario Tech.txt",
+    type: "Education record",
+    intro: "Bachelor of Information Technology in Networking and Cybersecurity at Ontario Tech University in Oshawa, Ontario. I started in September 2024 and expect to graduate in 2028.",
+    bullets: [
+      "Advanced Networking I",
+      "Cybersecurity Fundamentals",
+      "Programming I with Python",
+      "Computer Systems",
+      "Coursework combines network configuration, systems, security, and software fundamentals",
+    ],
+    links: [{ label: "Visit Ontario Tech", href: "https://ontariotechu.ca/" }],
+  },
+  certification: {
+    title: "Security+.plan",
+    type: "Certification plan · In progress",
+    intro: "I am preparing for CompTIA Security+ with an expected completion target of September 2026.",
+    bullets: [
+      "Threats, vulnerabilities, and mitigations",
+      "Security architecture and operations",
+      "Identity, authentication, and access control",
+      "Risk, governance, and incident-response fundamentals",
+    ],
+  },
+  "work-experience": {
+    title: "Work Experience.txt",
+    type: "Employment record",
+    intro: "My work experience combines customer service, transaction accuracy, communication, and responsibility in fast-moving environments.",
+    bullets: [
+      "Sales Associate · Oshawa, Ontario · May 2025 to present",
+      "Assist customers, answer product questions, and create a positive shopping experience",
+      "Process cash and card transactions accurately while supporting efficient checkout operations",
+      "Restock merchandise, organize displays, and work with team members to maintain the sales floor",
+      "Summer Day Camp Counsellor · Oshawa, Ontario · May 2023 to July 2023",
+      "Led daily activities, maintained group safety, supported event planning for more than 100 attendees, communicated instructions, and resolved conflicts calmly",
+    ],
+  },
+  volunteer: {
+    title: "Volunteer Work.txt",
+    type: "Community experience · 430 hours",
+    intro: "I have completed more than 430 hours of community and event volunteer work in Oshawa.",
+    bullets: [
+      "Community Volunteer · Al Arqam Islamic Centre · 400 hours",
+      "Supported registration, guest service, crowd flow, setup, cleanup, and attendee needs at large community events",
+      "Event Organizer · YCC519 Community Event · 30 hours",
+      "Coordinated event setup, logistics, front-line attendee assistance, and flow control",
+    ],
+  },
   "learning-log": {
     title: "Learning Log.url",
     type: "Repository link",
@@ -167,21 +254,78 @@ const documents: Record<DocumentId, DocumentContent> = {
     type: "Plain text",
     intro: "I read East Asian web novels, Korean manhwa, and manga. My current long-form reads include Lord of the Mysteries and Reverend Insanity.",
   },
+  badminton: {
+    title: "Badminton.txt",
+    type: "Interest record · Regional competitor",
+    intro: "I competed at the regional level in badminton. The sport taught me to make fast decisions, stay composed when a match changes, and improve through repetition.",
+    bullets: ["Regional-level competition", "Footwork, timing, and controlled movement", "Match preparation and disciplined practice", "Learning from every rally instead of dwelling on the last point"],
+  },
+  "3d-printing": {
+    title: "3D Printing.txt",
+    type: "Design and fabrication notes",
+    intro: "I enjoy turning digital models into physical objects and learning how orientation, supports, layer height, tolerances, and material affect a print.",
+    bullets: ["Printed a katana inspired by Elden Ring", "Printed Leon's hand cannon from Red Dead Redemption", "Iterate on failed supports and weak overhangs", "Use the portfolio printer as an animated model of the real process"],
+  },
+  photography: {
+    title: "Photography.url",
+    type: "Photography profile",
+    intro: "Photography gives me a reason to notice framing, light, repetition, texture, and the small details people usually pass by.",
+    bullets: ["Street and everyday photography", "Architecture, shadows, reflections, and quiet scenes", "Editing and sequencing images into a consistent gallery"],
+    links: [{ label: "Open VSCO gallery", href: "https://sy1len.vsco.site" }],
+  },
+  "home-lab": {
+    title: "Home Lab.md",
+    type: "Current technical project",
+    intro: "I am repurposing older computers into a Proxmox server because I want a safe place to practise virtualization, networking, storage, and self-hosting.",
+    bullets: ["Build isolated virtual networks", "Create and rebuild virtual machines", "Practise backups and service recovery", "Document changes before exposing any service", "Reuse older hardware instead of treating it as waste"],
+  },
+  resume: {
+    title: "Resume.pdf",
+    type: "PDF document",
+    intro: "Affan Shaikh's current one-page IT resume.",
+  },
   terminal: {
     title: "Terminal",
     type: "AFFAN_OS shell",
-    intro: "affan@lab:~$ help\nfiles      open the Home folder\nprojects   open the Projects folder\nresume     open the resume PDF\nroom       return to the 3D room\n\nThis terminal is a visual system panel. The portfolio's hidden command terminal still lives under the backtick key.",
+    intro: "AFFAN_OS interactive shell",
   },
 };
 
-const desktopItems: OsItem[] = [
-  { id: "home", label: "Home", meta: "Personal files", icon: "folder", view: { kind: "folder", id: "home" } },
-  { id: "projects", label: "Projects", meta: "Development work", icon: "folder", view: { kind: "folder", id: "projects" } },
-  { id: "networking", label: "Network Labs", meta: "Lab notes", icon: "folder", view: { kind: "folder", id: "networking" } },
-  { id: "about", label: "About.txt", meta: "Profile", icon: "text", view: { kind: "document", id: "about" } },
-  { id: "resume", label: "Resume.pdf", meta: "Resume", icon: "pdf", href: "/Affan_Shaikh_Resume.pdf" },
-  { id: "contact", label: "Contact", meta: "Links", icon: "folder", view: { kind: "folder", id: "contact" } },
+const desktopGroups: Array<{ id: string; label: string; items: OsItem[] }> = [
+  {
+    id: "folders",
+    label: "Folders",
+    items: [
+      { id: "home", label: "Home", meta: "Personal files", icon: "folder", view: { kind: "folder", id: "home" } },
+      { id: "projects", label: "Projects", meta: "Development work", icon: "folder", view: { kind: "folder", id: "projects" } },
+      { id: "networking", label: "Network Labs", meta: "Lab notes", icon: "folder", view: { kind: "folder", id: "networking" } },
+      { id: "interests", label: "Interests", meta: "Personal interests", icon: "folder", view: { kind: "folder", id: "interests" } },
+      { id: "contact", label: "Contact", meta: "Public links", icon: "folder", view: { kind: "folder", id: "contact" } },
+    ],
+  },
+  {
+    id: "documents",
+    label: "Documents",
+    items: [
+      { id: "resume", label: "Resume.pdf", meta: "Resume", icon: "pdf", view: { kind: "document", id: "resume" } },
+      { id: "about", label: "About.txt", meta: "Profile", icon: "text", view: { kind: "document", id: "about" } },
+      { id: "skills", label: "Skills.md", meta: "Technical skills", icon: "code", view: { kind: "document", id: "skills" } },
+      { id: "education", label: "Education", meta: "Degree and certification", icon: "folder", view: { kind: "folder", id: "education" } },
+      { id: "experience", label: "Experience", meta: "Work and volunteer", icon: "folder", view: { kind: "folder", id: "experience" } },
+    ],
+  },
+  {
+    id: "system",
+    label: "System",
+    items: [
+      { id: "terminal", label: "Terminal", meta: "AFFAN_OS shell", icon: "terminal", view: { kind: "document", id: "terminal" } },
+      { id: "learning-log", label: "Learning Log.url", meta: "Build notes", icon: "link", view: { kind: "document", id: "learning-log" } },
+    ],
+  },
 ];
+
+const desktopItems = desktopGroups.flatMap((group) => group.items);
+const iconOrder: Record<OsItem["icon"], number> = { folder: 0, pdf: 1, text: 2, code: 3, terminal: 4, link: 5 };
 
 function FileIcon({ type }: { type: OsItem["icon"] }) {
   return <span className={`affan-os-icon affan-os-icon-${type}`} aria-hidden="true"><i /></span>;
@@ -200,7 +344,14 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
   const [minimized, setMinimized] = useState(false);
   const [clock, setClock] = useState(() => new Date());
   const [announcement, setAnnouncement] = useState("AFFAN_OS desktop ready");
+  const [terminalInput, setTerminalInput] = useState("");
+  const [terminalLines, setTerminalLines] = useState<string[]>([
+    "AFFAN_OS shell v2.0",
+    "Connected to the portfolio room.",
+    "Type help to list commands.",
+  ]);
   const windowRef = useRef<HTMLElement>(null);
+  const terminalInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const timer = window.setInterval(() => setClock(new Date()), 30_000);
@@ -210,6 +361,24 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
   useEffect(() => {
     if (view && !minimized) windowRef.current?.focus();
   }, [view, minimized]);
+
+  useEffect(() => {
+    if (view?.kind === "document" && view.id === "terminal" && !minimized) {
+      terminalInputRef.current?.focus();
+    }
+  }, [view, minimized]);
+
+  useEffect(() => {
+    const openOsTerminal = () => {
+      setView({ kind: "document", id: "terminal" });
+      setHistory([]);
+      setMinimized(false);
+      setLauncherOpen(false);
+      setAnnouncement("Terminal opened with the backtick key");
+    };
+    window.addEventListener("affan-os-terminal-toggle", openOsTerminal);
+    return () => window.removeEventListener("affan-os-terminal-toggle", openOsTerminal);
+  }, []);
 
   const openView = (next: OsView) => {
     if (view) setHistory((current) => [...current, view]);
@@ -238,13 +407,78 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
 
   const allLauncherItems = useMemo(() => [
     ...desktopItems,
-    { id: "terminal", label: "Terminal", meta: "System", icon: "terminal" as const, view: { kind: "document" as const, id: "terminal" as const } },
     { id: "inspiration", label: "Inspiration", meta: "References", icon: "folder" as const, view: { kind: "folder" as const, id: "inspiration" as const } },
   ], []);
   const launcherItems = allLauncherItems.filter((item) => `${item.label} ${item.meta}`.toLowerCase().includes(query.toLowerCase()));
 
   const activateItem = (item: OsItem) => {
     if (item.view) openView(item.view);
+  };
+
+  const submitTerminal = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const command = terminalInput.trim();
+    if (!command) return;
+    const normalized = command.toLowerCase().replace(/^open\s+/, "");
+    const prompt = `affan@portfolio:~$ ${command}`;
+    const folderCommands: Partial<Record<string, FolderId>> = {
+      files: "home",
+      home: "home",
+      projects: "projects",
+      labs: "networking",
+      networking: "networking",
+      education: "education",
+      experience: "experience",
+      interests: "interests",
+      contact: "contact",
+    };
+    const documentCommands: Partial<Record<string, DocumentId>> = {
+      resume: "resume",
+      about: "about",
+      skills: "skills",
+    };
+    const responses: Record<string, string[]> = {
+      help: ["Commands: help, ls, whoami, files, projects, labs, education, experience, interests, contact, about, skills, resume, status, lights, cat, relic, signal, print, room, clear"],
+      ls: ["Folders: Projects  Network Labs  Education  Experience  Interests  Contact  Inspiration", "Files: About.txt  Skills.md  Resume.pdf  Learning Log.url"],
+      whoami: ["Affan Shaikh", "Networking and Cybersecurity student · Ontario Tech · Class of 2028"],
+      status: ["AFFAN_OS online", "Current focus: portfolio systems, cybersecurity, networking, and a Proxmox home lab."],
+      lights: ["Sending a colour override to the 3D room..."],
+      cat: ["Sending three approved pets to the room cat..."],
+      relic: ["Charging the printed katana on the bottom shelf..."],
+      signal: ["Starting the hidden server beacon sequence..."],
+      print: ["The miniature chess set takes exactly 03:00.", "Watch the printer display for live progress."],
+    };
+
+    if (normalized === "clear") {
+      setTerminalLines([]);
+      setTerminalInput("");
+      return;
+    }
+    if (normalized === "room") {
+      setTerminalLines((lines) => [...lines, prompt, "Returning to the 3D room..."]);
+      setTerminalInput("");
+      window.setTimeout(onExit, 180);
+      return;
+    }
+    if (folderCommands[normalized]) {
+      setTerminalLines((lines) => [...lines, prompt, `Opening ${folders[folderCommands[normalized]].title}...`]);
+      setTerminalInput("");
+      window.setTimeout(() => openView({ kind: "folder", id: folderCommands[normalized] as FolderId }), 120);
+      return;
+    }
+    if (documentCommands[normalized]) {
+      setTerminalLines((lines) => [...lines, prompt, `Opening ${documents[documentCommands[normalized]].title}...`]);
+      setTerminalInput("");
+      window.setTimeout(() => openView({ kind: "document", id: documentCommands[normalized] as DocumentId }), 120);
+      return;
+    }
+    if (["lights", "cat", "relic", "signal"].includes(normalized)) {
+      const roomEvent = normalized === "lights" ? "affan-room-palette" : `affan-room-${normalized}`;
+      window.dispatchEvent(new Event(roomEvent));
+    }
+    const output = responses[normalized] ?? [`Command not found: ${normalized}`, "Type help to list AFFAN_OS commands."];
+    setTerminalLines((lines) => [...lines, prompt, ...output]);
+    setTerminalInput("");
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
@@ -263,6 +497,7 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
   const activeFolder = view?.kind === "folder" ? folders[view.id] : null;
   const activeDocument = view?.kind === "document" ? documents[view.id] : null;
   const activeTitle = activeFolder?.title ?? activeDocument?.title ?? "AFFAN_OS";
+  const sortedFolderItems = activeFolder ? [...activeFolder.items].sort((a, b) => iconOrder[a.icon] - iconOrder[b.icon] || a.label.localeCompare(b.label)) : [];
 
   return (
     <section className="affan-os" role="application" aria-label="AFFAN_OS portfolio desktop" onKeyDown={handleKeyDown}>
@@ -284,15 +519,22 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
       </header>
 
       <main className="affan-os-desktop" aria-label="Desktop files">
-        <div className="affan-os-desktop-grid">
-          {desktopItems.map((item) => item.href ? (
-            <a className="affan-os-desktop-item" href={item.href} target="_blank" rel="noreferrer" key={item.id}>
-              <FileIcon type={item.icon} /><span>{item.label}</span>
-            </a>
-          ) : (
-            <button className="affan-os-desktop-item" type="button" onClick={() => activateItem(item)} key={item.id}>
-              <FileIcon type={item.icon} /><span>{item.label}</span>
-            </button>
+        <div className="affan-os-desktop-groups">
+          {desktopGroups.map((group) => (
+            <section className={`affan-os-desktop-group is-${group.id}`} aria-labelledby={`desktop-${group.id}`} key={group.id}>
+              <h2 id={`desktop-${group.id}`}>{group.label}</h2>
+              <div className="affan-os-desktop-grid">
+                {group.items.map((item) => item.href ? (
+                  <a className="affan-os-desktop-item" href={item.href} target="_blank" rel="noreferrer" key={item.id}>
+                    <FileIcon type={item.icon} /><span>{item.label}</span>
+                  </a>
+                ) : (
+                  <button className="affan-os-desktop-item" type="button" onClick={() => activateItem(item)} key={item.id}>
+                    <FileIcon type={item.icon} /><span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
         <div className="affan-os-welcome" aria-hidden="true">
@@ -343,12 +585,12 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
               <div className="affan-os-file-layout">
                 <aside className="affan-os-places" aria-label="Places">
                   <strong>Places</strong>
-                  {(["home", "projects", "networking", "contact"] as FolderId[]).map((folderId) => (
+                  {(["home", "projects", "networking", "education", "experience", "interests", "contact"] as FolderId[]).map((folderId) => (
                     <button className={view.id === folderId ? "is-current" : ""} type="button" onClick={() => openView({ kind: "folder", id: folderId })} key={folderId}>{folders[folderId].title}</button>
                   ))}
                 </aside>
                 <div className="affan-os-file-grid" aria-label={`${activeFolder.title} contents`}>
-                  {activeFolder.items.map((item) => item.href ? (
+                  {sortedFolderItems.map((item) => item.href ? (
                     <a href={item.href} target="_blank" rel="noreferrer" key={item.id} aria-label={`Open ${item.label} in a new tab`}>
                       <FileIcon type={item.icon} /><span><strong>{item.label}</strong><small>{item.meta}</small></span><ExternalMark />
                     </a>
@@ -363,8 +605,40 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
             </>
           )}
 
-          {activeDocument && (
-            <div className={`affan-os-document ${view.kind === "document" && view.id === "terminal" ? "is-terminal" : ""}`}>
+          {activeDocument && view.kind === "document" && view.id === "resume" && (
+            <div className="affan-os-resume-viewer">
+              <nav aria-label="Resume controls">
+                <div><strong>Affan_Shaikh_Resume.pdf</strong><span>1 page</span></div>
+                <a href="/Affan_Shaikh_Resume.pdf" target="_blank" rel="noreferrer">Open full size <ExternalMark /></a>
+                <a href="/Affan_Shaikh_Resume.pdf" download>Download PDF</a>
+              </nav>
+              <iframe src="/Affan_Shaikh_Resume.pdf#view=FitH&toolbar=0" title="Affan Shaikh resume PDF" />
+            </div>
+          )}
+
+          {activeDocument && view.kind === "document" && view.id === "terminal" && (
+            <div className="affan-os-terminal">
+              <div className="affan-os-terminal-history" aria-live="polite">
+                {terminalLines.map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}
+              </div>
+              <form onSubmit={submitTerminal}>
+                <label htmlFor="affan-os-terminal-input">affan@portfolio:~$</label>
+                <input
+                  id="affan-os-terminal-input"
+                  ref={terminalInputRef}
+                  value={terminalInput}
+                  onChange={(event) => setTerminalInput(event.target.value)}
+                  autoComplete="off"
+                  spellCheck={false}
+                  aria-describedby="affan-os-terminal-help"
+                />
+              </form>
+              <p id="affan-os-terminal-help">Type help for commands. Press backtick anywhere in AFFAN_OS to reopen this terminal.</p>
+            </div>
+          )}
+
+          {activeDocument && view.kind === "document" && view.id !== "terminal" && view.id !== "resume" && (
+            <div className="affan-os-document">
               <div className="affan-os-document-meta"><span>{activeDocument.type}</span><span>Read only</span></div>
               <h1>{activeDocument.title}</h1>
               <p className="affan-os-document-intro">{activeDocument.intro}</p>

@@ -35,8 +35,11 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
 - Compact desktop PC setup that starts as one powered-off screen and boots into a complete original AFFAN_OS interface
 - Linux Plasma and Windows-inspired desktop patterns with a top system panel, wallpaper, taskbar, searchable launcher, clock, system tray, running-app indicator, and show-desktop control
-- A windowed file manager with Home, Projects, Network Labs, Contact, and Inspiration folders, plus back, home, breadcrumb, places, status, minimize, maximize, and close controls
-- Nested project files for Archtech, SSIK, the portfolio, Password Manager, and Event Planner, alongside lab notes, profile documents, public contact links, resume access, and reference links
+- Desktop icons divided into Folders, Documents, and System groups instead of one left-side stack, with folder contents automatically ordered by file type
+- A windowed file manager with Home, Projects, Network Labs, Education, Experience, Interests, Contact, and Inspiration folders, plus back, home, breadcrumb, places, status, minimize, maximize, and close controls
+- Nested project files for Archtech, SSIK, the portfolio, Password Manager, and Event Planner, alongside degree, certification, employment, volunteer, lab, profile, skills, public contact, photography, reading, and reference files
+- An in-system PDF reader for the complete resume, with full-size and download controls
+- A functional AFFAN_OS terminal that opens from the taskbar or backtick key, navigates folders and documents, opens the resume, reports portfolio status, and controls room Easter eggs
 - Keyboard-friendly buttons, focus management, live announcements, Escape behavior, readable mobile windows, and a screen-reader power control
 - An Inspiration file that credits Bruno Simon, Ida's Gameboy, and Jesse Zhou, with direct links and notes on what each site influenced
 - Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar

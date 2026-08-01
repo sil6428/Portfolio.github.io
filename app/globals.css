@@ -3122,10 +3122,25 @@ body.room-default-view .room-fluid-hint {
   inset: 38px 0 48px;
   z-index: 2;
   padding: 22px;
+  overflow: auto;
 }
+.affan-os-desktop-groups { position: absolute; inset: 18px; }
+.affan-os-desktop-group { position: absolute; }
+.affan-os-desktop-group h2 {
+  margin: 0 0 5px;
+  padding: 0 6px 6px;
+  border-bottom: 1px solid rgba(188,210,224,.12);
+  color: rgba(220,235,241,.62);
+  font: 8px "DM Mono",monospace;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.affan-os-desktop-group.is-folders { left: 0; top: 0; width: 198px; }
+.affan-os-desktop-group.is-documents { right: 0; top: 0; width: 198px; }
+.affan-os-desktop-group.is-system { right: 0; bottom: 0; width: 198px; }
 .affan-os-desktop-grid {
-  width: 94px;
   display: grid;
+  grid-template-columns: repeat(2, 92px);
   gap: 6px;
 }
 .affan-os-desktop-item {
@@ -3153,14 +3168,15 @@ body.room-default-view .room-fluid-hint {
 .affan-os-desktop-item > span:last-child { max-width: 82px; overflow: hidden; font-size: 11px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .affan-os-welcome {
   position: absolute;
-  right: 6vw;
-  top: 11vh;
-  width: min(360px, 35vw);
+  left: 50%;
+  top: 14vh;
+  width: min(360px, 34vw);
   padding-left: 18px;
   display: grid;
   gap: 7px;
   border-left: 2px solid var(--os-blue);
   text-shadow: 0 2px 18px #070b12;
+  transform: translateX(-50%);
 }
 .affan-os-welcome p { margin: 0; color: var(--os-mint); font: 9px "DM Mono", monospace; letter-spacing: .18em; }
 .affan-os-welcome strong { font-family: Georgia, serif; font-size: clamp(26px,4vw,54px); font-weight: 400; }
@@ -3339,6 +3355,44 @@ body.room-default-view .room-fluid-hint {
 .affan-os-document.is-terminal { color: #bfffe0; background: #06100d; font-family: "DM Mono",monospace; }
 .affan-os-document.is-terminal h1 { color: #effff5; font-family: "DM Mono",monospace; font-size: 28px; }
 .affan-os-document.is-terminal .affan-os-document-intro { color: #8ad7ae; font: 12px/1.8 "DM Mono",monospace; }
+.affan-os-resume-viewer {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 48px minmax(0,1fr);
+  background: #353a43;
+}
+.affan-os-resume-viewer nav {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--os-border);
+  background: #171d27;
+}
+.affan-os-resume-viewer nav > div { min-width: 0; display: grid; gap: 2px; margin-right: auto; }
+.affan-os-resume-viewer nav strong { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.affan-os-resume-viewer nav span { color: var(--os-muted); font-size: 8px; }
+.affan-os-resume-viewer nav a { min-height: 32px; padding: 0 10px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--os-border); border-radius: 6px; color: #dce9ef; background: rgba(255,255,255,.04); font-size: 9px; text-decoration: none; white-space: nowrap; }
+.affan-os-resume-viewer nav a:hover,
+.affan-os-resume-viewer nav a:focus-visible { border-color: var(--os-blue); outline: none; background: rgba(112,184,255,.12); }
+.affan-os-resume-viewer iframe { width: 100%; height: 100%; border: 0; background: #e6e8ea; }
+.affan-os-terminal {
+  min-height: 0;
+  padding: 18px;
+  display: grid;
+  grid-template-rows: minmax(0,1fr) auto auto;
+  gap: 10px;
+  color: #aaf2cb;
+  background: radial-gradient(circle at 80% 10%,rgba(45,126,96,.12),transparent 28%),#050c0a;
+  font: 11px/1.55 "DM Mono",monospace;
+}
+.affan-os-terminal-history { min-height: 0; overflow: auto; scrollbar-color: #285b49 transparent; }
+.affan-os-terminal-history p { margin: 0 0 3px; white-space: pre-wrap; }
+.affan-os-terminal form { display: flex; align-items: center; gap: 8px; }
+.affan-os-terminal label { color: #e2fff0; white-space: nowrap; }
+.affan-os-terminal input { min-width: 0; flex: 1; border: 0; border-bottom: 1px solid rgba(104,224,174,.35); border-radius: 0; color: #c8ffe1; outline: 0; background: transparent; font: inherit; caret-color: var(--os-mint); }
+.affan-os-terminal input:focus { border-bottom-color: var(--os-mint); box-shadow: 0 3px 10px rgba(104,224,174,.08); }
+.affan-os-terminal > p { margin: 0; color: #598771; font-size: 9px; }
 .affan-os-taskbar {
   position: absolute;
   inset: auto 0 0;
@@ -3372,13 +3426,15 @@ body.room-default-view .room-fluid-hint {
   .affan-os-brand { font-size: 10px !important; }
   .affan-os-workspaces,
   .affan-os-tray > span { display: none; }
-  .affan-os-desktop { padding: 13px 8px; }
-  .affan-os-desktop-grid { width: 82px; }
+  .affan-os-desktop { padding: 13px 8px 34px; }
+  .affan-os-desktop-groups { position: static; display: grid; gap: 18px; }
+  .affan-os-desktop-group,
+  .affan-os-desktop-group.is-folders,
+  .affan-os-desktop-group.is-documents,
+  .affan-os-desktop-group.is-system { position: static; width: auto; }
+  .affan-os-desktop-grid { grid-template-columns: repeat(4,80px); overflow-x: auto; }
   .affan-os-desktop-item { width: 80px; min-height: 72px; }
-  .affan-os-desktop-item:nth-child(n+5) { display: none; }
-  .affan-os-welcome { right: 18px; top: 8vh; width: min(250px,60vw); }
-  .affan-os-welcome strong { font-size: clamp(25px,8vw,38px); }
-  .affan-os-welcome span { font-size: 11px; }
+  .affan-os-welcome { display: none; }
   .affan-os-window,
   .affan-os-window.is-maximized { top: 38px; left: 0; width: 100%; height: calc(100svh - 86px); border-right: 0; border-left: 0; border-radius: 0; transform: none; animation: affan-os-mobile-window-in .24s ease both; }
   .affan-os-window-controls button { width: 38px; }
@@ -3391,6 +3447,10 @@ body.room-default-view .room-fluid-hint {
   .affan-os-launcher { left: 6px; bottom: 52px; width: calc(100vw - 12px); }
   .affan-os-launcher-grid { grid-template-columns: repeat(4,1fr); }
   .affan-os-running { max-width: 120px; }
+  .affan-os-resume-viewer nav > div { display: none; }
+  .affan-os-resume-viewer nav { justify-content: flex-end; }
+  .affan-os-resume-viewer nav a { padding: 0 8px; }
+  .affan-os-terminal { padding: 14px 12px; font-size: 10px; }
   .room-desktop-active .room-stage-bar { display: none; }
 }
 @keyframes affan-os-mobile-window-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
