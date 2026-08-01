@@ -17,19 +17,19 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Affan Shaikh | Networking & Cybersecurity",
     description:
       "Portfolio of Affan Shaikh, a networking and cybersecurity student building secure systems and useful software.",
-    icons: { icon: "/terminal-favicon.svg", shortcut: "/terminal-favicon.svg" },
+    icons: { icon: "/lab-favicon.svg", shortcut: "/lab-favicon.svg" },
     openGraph: {
       title: "Affan Shaikh | Networking & Cybersecurity",
       description: "Networks, security, and software built with purpose.",
       type: "website",
       url: origin,
-      images: [{ url: "/og-lab.png", width: 1200, height: 630, alt: "Affan Shaikh interactive cyber-lab portfolio" }],
+      images: [{ url: "/og-lab-v2.png", width: 1200, height: 630, alt: "Affan Shaikh interactive systems lab portfolio" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "Affan Shaikh | Networking & Cybersecurity",
       description: "Networks, security, and software built with purpose.",
-      images: ["/og-lab.png"],
+      images: ["/og-lab-v2.png"],
     },
   };
 }

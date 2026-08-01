@@ -4,7 +4,9 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 [View the live portfolio](https://affan-shaikh-portfolio.sil6428-archtech.workers.dev)
 
-![Affan Shaikh portfolio preview](public/og-lab.png)
+![Affan Shaikh portfolio preview](public/og-lab-v2.png)
+
+The social cover uses an editorial, isometric indie-game poster treatment with a limited cream, teal, lavender, orange, and near-black palette. The favicon uses the same palette in a compact wireframe lab-room mark.
 
 ## Overview
 
