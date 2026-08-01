@@ -372,7 +372,6 @@ export default function InteractiveRoom() {
     const clickable: THREE.Object3D[] = [];
     const objectByKey = new Map<string, THREE.Object3D>();
     const cyan = new THREE.Color("#77e7ff");
-    const violet = new THREE.Color("#9f91ff");
     const amber = new THREE.Color("#ffbd72");
 
     const material = (
@@ -822,32 +821,6 @@ export default function InteractiveRoom() {
     desktopMonitor.add(desktopPowerTarget);
     clickable.push(desktopPowerTarget);
 
-    const addDesktopFile = (
-      key: "archtech" | "ssik" | "profile" | "contact" | "resume" | "inspiration",
-      label: string,
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      color: THREE.ColorRepresentation,
-    ) => {
-      const file = hotspot(key, label, desktopMonitor);
-      file.position.set(x, y, 0.09);
-      const hitArea = new THREE.Mesh(
-        new THREE.PlaneGeometry(width, height),
-        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.035, depthWrite: false }),
-      );
-      hitArea.layers.disable(0);
-      file.add(hitArea);
-      file.visible = false;
-      return file;
-    };
-    addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.16, 1.46, 0.53, 0.48, cyan);
-    addDesktopFile("ssik", "OPEN SSIK FILE", -0.47, 1.46, 0.53, 0.48, violet);
-    addDesktopFile("profile", "OPEN ABOUT FILE", 0.22, 1.46, 0.53, 0.48, amber);
-    addDesktopFile("inspiration", "OPEN INSPIRATION FILE", 0.91, 1.46, 0.57, 0.48, "#d6b85d");
-    addDesktopFile("contact", "OPEN CONTACT FILE", -0.81, 0.84, 0.57, 0.47, "#68e0ae");
-    addDesktopFile("resume", "OPEN RESUME PDF", 0, 0.84, 0.57, 0.47, "#e7eceb");
     let desktopPowered = false;
     let desktopBooting = false;
     const desktopBootTimers: number[] = [];
@@ -2532,9 +2505,13 @@ export default function InteractiveRoom() {
 
     room.updateMatrixWorld(true);
     const interactionMarkers = new Map<string, THREE.Mesh>();
-    for (const [key, object] of objectByKey) {
+    const addInteractionMarker = (
+      key: string,
+      object: THREE.Object3D,
+      markerColor: THREE.ColorRepresentation = cyan,
+    ) => {
       const markerMaterial = new THREE.MeshBasicMaterial({
-        color: key === "profile" ? amber : cyan,
+        color: markerColor,
         transparent: true,
         opacity: 0.26,
         side: THREE.DoubleSide,
@@ -2547,7 +2524,11 @@ export default function InteractiveRoom() {
       marker.position.set(markerLocalPosition.x, 0.035, markerLocalPosition.z);
       room.add(marker);
       interactionMarkers.set(key, marker);
+    };
+    for (const [key, object] of objectByKey) {
+      addInteractionMarker(key, object);
     }
+    addInteractionMarker("__desktop", desktopPowerTarget, cyan);
 
     scene.add(new THREE.HemisphereLight(0xb8deea, 0x12101b, 1.65));
     const cyanLight = new THREE.PointLight(0x77e7ff, 27, 10, 2);
@@ -3051,8 +3032,11 @@ export default function InteractiveRoom() {
       }
 
       for (const [key, marker] of interactionMarkers) {
-        const active = key === hovered?.userData.key || key === focusedKey;
-        const pulse = 1 + Math.sin(elapsed * 2.3 + Number(ROOM_ENTRIES[key].number)) * 0.06;
+        const active = key === "__desktop"
+          ? hovered?.userData.action === "desktop-power" || focusedKey === "__desktop"
+          : key === hovered?.userData.key || key === focusedKey;
+        const phase = key === "__desktop" ? 0 : Number(ROOM_ENTRIES[key]?.number ?? 0);
+        const pulse = 1 + Math.sin(elapsed * 2.3 + phase) * 0.06;
         marker.scale.setScalar((active ? 1.22 : 1) * pulse);
         const markerMaterial = marker.material as THREE.MeshBasicMaterial;
         markerMaterial.opacity = active ? 0.72 : 0.16 + Math.sin(elapsed * 1.5) * 0.045;

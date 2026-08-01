@@ -42,7 +42,8 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A private learning-log record without a public repository link
 - An in-system PDF reader for the complete resume, with full-size and download controls
 - A functional AFFAN_OS terminal that opens from the taskbar or backtick key, navigates folders and documents, opens the resume, reports portfolio status, and controls room Easter eggs
-- Full shutdown behavior: leaving AFFAN_OS turns off the monitor and PC power light, returns to the 3D room, keeps the retired six-file interaction disabled, and runs the boot sequence again on the next startup
+- Full shutdown behavior: leaving AFFAN_OS turns off the monitor and PC power light, returns to the 3D room, and runs the boot sequence again on the next startup
+- One computer interaction marker replaces the retired cluster of six overlapping desktop-file markers
 - Keyboard-friendly buttons, focus management, live announcements, Escape behavior, readable mobile windows, and a screen-reader power control
 - An Inspiration file that credits Bruno Simon, Ida's Gameboy, and Jesse Zhou, with direct links and notes on what each site influenced
 - Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar

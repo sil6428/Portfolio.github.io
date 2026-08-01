@@ -212,12 +212,13 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /MeshPhysicalMaterial/);
   assert.match(room, /ACESFilmicToneMapping/);
   assert.match(room, /highDetail/);
-  assert.match(room, /OPEN ARCHTECH FILE/);
-  assert.match(room, /OPEN SSIK FILE/);
-  assert.match(room, /OPEN ABOUT FILE/);
-  assert.match(room, /OPEN CONTACT FILE/);
-  assert.match(room, /OPEN RESUME PDF/);
-  assert.match(room, /OPEN INSPIRATION FILE/);
+  assert.doesNotMatch(room, /addDesktopFile/);
+  assert.doesNotMatch(room, /OPEN ARCHTECH FILE/);
+  assert.doesNotMatch(room, /OPEN SSIK FILE/);
+  assert.doesNotMatch(room, /OPEN ABOUT FILE/);
+  assert.doesNotMatch(room, /OPEN CONTACT FILE/);
+  assert.doesNotMatch(room, /OPEN RESUME PDF/);
+  assert.doesNotMatch(room, /OPEN INSPIRATION FILE/);
   assert.match(room, /https:\/\/bruno-simon\.com\//);
   assert.match(room, /https:\/\/idas-gameboy\.netlify\.app\//);
   assert.match(room, /https:\/\/www\.jesse-zhou\.com\//);
@@ -418,6 +419,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /pointerParallaxTarget/);
   assert.match(room, /arcHeight/);
   assert.match(room, /interactionMarkers/);
+  assert.match(room, /addInteractionMarker\("__desktop", desktopPowerTarget, cyan\)/);
   assert.match(room, /MOVE \/ DRAG \/ SELECT/);
   assert.match(room, /SCENE RESPONSIVE/);
   assert.match(room, /affan-lab-discoveries/);
