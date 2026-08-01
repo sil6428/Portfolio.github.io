@@ -62,7 +62,7 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
       { id: "about", label: "About.txt", meta: "Text document", icon: "text", view: { kind: "document", id: "about" } },
       { id: "skills", label: "Skills.md", meta: "Markdown", icon: "code", view: { kind: "document", id: "skills" } },
       { id: "resume", label: "Resume.pdf", meta: "PDF document", icon: "pdf", view: { kind: "document", id: "resume" } },
-      { id: "learning-log", label: "Learning Log.url", meta: "GitHub link", icon: "link", view: { kind: "document", id: "learning-log" } },
+      { id: "learning-log", label: "Learning Log.private", meta: "Private project record", icon: "text", view: { kind: "document", id: "learning-log" } },
       { id: "reading", label: "Reading-list.txt", meta: "Text document", icon: "text", view: { kind: "document", id: "reading" } },
     ],
   },
@@ -179,9 +179,24 @@ const documents: Record<DocumentId, DocumentContent> = {
   },
   skills: {
     title: "Skills.md",
-    type: "Markdown document",
-    intro: "Tools and concepts I have worked with through school, labs, and personal projects.",
-    bullets: ["IPv4 and IPv6, VLANs, trunking, DHCP, DNS, NAT, STP, and inter-VLAN routing", "Python, TypeScript, JavaScript, React, Next.js, HTML, and CSS", "Linux, Windows Server, Wireshark, Packet Tracer, Git, GitHub, and Cloudflare Workers", "Authentication, access control, hashing, encryption, and vulnerability analysis fundamentals"],
+    type: "Markdown document · Skills with applied examples",
+    intro: "Tools and concepts I have used through university coursework, networking labs, personal software, client-facing work, and this portfolio. Each entry identifies where I applied the skill instead of listing it without context.",
+    bullets: [
+      "Networking · Configured IPv4 and IPv6 addressing, subnetting, VLANs, access ports, 802.1Q trunks, DHCP, DNS, NAT, STP, and inter-VLAN routing in Cisco IOS and Packet Tracer labs",
+      "Troubleshooting · Used ping, traceroute, show commands, Wireshark, packet captures, routing tables, and interface state to isolate connectivity and configuration problems",
+      "Cybersecurity · Applied authentication, authorization, role-based access control, encryption, hashing, vulnerability analysis, and privacy requirements while planning Archtech and completing security coursework",
+      "Python · Built a command-line password manager with generation, validation, menus, input handling, and encrypted-storage fundamentals",
+      "JavaScript and DOM · Built an event-planning tool that adds, edits, displays, and removes events while keeping the page state synchronized",
+      "TypeScript and React · Built AFFAN_OS, the portfolio interface, reusable components, window state, keyboard interactions, and accessible controls",
+      "Three.js · Built the interactive cyber lab, procedural room models, material systems, raycast selection, camera transitions, printer animation, and separate touch controls",
+      "Next.js and CSS · Built responsive routes, project case studies, mobile layouts, metadata, custom illustrations, and the desktop-style file environment",
+      "Cloudflare Workers · Built and repeatedly deployed the portfolio and Archtech demonstrations, then verified live Worker versions and public routes",
+      "Git and GitHub · Managed staged project repositories, backup branches, documentation, version history, tests, and public portfolio source",
+      "Linux and virtualization · Use Linux tools in coursework and personal systems work while converting older computers into a Proxmox home lab for virtual machines and isolated networks",
+      "Web delivery · Independently designed and built the SSIK IT consulting website, organized its service content, and published it through GitHub Pages",
+      "Systems tools · Worked with Windows Server, Cisco Packet Tracer, Wireshark, SecureCRT, and GitHub across labs and projects",
+      "Communication and operations · Applied customer support, transaction accuracy, crowd flow, event coordination, conflict resolution, and team communication through paid and volunteer experience",
+    ],
   },
   education: {
     title: "Ontario Tech.txt",
@@ -232,10 +247,10 @@ const documents: Record<DocumentId, DocumentContent> = {
     ],
   },
   "learning-log": {
-    title: "Learning Log.url",
-    type: "Repository link",
-    intro: "A public record of genuine study sessions, networking labs, portfolio development, problems solved, and next steps.",
-    links: [{ label: "Open learning log", href: "https://github.com/sil6428/learning-log" }],
+    title: "Learning Log.private",
+    type: "Private project record",
+    intro: "A private record of genuine study sessions, networking labs, portfolio development, problems solved, evidence, and next steps. The repository is intentionally not linked from this public portfolio.",
+    bullets: ["Tracks completed work instead of artificial activity", "Records problems, decisions, evidence, and next steps", "Keeps private project context outside the public portfolio", "Updated alongside meaningful portfolio and technical work"],
   },
   "vlan-lab": {
     title: "VLAN Lab.md",
@@ -319,7 +334,7 @@ const desktopGroups: Array<{ id: string; label: string; items: OsItem[] }> = [
     label: "System",
     items: [
       { id: "terminal", label: "Terminal", meta: "AFFAN_OS shell", icon: "terminal", view: { kind: "document", id: "terminal" } },
-      { id: "learning-log", label: "Learning Log.url", meta: "Build notes", icon: "link", view: { kind: "document", id: "learning-log" } },
+      { id: "learning-log", label: "Learning Log.private", meta: "Private build notes", icon: "text", view: { kind: "document", id: "learning-log" } },
     ],
   },
 ];
@@ -439,7 +454,7 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
     };
     const responses: Record<string, string[]> = {
       help: ["Commands: help, ls, whoami, files, projects, labs, education, experience, interests, contact, about, skills, resume, status, lights, cat, relic, signal, print, room, clear"],
-      ls: ["Folders: Projects  Network Labs  Education  Experience  Interests  Contact  Inspiration", "Files: About.txt  Skills.md  Resume.pdf  Learning Log.url"],
+      ls: ["Folders: Projects  Network Labs  Education  Experience  Interests  Contact  Inspiration", "Files: About.txt  Skills.md  Resume.pdf  Learning Log.private"],
       whoami: ["Affan Shaikh", "Networking and Cybersecurity student · Ontario Tech · Class of 2028"],
       status: ["AFFAN_OS online", "Current focus: portfolio systems, cybersecurity, networking, and a Proxmox home lab."],
       lights: ["Sending a colour override to the 3D room..."],

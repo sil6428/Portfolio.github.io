@@ -457,6 +457,14 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /submitTerminal/);
   assert.match(desktopOs, /affan-os-terminal-toggle/);
   assert.match(desktopOs, /iconOrder/);
+  assert.match(desktopOs, /Learning Log\.private/);
+  assert.match(desktopOs, /Private project record/);
+  assert.doesNotMatch(desktopOs, /github\.com\/sil6428\/learning-log/);
+  assert.match(desktopOs, /Networking · Configured IPv4 and IPv6/);
+  assert.match(desktopOs, /Python · Built a command-line password manager/);
+  assert.match(desktopOs, /Three\.js · Built the interactive cyber lab/);
+  assert.match(desktopOs, /Cloudflare Workers · Built and repeatedly deployed/);
+  assert.match(desktopOs, /Web delivery · Independently designed and built the SSIK/);
   assert.match(desktopOs, /Minimize/);
   assert.match(desktopOs, /Maximize/);
   assert.match(desktopOs, /Return to 3D room/);

@@ -38,6 +38,8 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Desktop icons divided into Folders, Documents, and System groups instead of one left-side stack, with folder contents automatically ordered by file type
 - A windowed file manager with Home, Projects, Network Labs, Education, Experience, Interests, Contact, and Inspiration folders, plus back, home, breadcrumb, places, status, minimize, maximize, and close controls
 - Nested project files for Archtech, SSIK, the portfolio, Password Manager, and Event Planner, alongside degree, certification, employment, volunteer, lab, profile, skills, public contact, photography, reading, and reference files
+- Applied-skills documentation that identifies where each networking, security, programming, frontend, Three.js, Cloudflare, Git, Linux, virtualization, web-delivery, and communication skill was used
+- A private learning-log record without a public repository link
 - An in-system PDF reader for the complete resume, with full-size and download controls
 - A functional AFFAN_OS terminal that opens from the taskbar or backtick key, navigates folders and documents, opens the resume, reports portfolio status, and controls room Easter eggs
 - Full shutdown behavior: leaving AFFAN_OS turns off the monitor and PC power light, returns to the 3D room, keeps the retired six-file interaction disabled, and runs the boot sequence again on the next startup
