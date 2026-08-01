@@ -815,9 +815,6 @@ export default function InteractiveRoom() {
     desktopMonitor.add(desktopPowerTarget);
     clickable.push(desktopPowerTarget);
 
-    const desktopFileTargets: THREE.Group[] = [];
-    const desktopFileHitAreas: THREE.Mesh[] = [];
-
     const addDesktopFile = (
       key: "archtech" | "ssik" | "profile" | "contact" | "resume" | "inspiration",
       label: string,
@@ -836,8 +833,6 @@ export default function InteractiveRoom() {
       hitArea.layers.disable(0);
       file.add(hitArea);
       file.visible = false;
-      desktopFileTargets.push(file);
-      desktopFileHitAreas.push(hitArea);
       return file;
     };
     addDesktopFile("archtech", "OPEN ARCHTECH FILE", -1.16, 1.46, 0.53, 0.48, cyan);
@@ -2661,13 +2656,12 @@ export default function InteractiveRoom() {
       desktopBootTimers.push(window.setTimeout(() => {
         drawDesktopEnvironment();
         desktopTexture.needsUpdate = true;
-        desktopFileTargets.forEach((target) => { target.visible = true; });
-        desktopFileHitAreas.forEach((hitArea) => { hitArea.layers.enable(0); });
-        desktopPowerTarget.visible = false;
-        desktopPowerHitArea.layers.disable(0);
+        desktopPowerTarget.visible = true;
+        desktopPowerTarget.userData.label = "OPEN AFFAN_OS DESKTOP";
+        desktopPowerHitArea.layers.enable(0);
         desktopBooting = false;
         desktopPowered = true;
-        setHoverLabel("AFFAN_OS READY / SELECT A FILE");
+        setHoverLabel("AFFAN_OS READY / CLICK SCREEN TO OPEN");
         playSiteSfx("complete");
       }, reducedMotion ? 1 : 980));
     };
