@@ -202,6 +202,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   const room = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../app/interactive-room.tsx", import.meta.url), "utf8"),
   );
+  const desktopOs = await import("node:fs/promises").then(({ readFile }) =>
+    readFile(new URL("../app/desktop-os.tsx", import.meta.url), "utf8"),
+  );
   assert.match(room, /OrbitControls/);
   assert.match(room, /RoundedBoxGeometry/);
   assert.match(room, /MeshPhysicalMaterial/);
@@ -239,7 +242,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /CLICK SCREEN TO POWER ON AFFAN_OS/);
   assert.match(room, /INITIALIZING DESKTOP/);
   assert.match(room, /Power on computer desktop/);
-  assert.match(room, /Exit desktop/);
+  assert.match(room, /DesktopOs/);
   assert.match(room, /desktop-keycap/);
   assert.match(room, /desktop-tower-glass/);
   assert.match(room, /desktop-motherboard/);
@@ -414,7 +417,26 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.doesNotMatch(room, /href: "\/work\//);
   assert.doesNotMatch(room, /href: "\/interests\//);
 
+  assert.match(desktopOs, /AFFAN_OS portfolio desktop/);
+  assert.match(desktopOs, /Search files and apps/);
+  assert.match(desktopOs, /Projects/);
+  assert.match(desktopOs, /Network Labs/);
+  assert.match(desktopOs, /Contact/);
+  assert.match(desktopOs, /Inspiration/);
+  assert.match(desktopOs, /Archtech\.project/);
+  assert.match(desktopOs, /SSIK\.website/);
+  assert.match(desktopOs, /Password Manager\.py/);
+  assert.match(desktopOs, /Event Planner\.js/);
+  assert.match(desktopOs, /Resume\.pdf/);
+  assert.match(desktopOs, /Minimize/);
+  assert.match(desktopOs, /Maximize/);
+  assert.match(desktopOs, /Return to 3D room/);
+  assert.match(desktopOs, /aria-live="polite"/);
+
   assert.match(styles, /room-fluid-hint/);
+  assert.match(styles, /affan-os-file-grid/);
+  assert.match(styles, /affan-os-launcher/);
+  assert.match(styles, /affan-os-taskbar/);
   assert.match(styles, /room-directory-accessible/);
   assert.match(styles, /room-secret-toast/);
   assert.match(styles, /body\.room-default-view \.immersive-intro/);

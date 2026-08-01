@@ -10,7 +10,7 @@ A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cyberse
 
 The site presents my technical work, education, experience, and interests without relying on a profile photo. The homepage is a full-screen Three.js cyber lab where each object represents part of my work or personality.
 
-Visitors move the pointer to subtly shift the diorama, drag to orbit within a restrained range, and select any object directly. The computer begins powered off. Selecting its full screen starts a short AFFAN_OS boot sequence, moves into a readable desktop view, and then unlocks the individual project, profile, contact, resume, and inspiration files. Other room selections follow a curved, eased camera path into a composed close-up without leaving the scene. Earlier focused routes remain available as unlisted fallbacks.
+Visitors move the pointer to subtly shift the diorama, drag to orbit within a restrained range, and select any object directly. The computer begins powered off. Selecting its full screen starts a short AFFAN_OS boot sequence and opens a complete desktop environment with folders, files, application search, window controls, a taskbar, system tray, keyboard navigation, and responsive layouts. Other room selections follow a curved, eased camera path into a composed close-up without leaving the scene. Earlier focused routes remain available as unlisted fallbacks.
 
 ## Pages
 
@@ -33,8 +33,11 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
 - Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
-- Compact desktop PC setup that starts as one powered-off screen, boots on selection, and then unlocks separate Archtech, SSIK, About, Contact, Resume, and Inspiration files
-- Focused AFFAN_OS desktop camera, visible exit control, Escape-to-overview behavior, and screen-reader power control
+- Compact desktop PC setup that starts as one powered-off screen and boots into a complete original AFFAN_OS interface
+- Linux Plasma and Windows-inspired desktop patterns with a top system panel, wallpaper, taskbar, searchable launcher, clock, system tray, running-app indicator, and show-desktop control
+- A windowed file manager with Home, Projects, Network Labs, Contact, and Inspiration folders, plus back, home, breadcrumb, places, status, minimize, maximize, and close controls
+- Nested project files for Archtech, SSIK, the portfolio, Password Manager, and Event Planner, alongside lab notes, profile documents, public contact links, resume access, and reference links
+- Keyboard-friendly buttons, focus management, live announcements, Escape behavior, readable mobile windows, and a screen-reader power control
 - An Inspiration file that credits Bruno Simon, Ida's Gameboy, and Jesse Zhou, with direct links and notes on what each site influenced
 - Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection

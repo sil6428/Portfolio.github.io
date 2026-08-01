@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import DesktopOs from "./desktop-os";
 import { playSiteSfx } from "./site-sfx";
 
 type HotspotData = {
@@ -3119,15 +3120,7 @@ export default function InteractiveRoom() {
         </strong>
       </div>
       <div className="room-canvas" ref={hostRef} />
-      {desktopActive && (
-        <button
-          className="room-desktop-exit"
-          type="button"
-          onClick={() => focusRef.current("__overview")}
-        >
-          Exit desktop
-        </button>
-      )}
+      {desktopActive && <DesktopOs onExit={() => focusRef.current("__overview")} />}
       <div className="room-fluid-hint" aria-hidden="true">
         <span><i /> SCENE RESPONSIVE</span>
         <span>Move pointer / shift perspective</span>
