@@ -247,8 +247,8 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "Inspiration file",
     label: "CREDITS / WEB INSPIRATION",
     title: "Sites that shaped the lab",
-    summary: "Three interactive portfolios helped set the standard for the room, its camera movement, and the desktop computer interface.",
-    details: ["Interactive 3D", "Fluid camera work", "Desktop interface", "Original implementation"],
+    summary: "Five interaction references helped set the standard for the room, its feedback, camera movement, object index, and desktop computer interface.",
+    details: ["Interactive 3D", "Targeted feedback", "Room index", "Desktop interface", "Original implementation"],
     sections: [
       {
         heading: "Bruno Simon",
@@ -262,11 +262,21 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         heading: "Jesse Zhou",
         body: "Jesse Zhou's portfolio influenced the focus on fluid camera motion, polished object interactions, and transitions that keep the 3D scene feeling responsive.",
       },
+      {
+        heading: "React Bits",
+        body: "React Bits informed the lightweight target cursor and click-spark feedback. The effects were implemented locally, limited to the 3D room, and disabled where motion or touch performance would suffer.",
+      },
+      {
+        heading: "Rachel Wei",
+        body: "Rachel Wei's room portfolio inspired the optional in-scene index that makes every object reachable without returning to a permanent header, footer, or bottom directory.",
+      },
     ],
     links: [
       { label: "Visit Bruno Simon", href: "https://bruno-simon.com/" },
       { label: "Visit Ida's Gameboy", href: "https://idas-gameboy.netlify.app/" },
       { label: "Visit Jesse Zhou", href: "https://www.jesse-zhou.com/" },
+      { label: "Visit React Bits", href: "https://reactbits.dev/get-started/introduction" },
+      { label: "Visit Rachel Wei", href: "https://rachelqrwei.ca/use" },
     ],
     cameraOffset: [0, 0.1, 3.05],
     targetOffset: [0, 0, 0],
@@ -292,6 +302,7 @@ export default function InteractiveRoom() {
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [visitedKeys, setVisitedKeys] = useState<string[]>([]);
   const [roomSecret, setRoomSecret] = useState("");
+  const [directoryOpen, setDirectoryOpen] = useState(false);
   const focusRef = useRef<(key: string) => void>(() => undefined);
   const dismissRef = useRef<() => void>(() => undefined);
   const activeEntry = activeKey ? ROOM_ENTRIES[activeKey] : null;
@@ -316,6 +327,7 @@ export default function InteractiveRoom() {
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
+    const stage = host.closest(".room-stage") as HTMLElement | null;
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x080a0f, 9, 19);
@@ -2803,6 +2815,7 @@ export default function InteractiveRoom() {
     const pointer = new THREE.Vector2();
     let pressedAt = { x: 0, y: 0 };
     let hovered: THREE.Object3D | null = null;
+    let interactionSparkTimer = 0;
 
     const pick = (event: PointerEvent) => {
       const bounds = renderer.domElement.getBoundingClientRect();
@@ -2841,6 +2854,12 @@ export default function InteractiveRoom() {
     const handlePointerMove = (event: PointerEvent) => {
       const next = pick(event);
       pointerParallaxTarget.copy(pointer);
+      if (stage) {
+        const stageBounds = stage.getBoundingClientRect();
+        stage.style.setProperty("--room-target-x", `${event.clientX - stageBounds.left}px`);
+        stage.style.setProperty("--room-target-y", `${event.clientY - stageBounds.top}px`);
+        stage.classList.toggle("room-target-active", Boolean(next));
+      }
       if (next === hovered) return;
       hovered = next;
       renderer.domElement.style.cursor = hovered ? "pointer" : "grab";
@@ -2854,6 +2873,17 @@ export default function InteractiveRoom() {
     const handlePointerUp = (event: PointerEvent) => {
       if (Math.hypot(event.clientX - pressedAt.x, event.clientY - pressedAt.y) > 7) return;
       const selected = pick(event);
+      if (selected && stage) {
+        setDirectoryOpen(false);
+        const stageBounds = stage.getBoundingClientRect();
+        stage.style.setProperty("--room-spark-x", `${event.clientX - stageBounds.left}px`);
+        stage.style.setProperty("--room-spark-y", `${event.clientY - stageBounds.top}px`);
+        stage.classList.remove("room-spark-active");
+        void stage.offsetWidth;
+        stage.classList.add("room-spark-active");
+        window.clearTimeout(interactionSparkTimer);
+        interactionSparkTimer = window.setTimeout(() => stage.classList.remove("room-spark-active"), 520);
+      }
       if (selected?.userData.action === "desktop-power") {
         powerOnDesktop();
       } else if (selected?.userData.easterEgg) {
@@ -2868,6 +2898,7 @@ export default function InteractiveRoom() {
       pointerParallaxTarget.set(0, 0);
       renderer.domElement.style.cursor = "grab";
       setHoverLabel("");
+      stage?.classList.remove("room-target-active");
     };
     const handleContextMenu = (event: MouseEvent) => event.preventDefault();
     renderer.domElement.addEventListener("pointermove", handlePointerMove);
@@ -3094,6 +3125,8 @@ export default function InteractiveRoom() {
       window.removeEventListener("affan-room-signal", handleSignalCommand);
       window.removeEventListener("affan-room-cat", handleCatCommand);
       window.clearTimeout(roomSecretTimeout);
+      window.clearTimeout(interactionSparkTimer);
+      stage?.classList.remove("room-target-active", "room-spark-active");
       desktopBootTimers.forEach((timer) => window.clearTimeout(timer));
       focusRef.current = () => undefined;
       dismissRef.current = () => undefined;
@@ -3127,11 +3160,24 @@ export default function InteractiveRoom() {
     <section className={`room-stage ${activeEntry ? "room-has-popup" : ""} ${desktopActive ? "room-desktop-active" : ""}`} aria-label="Interactive 3D portfolio">
       <div className="room-stage-bar">
         <span>AFFAN_LAB / ROOM_01</span>
-        <strong aria-live="polite">
-          {transitionLabel || hoverLabel || (activeEntry ? activeEntry.title.toUpperCase() : desktopActive ? "AFFAN_OS / DESKTOP READY" : "MOVE / DRAG / SELECT")}
-        </strong>
+        <div className="room-stage-actions">
+          <strong aria-live="polite">
+            {transitionLabel || hoverLabel || (activeEntry ? activeEntry.title.toUpperCase() : desktopActive ? "AFFAN_OS / DESKTOP READY" : "MOVE / DRAG / SELECT")}
+          </strong>
+          <button
+            className="room-index-toggle"
+            type="button"
+            aria-expanded={directoryOpen}
+            aria-controls="room-index-panel"
+            onClick={() => setDirectoryOpen((current) => !current)}
+          >
+            INDEX <span>{DIRECTORY.length + 1}</span>
+          </button>
+        </div>
       </div>
       <div className="room-canvas" ref={hostRef} />
+      <div className="room-target-cursor" aria-hidden="true"><i /><i /><i /><i /></div>
+      <div className="room-click-spark" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /></div>
       {desktopActive && <DesktopOs onExit={() => focusRef.current("__desktop-off")} />}
       <div className="room-fluid-hint" aria-hidden="true">
         <span><i /> SCENE RESPONSIVE</span>
@@ -3142,17 +3188,17 @@ export default function InteractiveRoom() {
         <strong>{visitedKeys.length} / {DIRECTORY.length} viewed</strong>
       </div>
       {roomSecret && <div className="room-secret-toast" role="status">{roomSecret}</div>}
-      <nav className="room-directory-accessible" aria-label="3D room objects">
-        <button type="button" onClick={() => focusRef.current("__desktop")}>
-          Power on computer desktop
+      <nav id="room-index-panel" className="room-index-panel" aria-label="3D room objects" hidden={!directoryOpen}>
+        <button type="button" onClick={() => { setDirectoryOpen(false); focusRef.current("__desktop"); }}>
+          <span>00</span> Power on computer desktop
         </button>
         {DIRECTORY.map(([key, entry]) => (
           <button
             type="button"
-            onClick={() => focusRef.current(key)}
+            onClick={() => { setDirectoryOpen(false); focusRef.current(key); }}
             key={key}
           >
-            Open {entry.directory}
+            <span>{entry.number}</span> {entry.directory}
           </button>
         ))}
       </nav>

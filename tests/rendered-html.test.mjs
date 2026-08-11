@@ -31,6 +31,8 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.match(html, /Contact file/);
   assert.match(html, /Resume file/);
   assert.match(html, /Inspiration file/);
+  assert.match(html, /INDEX/);
+  assert.match(html, /room-index-panel/);
   assert.doesNotMatch(html, /Room controls/);
   assert.doesNotMatch(html, /08 ACTIVE OBJECTS/);
   assert.doesNotMatch(html, /href="#room-directory"/);
@@ -223,6 +225,12 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /https:\/\/bruno-simon\.com\//);
   assert.match(room, /https:\/\/idas-gameboy\.netlify\.app\//);
   assert.match(room, /https:\/\/www\.jesse-zhou\.com\//);
+  assert.match(room, /https:\/\/reactbits\.dev\/get-started\/introduction/);
+  assert.match(room, /https:\/\/rachelqrwei\.ca\/use/);
+  assert.match(room, /room-target-cursor/);
+  assert.match(room, /room-click-spark/);
+  assert.match(room, /room-target-active/);
+  assert.match(room, /room-spark-active/);
   assert.match(room, /Open resume PDF/);
   assert.match(room, /tel:\+16473091927/);
   assert.match(room, /Affan_Shaikh_Resume\.pdf/);
@@ -446,6 +454,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /Interests/);
   assert.match(desktopOs, /Contact/);
   assert.match(desktopOs, /Inspiration/);
+  assert.match(desktopOs, /React Bits\.url/);
+  assert.match(desktopOs, /Rachel Wei\.url/);
   assert.match(desktopOs, /Archtech\.project/);
   assert.match(desktopOs, /SSIK\.website/);
   assert.match(desktopOs, /Password Manager\.py/);
@@ -485,7 +495,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(styles, /affan-os-terminal-history/);
   assert.match(styles, /@media \(pointer: coarse\)/);
   assert.match(styles, /\.room-canvas canvas \{ touch-action: none; \}/);
-  assert.match(styles, /room-directory-accessible/);
+  assert.match(styles, /room-index-panel/);
+  assert.match(styles, /room-target-cursor/);
+  assert.match(styles, /room-click-spark/);
   assert.match(styles, /room-secret-toast/);
   assert.match(styles, /body\.room-default-view \.immersive-intro/);
   assert.match(styles, /body\.room-default-view \.room-fluid-hint/);

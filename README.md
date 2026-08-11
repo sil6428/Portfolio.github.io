@@ -48,11 +48,13 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - One computer interaction marker replaces the retired cluster of six overlapping desktop-file markers
 - A continuous boot handoff keeps the monitor on its completed loading frame until the current AFFAN_OS interface is mounted, preventing the retired desktop from flashing between states
 - Keyboard-friendly buttons, focus management, live announcements, Escape behavior, readable mobile windows, and a screen-reader power control
-- An Inspiration file that credits Bruno Simon, Ida's Gameboy, and Jesse Zhou, with direct links and notes on what each site influenced
+- An Inspiration file that credits Bruno Simon, Ida's Gameboy, Jesse Zhou, React Bits, and Rachel Wei, with direct links and notes on what each site influenced
 - Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, focused-object motion, pulsing floor markers, and direct click or tap selection
+- A lightweight target cursor and click-spark response influenced by React Bits, implemented locally and disabled for coarse pointers and reduced-motion visitors
+- An optional in-scene object index influenced by Rachel Wei's room portfolio, providing direct access without restoring the retired bottom directory
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, animated yarn ball, pulsing lights, and responsive interaction markers
 - A real three-minute printer sequence with a complete miniature black-and-white chess set, printed board, all 32 pieces, a height-tracking print head, live percentage, ETA, completion message, and finish glow
@@ -119,7 +121,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 
 ## Interaction references
 
-[Ida's Gameboy](https://idas-gameboy.netlify.app/) and [Jesse's Ramen](https://www.jesse-zhou.com/) informed the scene-first direction, subtle pointer response, and fluid transitions between a shared 3D world and its interface. [Bruno Simon's portfolio](https://bruno-simon.com/) informed an earlier game-control experiment, which remains preserved only on the backup branch `backup/rover-world-v6-2026-07-29`.
+[Ida's Gameboy](https://idas-gameboy.netlify.app/) and [Jesse's Ramen](https://www.jesse-zhou.com/) informed the scene-first direction, subtle pointer response, and fluid transitions between a shared 3D world and its interface. [Bruno Simon's portfolio](https://bruno-simon.com/) informed an earlier game-control experiment, which remains preserved only on the backup branch `backup/rover-world-v6-2026-07-29`. [React Bits](https://reactbits.dev/get-started/introduction) informed the targeted cursor and click-feedback language, while [Rachel Wei's portfolio](https://rachelqrwei.ca/use) informed the compact in-scene index.
 
 The current portfolio uses an original cyber-lab concept, code, procedural models, copy, interface, and interaction system. No source code, models, textures, music, or other visual assets from these reference sites are included.
 
