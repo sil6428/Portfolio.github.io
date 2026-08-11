@@ -227,6 +227,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /https:\/\/www\.jesse-zhou\.com\//);
   assert.match(room, /https:\/\/reactbits\.dev\/get-started\/introduction/);
   assert.match(room, /https:\/\/rachelqrwei\.ca\/use/);
+  assert.match(room, /https:\/\/threejs\.org\//);
+  assert.match(room, /RoomEnvironment/);
+  assert.match(room, /ambient-signal-motes/);
+  assert.match(room, /THREE\.Points/);
   assert.match(room, /room-target-cursor/);
   assert.match(room, /room-click-spark/);
   assert.match(room, /room-target-active/);
@@ -456,6 +460,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /Inspiration/);
   assert.match(desktopOs, /React Bits\.url/);
   assert.match(desktopOs, /Rachel Wei\.url/);
+  assert.match(desktopOs, /Three\.js\.url/);
   assert.match(desktopOs, /Archtech\.project/);
   assert.match(desktopOs, /SSIK\.website/);
   assert.match(desktopOs, /Password Manager\.py/);

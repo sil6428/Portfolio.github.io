@@ -58,7 +58,7 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
       { id: "experience", label: "Experience", meta: "2 files", icon: "folder", view: { kind: "folder", id: "experience" } },
       { id: "interests", label: "Interests", meta: "5 files", icon: "folder", view: { kind: "folder", id: "interests" } },
       { id: "contact", label: "Contact", meta: "5 links", icon: "folder", view: { kind: "folder", id: "contact" } },
-      { id: "inspiration", label: "Inspiration", meta: "5 links", icon: "folder", view: { kind: "folder", id: "inspiration" } },
+      { id: "inspiration", label: "Inspiration", meta: "6 links", icon: "folder", view: { kind: "folder", id: "inspiration" } },
       { id: "about", label: "About.txt", meta: "Text document", icon: "text", view: { kind: "document", id: "about" } },
       { id: "skills", label: "Skills.md", meta: "Markdown", icon: "code", view: { kind: "document", id: "skills" } },
       { id: "resume", label: "Resume.pdf", meta: "PDF document", icon: "pdf", view: { kind: "document", id: "resume" } },
@@ -132,6 +132,7 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
       { id: "jesse", label: "Jesse Zhou.url", meta: "Fluid scene reference", icon: "link", href: "https://www.jesse-zhou.com/" },
       { id: "react-bits", label: "React Bits.url", meta: "Motion feedback reference", icon: "link", href: "https://reactbits.dev/get-started/introduction" },
       { id: "rachel", label: "Rachel Wei.url", meta: "Room index reference", icon: "link", href: "https://rachelqrwei.ca/use" },
+      { id: "three-js", label: "Three.js.url", meta: "3D rendering reference", icon: "link", href: "https://threejs.org/" },
     ],
   },
 };

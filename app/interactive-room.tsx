@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import DesktopOs from "./desktop-os";
 import { playSiteSfx } from "./site-sfx";
@@ -247,8 +248,8 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "Inspiration file",
     label: "CREDITS / WEB INSPIRATION",
     title: "Sites that shaped the lab",
-    summary: "Five interaction references helped set the standard for the room, its feedback, camera movement, object index, and desktop computer interface.",
-    details: ["Interactive 3D", "Targeted feedback", "Room index", "Desktop interface", "Original implementation"],
+    summary: "Six references helped set the standard for the room, its rendering, feedback, camera movement, object index, and desktop computer interface.",
+    details: ["Interactive 3D", "Environment lighting", "Efficient particles", "Targeted feedback", "Room index", "Original implementation"],
     sections: [
       {
         heading: "Bruno Simon",
@@ -270,6 +271,10 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         heading: "Rachel Wei",
         body: "Rachel Wei's room portfolio inspired the optional in-scene index that makes every object reachable without returning to a permanent header, footer, or bottom directory.",
       },
+      {
+        heading: "Three.js",
+        body: "The official Three.js documentation and examples informed the room's OrbitControls, raycast selection, physical materials, image-based environment lighting, and lightweight ambient point field.",
+      },
     ],
     links: [
       { label: "Visit Bruno Simon", href: "https://bruno-simon.com/" },
@@ -277,6 +282,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       { label: "Visit Jesse Zhou", href: "https://www.jesse-zhou.com/" },
       { label: "Visit React Bits", href: "https://reactbits.dev/get-started/introduction" },
       { label: "Visit Rachel Wei", href: "https://rachelqrwei.ca/use" },
+      { label: "Visit Three.js", href: "https://threejs.org/" },
     ],
     cameraOffset: [0, 0.1, 3.05],
     targetOffset: [0, 0, 0],
@@ -352,6 +358,20 @@ export default function InteractiveRoom() {
     renderer.domElement.setAttribute("aria-hidden", "true");
     host.appendChild(renderer.domElement);
 
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    const lightingEnvironment = new RoomEnvironment();
+    const environmentRenderTarget = pmremGenerator.fromScene(lightingEnvironment, 0.04);
+    scene.environment = environmentRenderTarget.texture;
+    scene.environmentIntensity = highDetail ? 0.42 : 0.32;
+    pmremGenerator.dispose();
+    lightingEnvironment.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      object.geometry.dispose();
+      const objectMaterial = object.material;
+      if (Array.isArray(objectMaterial)) objectMaterial.forEach((item) => item.dispose());
+      else objectMaterial.dispose();
+    });
+
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 1.55, -0.7);
     controls.enableDamping = true;
@@ -380,6 +400,41 @@ export default function InteractiveRoom() {
     const room = new THREE.Group();
     room.rotation.y = -0.08;
     scene.add(room);
+
+    const signalMoteCount = highDetail ? 72 : 32;
+    const signalMotePositions = new Float32Array(signalMoteCount * 3);
+    const signalMoteColors = new Float32Array(signalMoteCount * 3);
+    const signalPalette = [new THREE.Color("#77e7ff"), new THREE.Color("#9f91ff"), new THREE.Color("#ffbd72")];
+    let signalSeed = 260810;
+    const signalRandom = () => {
+      signalSeed = (signalSeed * 1664525 + 1013904223) >>> 0;
+      return signalSeed / 4294967296;
+    };
+    for (let index = 0; index < signalMoteCount; index += 1) {
+      const offset = index * 3;
+      signalMotePositions[offset] = -3.25 + signalRandom() * 6.5;
+      signalMotePositions[offset + 1] = 0.42 + signalRandom() * 3.25;
+      signalMotePositions[offset + 2] = -4.15 + signalRandom() * 5.65;
+      const pointColor = signalPalette[index % signalPalette.length];
+      signalMoteColors[offset] = pointColor.r;
+      signalMoteColors[offset + 1] = pointColor.g;
+      signalMoteColors[offset + 2] = pointColor.b;
+    }
+    const signalMoteGeometry = new THREE.BufferGeometry();
+    signalMoteGeometry.setAttribute("position", new THREE.BufferAttribute(signalMotePositions, 3));
+    signalMoteGeometry.setAttribute("color", new THREE.BufferAttribute(signalMoteColors, 3));
+    const signalMoteMaterial = new THREE.PointsMaterial({
+      size: highDetail ? 0.026 : 0.022,
+      transparent: true,
+      opacity: 0.42,
+      depthWrite: false,
+      vertexColors: true,
+      blending: THREE.AdditiveBlending,
+      fog: true,
+    });
+    const signalMotes = new THREE.Points(signalMoteGeometry, signalMoteMaterial);
+    signalMotes.name = "ambient-signal-motes";
+    room.add(signalMotes);
 
     const clickable: THREE.Object3D[] = [];
     const objectByKey = new Map<string, THREE.Object3D>();
@@ -2997,6 +3052,8 @@ export default function InteractiveRoom() {
       serverBeaconMaterial.emissiveIntensity = signalActive ? 5.5 : 2.4;
 
       if (!reducedMotion) {
+        signalMotes.rotation.y = Math.sin(elapsed * 0.11) * 0.035;
+        signalMotes.position.y = Math.sin(elapsed * 0.24) * 0.018;
         cyanLight.intensity = signalActive
           ? 24 + Math.abs(Math.sin(elapsed * 5.2)) * 25
           : 27 + Math.sin(elapsed * 1.4) * 2;
@@ -3141,6 +3198,9 @@ export default function InteractiveRoom() {
       });
       desktopTexture.dispose();
       printerDisplayTexture.dispose();
+      signalMoteGeometry.dispose();
+      signalMoteMaterial.dispose();
+      environmentRenderTarget.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
