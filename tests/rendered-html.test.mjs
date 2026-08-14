@@ -419,6 +419,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /book-page-block/);
   assert.match(room, /book-spine-label-band/);
   assert.match(room, /racket-single-shaft/);
+  assert.match(room, /physicalMaterial\("#25313a"/);
+  assert.match(room, /material\("#21162f"/);
+  assert.match(room, /"#46545b"/);
   assert.match(room, /racket-tapered-shaft-ferrule/);
   assert.match(room, /racket-shaft-collar/);
   assert.match(room, /racket-wall-mount-plate/);

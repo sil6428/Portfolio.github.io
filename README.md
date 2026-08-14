@@ -89,6 +89,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Refined server faceplates, network ports, rack screws and status badge without restoring the removed wires or decorative server fans
 - Camera focus rings, coated lens glass, viewfinder, rear display and controls, plus book covers, page blocks, page lines, shelf fasteners, racket grommets, and denser strings
 - Corrected badminton-racket construction with one slim shaft, a tapered frame ferrule, collar, and compact wall hooks positioned behind the shaft instead of a tennis-style double throat
+- Dark gunmetal, charcoal, muted-violet, and smoke-grey racket materials that fit the cyber-lab palette while preserving close-up definition
 - Rotation-aware racket mount placement that centres the angled shaft between the two wall hooks
 - More expressive cat details including modeled whiskers, mouth, and paw toes
 - Adaptive model fidelity that adds desktop-only micro-details while using a lighter geometry path on touch and narrow-screen devices

@@ -2283,7 +2283,7 @@ export default function InteractiveRoom() {
     const racketMount = new THREE.Group();
     racketMount.position.set(-4.5, 2.42, -4.16);
     room.add(racketMount);
-    const racketWallPlate = roundedBox(racketMount, [0.4, 0.12, 0.06], [0, 0, 0], "#303a46", 0.025, {
+    const racketWallPlate = roundedBox(racketMount, [0.4, 0.12, 0.06], [0, 0, 0], "#161d24", 0.025, {
       metalness: 0.62,
       roughness: 0.42,
     });
@@ -2291,9 +2291,9 @@ export default function InteractiveRoom() {
     for (const x of [-0.08, 0.08]) {
       const mountArm = new THREE.Mesh(
         new THREE.CylinderGeometry(0.018, 0.018, 0.18, 12),
-        material("#7b69bb", {
-          emissive: "#332966",
-          emissiveIntensity: 0.3,
+        material("#302743", {
+          emissive: "#171226",
+          emissiveIntensity: 0.18,
           metalness: 0.62,
           roughness: 0.32,
         }),
@@ -2304,9 +2304,9 @@ export default function InteractiveRoom() {
       racketMount.add(mountArm);
       const hookTip = new THREE.Mesh(
         new THREE.CylinderGeometry(0.021, 0.021, 0.12, 12),
-        material("#7b69bb", {
-          emissive: "#332966",
-          emissiveIntensity: 0.3,
+        material("#302743", {
+          emissive: "#171226",
+          emissiveIntensity: 0.18,
           metalness: 0.62,
           roughness: 0.32,
         }),
@@ -2316,9 +2316,9 @@ export default function InteractiveRoom() {
       racketMount.add(hookTip);
       const hookCap = new THREE.Mesh(
         new THREE.SphereGeometry(0.023, 10, 7),
-        material("#9f91ff", {
-          emissive: "#493c86",
-          emissiveIntensity: 0.4,
+        material("#4a3a6b", {
+          emissive: "#211932",
+          emissiveIntensity: 0.22,
           metalness: 0.5,
           roughness: 0.3,
         }),
@@ -2329,11 +2329,11 @@ export default function InteractiveRoom() {
     }
     const racketHead = new THREE.Mesh(
       new THREE.TorusGeometry(0.58, 0.052, 12, 52),
-      physicalMaterial("#dce7e9", {
-        metalness: 0.55,
-        roughness: 0.25,
-        clearcoat: 0.82,
-        clearcoatRoughness: 0.14,
+      physicalMaterial("#25313a", {
+        metalness: 0.68,
+        roughness: 0.3,
+        clearcoat: 0.7,
+        clearcoatRoughness: 0.18,
       }),
     );
     racketHead.name = "racket-aero-frame";
@@ -2341,21 +2341,21 @@ export default function InteractiveRoom() {
     racket.add(racketHead);
     const shaft = new THREE.Mesh(
       new THREE.CylinderGeometry(0.032, 0.042, 0.78, 16),
-      material("#b9c8cc", { metalness: 0.74, roughness: 0.3 }),
+      material("#1c252c", { metalness: 0.78, roughness: 0.34 }),
     );
     shaft.name = "racket-single-shaft";
     shaft.position.y = -1.15;
     racket.add(shaft);
     const shaftFerrule = new THREE.Mesh(
       new THREE.CylinderGeometry(0.052, 0.036, 0.16, 18),
-      physicalMaterial("#dce7e9", { metalness: 0.5, roughness: 0.24, clearcoat: 0.75 }),
+      physicalMaterial("#27343d", { metalness: 0.64, roughness: 0.3, clearcoat: 0.68 }),
     );
     shaftFerrule.name = "racket-tapered-shaft-ferrule";
     shaftFerrule.position.y = -0.84;
     racket.add(shaftFerrule);
     const ferruleCollar = new THREE.Mesh(
       new THREE.TorusGeometry(0.039, 0.006, 6, 18),
-      material("#8ca0a6", { metalness: 0.78, roughness: 0.28 }),
+      material("#12181d", { metalness: 0.8, roughness: 0.32 }),
     );
     ferruleCollar.name = "racket-shaft-collar";
     ferruleCollar.rotation.x = Math.PI / 2;
@@ -2363,24 +2363,24 @@ export default function InteractiveRoom() {
     racket.add(ferruleCollar);
     const grip = new THREE.Mesh(
       new THREE.CylinderGeometry(0.065, 0.078, 0.62, 12),
-      material("#7046b7", { roughness: 0.62 }),
+      material("#21162f", { roughness: 0.72 }),
     );
     grip.position.y = -1.72;
     racket.add(grip);
     for (let string = -4; string <= 4; string += 1) {
       const chord = Math.sqrt(Math.max(0, 1 - Math.pow((string * 0.105) / 0.58, 2))) * 1.35;
-      const racketString = box(racket, [0.01, chord, 0.009], [string * 0.105, 0, 0], "#91a3a8", { metalness: 0.18 });
+      const racketString = box(racket, [0.01, chord, 0.009], [string * 0.105, 0, 0], "#46545b", { metalness: 0.22 });
       racketString.name = "racket-string";
     }
     for (let string = -5; string <= 5; string += 1) {
       const chord = Math.sqrt(Math.max(0, 1 - Math.pow((string * 0.098) / 0.74, 2))) * 1.02;
-      const racketString = box(racket, [chord, 0.01, 0.009], [0, string * 0.098, 0], "#91a3a8", { metalness: 0.18 });
+      const racketString = box(racket, [chord, 0.01, 0.009], [0, string * 0.098, 0], "#46545b", { metalness: 0.22 });
       racketString.name = "racket-string";
     }
     for (let wrap = 0; wrap < 6; wrap += 1) {
       const gripBand = new THREE.Mesh(
         new THREE.TorusGeometry(0.072, 0.012, 6, 18),
-        material(wrap % 2 ? "#9a75da" : "#503177", { roughness: 0.8 }),
+        material(wrap % 2 ? "#30233f" : "#17121f", { roughness: 0.84 }),
       );
       gripBand.rotation.x = Math.PI / 2;
       gripBand.position.y = -1.47 - wrap * 0.1;
