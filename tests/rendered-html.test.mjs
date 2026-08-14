@@ -18,9 +18,9 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Affan Shaikh/);
-  assert.match(html, /AFFAN_OS \/ INTERACTIVE PORTFOLIO/);
-  assert.match(html, /Explore the lab/);
-  assert.match(html, /Move your pointer to shift the room/);
+  assert.match(html, /affan shaikh/);
+  assert.match(html, /networking &amp; cybersecurity/);
+  assert.match(html, /ARRANGING THE STUDIO/);
   assert.match(html, /Interactive 3D portfolio/);
   assert.match(html, /3D room objects/);
   assert.match(html, /Archtech file/);
@@ -76,7 +76,7 @@ test("publishes crawler and structured profile metadata", async () => {
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /ProfilePage/);
   assert.match(html, /Ontario Tech University/);
-  assert.match(html, /\/og-lab-v2\.png/);
+  assert.match(html, /\/og-cutaway-v3\.png/);
   assert.match(html, /\/lab-favicon\.svg/);
   assert.doesNotMatch(html, /\/terminal-favicon\.svg/);
 
@@ -253,8 +253,12 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /side_table_01_1k\.gltf/);
   assert.match(room, /potted_plant_04_1k\.gltf/);
   assert.match(room, /desk_lamp_arm_01_1k\.gltf/);
-  assert.match(room, /#d8cbb8/);
-  assert.match(room, /#c4d3ce/);
+  assert.match(room, /compact-cutaway-studio/);
+  assert.match(room, /cutaway-room-platform/);
+  assert.match(room, /left-lounge-daybed/);
+  assert.match(room, /warm-string-lights/);
+  assert.match(room, /#d8c17f/);
+  assert.match(room, /#c9b374/);
   assert.match(room, /ambient-signal-motes/);
   assert.match(room, /THREE\.Points/);
   assert.match(room, /room-target-cursor/);
@@ -551,7 +555,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(styles, /room-target-cursor/);
   assert.match(styles, /room-click-spark/);
   assert.match(styles, /room-secret-toast/);
-  assert.match(styles, /body\.room-default-view \.immersive-intro/);
+  assert.match(styles, /room-loading-gate/);
+  assert.match(styles, /Warm cutaway studio composition/);
   assert.match(styles, /body\.room-default-view \.room-fluid-hint/);
   assert.doesNotMatch(styles, /room-drive-hud/);
   assert.doesNotMatch(styles, /rover-pad/);
