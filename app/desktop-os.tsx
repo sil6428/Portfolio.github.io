@@ -370,10 +370,13 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
   const [clock, setClock] = useState(() => new Date());
   const [announcement, setAnnouncement] = useState("AFFAN_OS desktop ready");
   const [terminalInput, setTerminalInput] = useState("");
+  const [terminalCwd, setTerminalCwd] = useState<FolderId>("home");
+  const [terminalCommandHistory, setTerminalCommandHistory] = useState<string[]>([]);
+  const [terminalHistoryIndex, setTerminalHistoryIndex] = useState(-1);
   const [terminalLines, setTerminalLines] = useState<string[]>([
-    "AFFAN_OS shell v2.0",
+    "AFFAN_OS bash-compatible portfolio shell v3.0",
     "Connected to the portfolio room.",
-    "Type help to list commands.",
+    "Type help to list commands. Use cd, ls, cat, open, find, and grep to explore.",
   ]);
   const windowRef = useRef<HTMLElement>(null);
   const terminalInputRef = useRef<HTMLInputElement>(null);
@@ -440,12 +443,56 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
     if (item.view) openView(item.view);
   };
 
+  const shellPath = terminalCwd === "home" ? "~" : folders[terminalCwd].path.replace("/home/affan", "~");
+  const shellPrompt = `affan@portfolio:${shellPath}$`;
+  const normalizeShellTarget = (value: string) => value
+    .trim()
+    .toLowerCase()
+    .replace(/^\.\//, "")
+    .replace(/\.(txt|md|pdf|project|website|repo|py|js|plan|url|contact|private)$/i, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  const resolveShellFolder = (value: string): FolderId | null => {
+    const target = value.trim().replace(/\/$/, "");
+    if (!target || target === ".") return terminalCwd;
+    if (["/", "~", "/home", "/home/affan", "home", "files"].includes(target.toLowerCase())) return "home";
+    if (target === "..") return "home";
+    const aliases: Partial<Record<string, FolderId>> = {
+      work: "projects", project: "projects", projects: "projects",
+      lab: "networking", labs: "networking", network: "networking", networking: "networking",
+      education: "education", experience: "experience", interest: "interests", interests: "interests",
+      contact: "contact", inspiration: "inspiration", references: "inspiration",
+    };
+    const normalized = normalizeShellTarget(target.split("/").filter(Boolean).at(-1) ?? target);
+    if (aliases[normalized]) return aliases[normalized] ?? null;
+    const currentMatch = folders[terminalCwd].items.find((item) => item.view?.kind === "folder" && normalizeShellTarget(item.label) === normalized);
+    return currentMatch?.view?.kind === "folder" ? currentMatch.view.id : null;
+  };
+  const findShellItem = (value: string): OsItem | null => {
+    const normalized = normalizeShellTarget(value);
+    if (!normalized) return null;
+    const items = [...folders[terminalCwd].items, ...Object.values(folders).flatMap((folder) => folder.items), ...desktopItems];
+    return items.find((item) => item.id === normalized || normalizeShellTarget(item.label) === normalized) ??
+      items.find((item) => normalizeShellTarget(item.label).includes(normalized)) ?? null;
+  };
+  const shellCompletions = [
+    "help", "pwd", "ls", "cd", "cat", "less", "open", "tree", "find", "grep", "history", "clear",
+    "whoami", "date", "uname", "hostname", "id", "echo", "printf", "printenv", "man", "status",
+    "lights", "relic", "signal", "print", "room", "exit", "shutdown", ...Object.keys(folders), ...Object.keys(documents),
+  ];
+
   const submitTerminal = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const command = terminalInput.trim();
     if (!command) return;
+    const tokens = command.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g)?.map((token) => token.replace(/^["']|["']$/g, "")) ?? [];
+    const verb = (tokens[0] ?? "").toLowerCase();
+    const args = tokens.slice(1);
+    const target = args.filter((argument) => !argument.startsWith("-")).join(" ");
     const normalized = command.toLowerCase().replace(/^open\s+/, "");
-    const prompt = `affan@portfolio:~$ ${command}`;
+    const prompt = `${shellPrompt} ${command}`;
+    setTerminalCommandHistory((current) => [...current, command]);
+    setTerminalHistoryIndex(-1);
     const folderCommands: Partial<Record<string, FolderId>> = {
       files: "home",
       home: "home",
@@ -463,7 +510,12 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
       skills: "skills",
     };
     const responses: Record<string, string[]> = {
-      help: ["Commands: help, ls, whoami, files, projects, labs, education, experience, interests, contact, about, skills, resume, status, lights, cat, relic, signal, print, room, clear"],
+      help: [
+        "Bash navigation: pwd, ls [-la] [dir], cd <dir>, tree [dir], cat <file>, less <file>, open <file|dir|link>, find <term>, grep <term> <file>",
+        "Shell tools: history, clear, whoami, date, uname, hostname, id, echo <text>, printenv, man <command>, status",
+        "Room controls: lights, cat, relic, signal, print, room, shutdown",
+        "Quote names containing spaces. Arrow keys recall history and Tab completes commands.",
+      ],
       ls: ["Folders: Projects  Network Labs  Education  Experience  Interests  Contact  Inspiration", "Files: About.txt  Skills.md  Resume.pdf  Learning Log.private"],
       whoami: ["Affan Shaikh", "Networking and Cybersecurity student · Ontario Tech · Class of 2028"],
       status: ["AFFAN_OS online", "Current focus: portfolio systems, cybersecurity, networking, and a Proxmox home lab."],
@@ -473,6 +525,116 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
       signal: ["Starting the hidden server beacon sequence..."],
       print: ["The miniature chess set takes exactly 03:00.", "Watch the printer display for live progress."],
     };
+
+    const appendOutput = (...output: string[]) => setTerminalLines((lines) => [...lines, prompt, ...output]);
+    if (verb === "exit") {
+      setTerminalInput("");
+      closeWindow();
+      return;
+    }
+    if (["shutdown", "poweroff"].includes(verb)) {
+      appendOutput("Shutting down AFFAN_OS and returning to the 3D room...");
+      setTerminalInput("");
+      window.setTimeout(onExit, 180);
+      return;
+    }
+    if (verb === "cd") {
+      const nextFolder = resolveShellFolder(target || "~");
+      if (!nextFolder) appendOutput(`bash: cd: ${target}: No such directory`);
+      else {
+        setTerminalCwd(nextFolder);
+        appendOutput(folders[nextFolder].path);
+      }
+      setTerminalInput("");
+      return;
+    }
+    if (verb === "pwd") {
+      appendOutput(folders[terminalCwd].path);
+      setTerminalInput("");
+      return;
+    }
+    if (verb === "ls" || verb === "dir") {
+      const selectedFolder = resolveShellFolder(target || ".");
+      if (!selectedFolder) appendOutput(`ls: cannot access '${target}': No such directory`);
+      else appendOutput(...folders[selectedFolder].items.map((item) => `${item.view?.kind === "folder" ? "d" : "-"}r--r--r--  affan  ${item.label}${item.view?.kind === "folder" ? "/" : ""}`));
+      setTerminalInput("");
+      return;
+    }
+    if (verb === "tree") {
+      const selectedFolder = resolveShellFolder(target || ".");
+      if (!selectedFolder) appendOutput(`tree: ${target}: No such directory`);
+      else appendOutput(folders[selectedFolder].title, ...folders[selectedFolder].items.map((item, index, items) => `${index === items.length - 1 ? "└──" : "├──"} ${item.label}${item.view?.kind === "folder" ? "/" : ""}`));
+      setTerminalInput("");
+      return;
+    }
+    if (["open", "xdg-open", "visit"].includes(verb)) {
+      const folderTarget = resolveShellFolder(target);
+      const item = findShellItem(target);
+      if (["room", "site", "website"].includes(target.toLowerCase())) {
+        appendOutput("Returning to the interactive room...");
+        window.setTimeout(onExit, 180);
+      } else if (folderTarget) {
+        appendOutput(`Opening ${folders[folderTarget].title}...`);
+        window.setTimeout(() => openView({ kind: "folder", id: folderTarget }), 120);
+      } else if (item?.view) {
+        appendOutput(`Opening ${item.label}...`);
+        window.setTimeout(() => openView(item.view as OsView), 120);
+      } else if (item?.href) {
+        appendOutput(`Opening ${item.label} in a new tab...`);
+        window.open(item.href, "_blank", "noopener,noreferrer");
+      } else appendOutput(`bash: open: ${target || "missing operand"}: No such file or directory`);
+      setTerminalInput("");
+      return;
+    }
+    if ((verb === "cat" && Boolean(target)) || verb === "less") {
+      const item = findShellItem(target);
+      if (item?.view?.kind !== "document") appendOutput(`cat: ${target || "missing operand"}: No such text file`);
+      else {
+        const document = documents[item.view.id];
+        appendOutput(`# ${document.title}`, document.intro, ...(document.bullets ?? []).map((line) => `- ${line}`));
+      }
+      setTerminalInput("");
+      return;
+    }
+    if (verb === "find") {
+      const needle = normalizeShellTarget(target);
+      const matches = Object.values(folders).flatMap((folder) => folder.items).filter((item) => !needle || normalizeShellTarget(`${item.label}-${item.meta}`).includes(needle));
+      appendOutput(...(matches.length ? matches.map((item) => `${item.view?.kind === "folder" ? "./" : ""}${item.label}`) : [`find: no files matched '${target}'`]));
+      setTerminalInput("");
+      return;
+    }
+    if (verb === "grep") {
+      const [pattern = "", ...fileParts] = args;
+      const item = findShellItem(fileParts.join(" "));
+      if (!pattern || item?.view?.kind !== "document") appendOutput("usage: grep <pattern> <file>");
+      else {
+        const document = documents[item.view.id];
+        const matches = [document.intro, ...(document.bullets ?? [])].filter((line) => line.toLowerCase().includes(pattern.toLowerCase()));
+        appendOutput(...(matches.length ? matches : [`grep: no matches for '${pattern}' in ${item.label}`]));
+      }
+      setTerminalInput("");
+      return;
+    }
+    if (verb === "history") {
+      appendOutput(...terminalCommandHistory.map((line, index) => `${String(index + 1).padStart(3, " ")}  ${line}`));
+      setTerminalInput("");
+      return;
+    }
+    if (verb === "echo" || verb === "printf") {
+      appendOutput(args.join(" "));
+      setTerminalInput("");
+      return;
+    }
+    if (verb === "date") responses.date = [new Date().toString()];
+    if (verb === "uname") responses.uname = ["AFFAN_OS portfolio 3.0 web x86_64 JavaScript/Three.js"];
+    if (verb === "hostname") responses.hostname = ["portfolio"];
+    if (verb === "id") responses.id = ["uid=1000(affan) gid=1000(portfolio) groups=projects,networking,cybersecurity"];
+    if (verb === "printenv") responses.printenv = ["HOME=/home/affan", `PWD=${folders[terminalCwd].path}`, "SHELL=/bin/affan-bash", "PORTFOLIO_MODE=interactive"];
+    if (verb === "man") {
+      appendOutput(`AFFAN_OS manual: ${target || "help"}`, "This is a read-only portfolio filesystem. Use help for the complete command map.");
+      setTerminalInput("");
+      return;
+    }
 
     if (normalized === "clear") {
       setTerminalLines([]);
@@ -504,6 +666,36 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
     const output = responses[normalized] ?? [`Command not found: ${normalized}`, "Type help to list AFFAN_OS commands."];
     setTerminalLines((lines) => [...lines, prompt, ...output]);
     setTerminalInput("");
+  };
+
+  const handleTerminalInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!terminalCommandHistory.length) return;
+      const nextIndex = terminalHistoryIndex < 0 ? terminalCommandHistory.length - 1 : Math.max(0, terminalHistoryIndex - 1);
+      setTerminalHistoryIndex(nextIndex);
+      setTerminalInput(terminalCommandHistory[nextIndex]);
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      if (terminalHistoryIndex < 0) return;
+      const nextIndex = terminalHistoryIndex + 1;
+      if (nextIndex >= terminalCommandHistory.length) {
+        setTerminalHistoryIndex(-1);
+        setTerminalInput("");
+      } else {
+        setTerminalHistoryIndex(nextIndex);
+        setTerminalInput(terminalCommandHistory[nextIndex]);
+      }
+    } else if (event.key === "Tab") {
+      event.preventDefault();
+      const parts = terminalInput.split(/\s+/);
+      const partial = parts.at(-1)?.toLowerCase() ?? "";
+      const matches = shellCompletions.filter((candidate) => candidate.startsWith(partial));
+      if (matches.length === 1) {
+        parts[parts.length - 1] = matches[0];
+        setTerminalInput(parts.join(" "));
+      }
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
@@ -647,18 +839,19 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
                 {terminalLines.map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}
               </div>
               <form onSubmit={submitTerminal}>
-                <label htmlFor="affan-os-terminal-input">affan@portfolio:~$</label>
+                <label htmlFor="affan-os-terminal-input">{shellPrompt}</label>
                 <input
                   id="affan-os-terminal-input"
                   ref={terminalInputRef}
                   value={terminalInput}
                   onChange={(event) => setTerminalInput(event.target.value)}
+                  onKeyDown={handleTerminalInputKeyDown}
                   autoComplete="off"
                   spellCheck={false}
                   aria-describedby="affan-os-terminal-help"
                 />
               </form>
-              <p id="affan-os-terminal-help">Type help for commands. Press backtick anywhere in AFFAN_OS to reopen this terminal.</p>
+              <p id="affan-os-terminal-help">Use Bash-style commands to navigate the portfolio. Arrow keys recall history and Tab completes commands.</p>
             </div>
           )}
 

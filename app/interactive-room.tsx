@@ -287,7 +287,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
       {
         heading: "Poly Haven",
-        body: "Poly Haven supplied the downloadable 1K glTF camera, shelf, chair, table, plant, and desk-lamp models. Every selected asset is released under CC0 and its author is recorded in THIRD_PARTY_ASSETS.md.",
+        body: "Poly Haven supplied the reviewed downloadable 1K glTF asset set. The current room loads its camera and potted plant, while the removed chair, table, and lamp remain documented in THIRD_PARTY_ASSETS.md. Every asset is released under CC0 and its author is credited.",
       },
       {
         heading: "Sketchfab room reference",
@@ -848,22 +848,9 @@ export default function InteractiveRoom() {
     }
     box(desk, [7.2, 0.12, 0.18], [-1.32, 0.72, -4.03], "#111920", { metalness: 0.7 });
     box(desk, [5.9, 0.08, 0.22], [-1.72, 1.1, -4.13], "#26333a", { metalness: 0.62 });
-    const deskCyanEdge = box(desk, [7.35, 0.045, 0.045], [-1.32, 1.46, -2.07], "#77e7ff", {
-      emissive: "#255765",
-      emissiveIntensity: 0.72,
-      roughness: 0.28,
-    });
-    deskCyanEdge.name = "desk-cyan-edge";
-    const deskAmberEdge = box(desk, [0.045, 0.045, 1.9], [2.47, 1.46, -3.15], "#ffbd72", {
-      emissive: "#6e4022",
-      emissiveIntensity: 0.68,
-      roughness: 0.3,
-    });
-    deskAmberEdge.name = "desk-amber-edge";
-
     const workstation = new THREE.Group();
     workstation.name = "compact-desktop-pc-setup";
-    workstation.position.set(-1.75, 1.46, -3.12);
+    workstation.position.set(-1.75, 1.39, -3.12);
     room.add(workstation);
     const keyboardDeck = roundedBox(workstation, [2.72, 0.08, 0.78], [-0.2, 0.07, 0.4], "#151e24", 0.035, {
       metalness: 0.55,
@@ -1075,14 +1062,18 @@ export default function InteractiveRoom() {
         keycap.name = "desktop-keycap";
       }
     }
-    box(workstation, [0.72, 0.02, 0.58], [1.28, 0.11, 0.45], "#1a242a", { metalness: 0.35, roughness: 0.34 });
+    const mousePad = box(workstation, [0.72, 0.02, 0.58], [1.28, 0.055, 0.45], "#1a242a", {
+      metalness: 0.12,
+      roughness: 0.82,
+    });
+    mousePad.name = "desktop-mouse-pad-seated";
     const desktopMouse = new THREE.Mesh(
       new THREE.SphereGeometry(0.16, 18, 12),
       material("#252f35", { metalness: 0.48, roughness: 0.35 }),
     );
     desktopMouse.name = "desktop-mouse";
     desktopMouse.scale.set(0.72, 0.35, 1);
-    desktopMouse.position.set(1.28, 0.15, 0.43);
+    desktopMouse.position.set(1.28, 0.122, 0.43);
     workstation.add(desktopMouse);
     const mouseWheel = new THREE.Mesh(
       new THREE.CylinderGeometry(0.024, 0.024, 0.075, 14),
@@ -1090,7 +1081,7 @@ export default function InteractiveRoom() {
     );
     mouseWheel.name = "desktop-mouse-scroll-wheel";
     mouseWheel.rotation.z = Math.PI / 2;
-    mouseWheel.position.set(1.28, 0.205, 0.34);
+    mouseWheel.position.set(1.28, 0.177, 0.34);
     workstation.add(mouseWheel);
     const desktopTower = roundedBox(workstation, [0.48, 1.18, 0.85], [1.48, 0.6, -0.32], "#121a20", 0.055, {
       metalness: 0.62,
@@ -2141,7 +2132,7 @@ export default function InteractiveRoom() {
     box(books, [0.02, 0.11, 0.72], [0.23, 0.08, 0.9], "#d8d1bb", { roughness: 1 });
 
     const cameraGroup = hotspot("camera", "PHOTOGRAPHY");
-    cameraGroup.position.set(-5.4, 2.8, 0.34);
+    cameraGroup.position.set(-5.46, 2.78, 0.34);
     const cameraBody = roundedBox(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", 0.09, {
       metalness: 0.7,
       roughness: 0.34,
@@ -2284,36 +2275,12 @@ export default function InteractiveRoom() {
     );
 
     loadStudioAsset(
-      "/models/polyhaven/modern_arm_chair_01/modern_arm_chair_01_1k.gltf",
-      room,
-      [1.42, 1.55, 1.42],
-      [3.72, 0.78, 1.72],
-      -0.74,
-      { palette: ["#735fa5", "#544779", "#2f3237"], roughness: 0.86 },
-    );
-    loadStudioAsset(
-      "/models/polyhaven/side_table_01/side_table_01_1k.gltf",
-      room,
-      [0.86, 0.72, 0.86],
-      [4.7, 0.36, 0.42],
-      0.28,
-      { palette: ["#775746", "#403938", "#9a7558"], roughness: 0.82 },
-    );
-    loadStudioAsset(
       "/models/polyhaven/potted_plant_04/potted_plant_04_1k.gltf",
       room,
-      [0.46, 0.5, 0.46],
-      [4.7, 1.01, 0.42],
+      [0.62, 0.72, 0.62],
+      [4.72, 0.36, 0.42],
       -0.25,
       { palette: ["#4e705b", "#315443", "#a36d4a"], roughness: 0.88 },
-    );
-    loadStudioAsset(
-      "/models/polyhaven/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf",
-      desk,
-      [0.76, 1.02, 0.76],
-      [-4.15, 1.98, -3.2],
-      0.62,
-      { palette: ["#d6814d", "#313940", "#e6b263"], metalness: 0.18, roughness: 0.64 },
     );
 
     const racket = hotspot("racket", "BADMINTON");
@@ -2742,7 +2709,7 @@ export default function InteractiveRoom() {
     waterBowl.add(waterSurface);
 
     const floorRug = new THREE.Mesh(
-      new THREE.CircleGeometry(1.45, 48),
+      new THREE.CircleGeometry(1.85, 56),
       material("#1c2437", { metalness: 0.02, roughness: 1 }),
     );
     floorRug.rotation.x = -Math.PI / 2;
@@ -2751,7 +2718,7 @@ export default function InteractiveRoom() {
     const rugColors = ["#77e7ff", "#9f91ff", "#ffbd72"];
     for (let ring = 1; ring <= 3; ring += 1) {
       const rugRing = new THREE.Mesh(
-        new THREE.TorusGeometry(0.35 * ring, 0.012, 5, 48),
+        new THREE.TorusGeometry(0.45 * ring, 0.012, 5, 56),
         material(rugColors[ring - 1], {
           emissive: rugColors[ring - 1],
           emissiveIntensity: 0.25,
@@ -3054,33 +3021,38 @@ export default function InteractiveRoom() {
     let pressedAt = { x: 0, y: 0 };
     let hovered: THREE.Object3D | null = null;
     let interactionSparkTimer = 0;
-    const hoverMaterialState = new Map<THREE.MeshStandardMaterial, { emissive: THREE.Color; intensity: number }>();
+    const hoverOutlineMaterial = new THREE.MeshBasicMaterial({
+      color: cyan,
+      side: THREE.BackSide,
+      transparent: true,
+      opacity: 0.82,
+      depthWrite: false,
+      toneMapped: false,
+    });
+    let hoverOutlineMeshes: THREE.Mesh[] = [];
     const restoreHoverTreatment = () => {
-      hoverMaterialState.forEach((original, surface) => {
-        surface.emissive.copy(original.emissive);
-        surface.emissiveIntensity = original.intensity;
-      });
-      hoverMaterialState.clear();
+      hoverOutlineMeshes.forEach((outline) => outline.removeFromParent());
+      hoverOutlineMeshes = [];
     };
     const applyHoverTreatment = (target: THREE.Object3D | null) => {
       restoreHoverTreatment();
       if (!target || coarsePointer) return;
-      target.traverse((object) => {
-        if (!(object instanceof THREE.Mesh) || !object.visible) return;
+      const outlinedTarget = target === desktopPowerTarget ? desktopMonitor : target;
+      const targetMeshes: THREE.Mesh[] = [];
+      outlinedTarget.traverse((object) => {
+        if (!(object instanceof THREE.Mesh) || !object.visible || object.userData.hoverBorder) return;
         const surfaces = Array.isArray(object.material) ? object.material : [object.material];
-        surfaces.forEach((surface) => {
-          if (!(surface instanceof THREE.MeshStandardMaterial) || (surface.transparent && surface.opacity < 0.15)) return;
-          if (!hoverMaterialState.has(surface)) {
-            hoverMaterialState.set(surface, {
-              emissive: surface.emissive.clone(),
-              intensity: surface.emissiveIntensity,
-            });
-          }
-          const original = hoverMaterialState.get(surface);
-          if (!original) return;
-          surface.emissive.copy(original.emissive).lerp(cyan, 0.2);
-          surface.emissiveIntensity = Math.max(original.intensity, 0.52);
-        });
+        if (surfaces.every((surface) => surface.transparent && surface.opacity < 0.15)) return;
+        targetMeshes.push(object);
+      });
+      targetMeshes.forEach((object) => {
+        const outline = new THREE.Mesh(object.geometry, hoverOutlineMaterial);
+        outline.name = "hover-border-outline";
+        outline.userData.hoverBorder = true;
+        outline.scale.setScalar(1.025);
+        outline.renderOrder = 12;
+        object.add(outline);
+        hoverOutlineMeshes.push(outline);
       });
     };
     previewRef.current = (key) => {
@@ -3409,6 +3381,7 @@ export default function InteractiveRoom() {
         if (Array.isArray(objectMaterial)) objectMaterial.forEach((item) => item.dispose());
         else objectMaterial.dispose();
       });
+      hoverOutlineMaterial.dispose();
       desktopTexture.dispose();
       printerDisplayTexture.dispose();
       signalMoteGeometry.dispose();
