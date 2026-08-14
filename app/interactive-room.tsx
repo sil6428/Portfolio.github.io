@@ -287,7 +287,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
       {
         heading: "Poly Haven",
-        body: "Poly Haven supplied the reviewed downloadable 1K glTF asset set. The current room loads its camera and potted plant, while the removed chair, table, and lamp remain documented in THIRD_PARTY_ASSETS.md. Every asset is released under CC0 and its author is credited.",
+        body: "Poly Haven supplied the reviewed downloadable 1K glTF asset set. The current room loads its camera, while the removed chair, table, plant, and lamp remain documented in THIRD_PARTY_ASSETS.md. Every asset is released under CC0 and its author is credited.",
       },
       {
         heading: "Sketchfab room reference",
@@ -2272,15 +2272,6 @@ export default function InteractiveRoom() {
       Math.PI / 2,
       { palette: ["#22282b", "#3f494d", "#7c898d"], metalness: 0.24, roughness: 0.58 },
       () => proceduralCameraParts.forEach((part) => { part.visible = false; }),
-    );
-
-    loadStudioAsset(
-      "/models/polyhaven/potted_plant_04/potted_plant_04_1k.gltf",
-      room,
-      [0.62, 0.72, 0.62],
-      [4.72, 0.36, 0.42],
-      -0.25,
-      { palette: ["#4e705b", "#315443", "#a36d4a"], roughness: 0.88 },
     );
 
     const racket = hotspot("racket", "BADMINTON");

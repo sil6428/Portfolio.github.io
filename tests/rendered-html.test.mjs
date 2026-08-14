@@ -251,7 +251,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /Camera_01_1k\.gltf/);
   assert.doesNotMatch(room, /modern_arm_chair_01_1k\.gltf/);
   assert.doesNotMatch(room, /side_table_01_1k\.gltf/);
-  assert.match(room, /potted_plant_04_1k\.gltf/);
+  assert.doesNotMatch(room, /potted_plant_04_1k\.gltf/);
   assert.doesNotMatch(room, /desk_lamp_arm_01_1k\.gltf/);
   assert.match(room, /#111a24/);
   assert.match(room, /#111622/);
