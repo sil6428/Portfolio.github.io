@@ -52,7 +52,9 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
-- Raycast hover anticipation, a lightweight whole-object material accent on pointer hover, focused-object motion, pulsing floor markers, and direct click or tap selection
+- Raycast hover anticipation, a lightweight whole-object material accent on pointer hover, focused-object motion, and direct click or tap selection without floor circles
+- A persistent desktop side index for direct model navigation, with the compact INDEX menu retained for smaller screens
+- A performance-scaled reflective surface beyond the room floor, with a polished physical-material fallback on touch-first devices
 - A lightweight target cursor and click-spark response influenced by React Bits, implemented locally and disabled for coarse pointers and reduced-motion visitors
 - An optional original in-scene object index that provides direct access without restoring the retired bottom directory
 - Image-based room lighting generated from Three.js `RoomEnvironment`, giving metal, glass, and clearcoat materials more natural depth without loading an external environment asset
@@ -128,6 +130,8 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 [Ida's Gameboy](https://idas-gameboy.netlify.app/) and [Jesse's Ramen](https://www.jesse-zhou.com/) informed the scene-first direction, subtle pointer response, and fluid transitions between a shared 3D world and its interface. [Bruno Simon's portfolio](https://bruno-simon.com/) informed an earlier game-control experiment, which remains preserved only on the backup branch `backup/rover-world-v6-2026-07-29`. [React Bits](https://reactbits.dev/get-started/introduction) informed the targeted cursor and click-feedback language. Rachel Wei's [live portfolio](https://rachelqrwei.ca/use) and [public repository](https://github.com/rachelqrwei/personalwebsite) clarified the value of named hitboxes, linked whole-object hover feedback, a scene-loading gate, and content layered over one persistent room. This portfolio reimplements those interaction principles independently and keeps its own object index and camera system. The official [Three.js](https://threejs.org/) documentation and examples informed the room's controls, raycasting, physical materials, environment lighting, and efficient point rendering. [Three.js Resources](https://threejsresources.com/category/models) helped locate reputable asset libraries. [Poly Haven](https://polyhaven.com/) supplies the six CC0 furnishing and camera models used in the room. The linked [Sketchfab Project room](https://sketchfab.com/3d-models/project-793e99898ff14f2a89c73a3ccb5d7d10) was used only as visual direction for a brighter studio and is not copied into the project.
 
 The portfolio's concept, code, copy, interface, interactions, and custom interactive models remain original. Rachel Wei's repository has no included licence file, so none of its source code, room model, images, or audio are copied into this project. The only external 3D assets included are the explicitly documented CC0 Poly Haven models.
+
+See [DESIGN_REFERENCES.md](DESIGN_REFERENCES.md) for the complete idea-by-idea reference record and [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md) for every included external asset and its licence.
 
 ## Local development
 

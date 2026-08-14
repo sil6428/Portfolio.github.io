@@ -6,6 +6,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Reflector } from "three/examples/jsm/objects/Reflector.js";
 import DesktopOs from "./desktop-os";
 import { playSiteSfx } from "./site-sfx";
 
@@ -249,7 +250,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "Inspiration file",
     label: "CREDITS / WEB INSPIRATION",
     title: "Sites that shaped the lab",
-    summary: "Ten references helped set the standard for the room, its rendering, interactions, desktop interface, and licensed 3D asset direction.",
+    summary: "Thirteen references document the room's rendering, interactions, earlier editorial layout, desktop interface, and licensed 3D asset direction.",
     details: ["Interactive 3D", "Environment lighting", "CC0 assets", "Targeted feedback", "Room index", "Original implementation"],
     sections: [
       {
@@ -270,7 +271,11 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
       {
         heading: "Rachel Wei",
-        body: "Rachel Wei's public repository clarified how the original room links named invisible hitboxes to visible props, highlights the complete target on hover, waits for its GLB scene to load, and opens content over the same 3D world. This portfolio uses an original lightweight grouped-material highlight and keeps its own object index and camera system.",
+        body: "Rachel Wei's public repository clarified how the original room links named invisible hitboxes to visible props, highlights the complete target on hover, waits for its GLB scene to load, reflects the scene beyond the room, and opens content over the same 3D world. This portfolio uses an original lightweight grouped-material highlight, reflective boundary, object index, and camera system.",
+      },
+      {
+        heading: "Perry Wang",
+        body: "Perry Wang's portfolio and information page informed an earlier editorial approach to separating selected work from detailed personal information. That layout was later replaced by the current room-first interface.",
       },
       {
         heading: "Three.js",
@@ -278,7 +283,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
       {
         heading: "Three.js Resources",
-        body: "Three.js Resources was used as a directory for locating reputable model libraries and evaluating formats, download terms, and sources before adding any external asset.",
+        body: "Three.js Resources and its 3D-assets directory were used to locate reputable model libraries and compare formats, tools, and download terms. TurboSquid's free results were reviewed, but no TurboSquid asset was included.",
       },
       {
         heading: "Poly Haven",
@@ -296,8 +301,11 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       { label: "Visit React Bits", href: "https://reactbits.dev/get-started/introduction" },
       { label: "Visit Rachel Wei", href: "https://rachelqrwei.ca/use" },
       { label: "View Rachel Wei's source", href: "https://github.com/rachelqrwei/personalwebsite" },
+      { label: "Visit Perry Wang", href: "https://perryw-2023.webflow.io/" },
       { label: "Visit Three.js", href: "https://threejs.org/" },
       { label: "Visit Three.js Resources", href: "https://threejsresources.com/category/models" },
+      { label: "Visit the 3D-assets directory", href: "https://threejsresources.com/tool/3d-assets" },
+      { label: "View reviewed TurboSquid results", href: "https://www.turbosquid.com/Search/3D-Models/furnishings?max_price=0" },
       { label: "Visit Poly Haven", href: "https://polyhaven.com/" },
       { label: "View the Sketchfab reference", href: "https://sketchfab.com/3d-models/project-793e99898ff14f2a89c73a3ccb5d7d10" },
     ],
@@ -328,6 +336,7 @@ export default function InteractiveRoom() {
   const [directoryOpen, setDirectoryOpen] = useState(false);
   const focusRef = useRef<(key: string) => void>(() => undefined);
   const dismissRef = useRef<() => void>(() => undefined);
+  const previewRef = useRef<(key: string | null) => void>(() => undefined);
   const activeEntry = activeKey ? ROOM_ENTRIES[activeKey] : null;
   const desktopActive = activeKey === "__desktop";
 
@@ -417,6 +426,51 @@ export default function InteractiveRoom() {
     const room = new THREE.Group();
     room.rotation.y = -0.08;
     scene.add(room);
+
+    const reflectiveBoundaryGeometry = new THREE.PlaneGeometry(42, 42);
+    const reflectionResolution = Math.min(
+      1024,
+      Math.max(480, Math.round(Math.max(host.clientWidth, host.clientHeight) * window.devicePixelRatio * 0.42)),
+    );
+    const reflectiveBoundary = highDetail
+      ? new Reflector(reflectiveBoundaryGeometry, {
+          clipBias: 0.003,
+          textureWidth: reflectionResolution,
+          textureHeight: reflectionResolution,
+          color: 0x756f70,
+          multisample: 2,
+        })
+      : new THREE.Mesh(
+          reflectiveBoundaryGeometry,
+          new THREE.MeshPhysicalMaterial({
+            color: "#59545b",
+            metalness: 0.72,
+            roughness: 0.18,
+            clearcoat: 0.92,
+            clearcoatRoughness: 0.12,
+          }),
+        );
+    reflectiveBoundary.name = "out-of-bounds-reflective-surface";
+    reflectiveBoundary.rotation.x = -Math.PI / 2;
+    reflectiveBoundary.position.y = -0.04;
+    reflectiveBoundary.receiveShadow = true;
+    scene.add(reflectiveBoundary);
+    const reflectiveBoundaryTint = new THREE.Mesh(
+      new THREE.PlaneGeometry(42, 42),
+      new THREE.MeshPhysicalMaterial({
+        color: "#786d68",
+        metalness: 0.08,
+        roughness: 0.5,
+        clearcoat: 0.78,
+        clearcoatRoughness: 0.22,
+        transparent: true,
+        opacity: 0.32,
+      }),
+    );
+    reflectiveBoundaryTint.name = "out-of-bounds-reflection-tint";
+    reflectiveBoundaryTint.rotation.x = -Math.PI / 2;
+    reflectiveBoundaryTint.position.y = -0.03;
+    scene.add(reflectiveBoundaryTint);
 
     const signalMoteCount = highDetail ? 72 : 32;
     const signalMotePositions = new Float32Array(signalMoteCount * 3);
@@ -2716,33 +2770,6 @@ export default function InteractiveRoom() {
     });
     ceilingLight.rotation.x = 0.02;
 
-    room.updateMatrixWorld(true);
-    const interactionMarkers = new Map<string, THREE.Mesh>();
-    const addInteractionMarker = (
-      key: string,
-      object: THREE.Object3D,
-      markerColor: THREE.ColorRepresentation = cyan,
-    ) => {
-      const markerMaterial = new THREE.MeshBasicMaterial({
-        color: markerColor,
-        transparent: true,
-        opacity: 0.26,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-      });
-      const marker = new THREE.Mesh(new THREE.RingGeometry(0.52, 0.59, 36), markerMaterial);
-      marker.rotation.x = -Math.PI / 2;
-      const markerWorldPosition = object.getWorldPosition(new THREE.Vector3());
-      const markerLocalPosition = room.worldToLocal(markerWorldPosition.clone());
-      marker.position.set(markerLocalPosition.x, 0.035, markerLocalPosition.z);
-      room.add(marker);
-      interactionMarkers.set(key, marker);
-    };
-    for (const [key, object] of objectByKey) {
-      addInteractionMarker(key, object);
-    }
-    addInteractionMarker("__desktop", desktopPowerTarget, cyan);
-
     scene.add(new THREE.HemisphereLight(0xfff0dc, 0x49404a, 2.05));
     const cyanLight = new THREE.PointLight(0x77e7ff, 19, 10, 2);
     cyanLight.position.set(-1.3, 3.3, -0.2);
@@ -3042,6 +3069,10 @@ export default function InteractiveRoom() {
         });
       });
     };
+    previewRef.current = (key) => {
+      const target = key === "__desktop" ? desktopPowerTarget : key ? objectByKey.get(key) ?? null : null;
+      applyHoverTreatment(target);
+    };
 
     const pick = (event: PointerEvent) => {
       const bounds = renderer.domElement.getBoundingClientRect();
@@ -3296,16 +3327,6 @@ export default function InteractiveRoom() {
         object.scale.setScalar(nextScale);
       }
 
-      for (const [key, marker] of interactionMarkers) {
-        const active = key === "__desktop"
-          ? hovered?.userData.action === "desktop-power" || focusedKey === "__desktop"
-          : key === hovered?.userData.key || key === focusedKey;
-        const phase = key === "__desktop" ? 0 : Number(ROOM_ENTRIES[key]?.number ?? 0);
-        const pulse = 1 + Math.sin(elapsed * 2.3 + phase) * 0.06;
-        marker.scale.setScalar((active ? 1.22 : 1) * pulse);
-        const markerMaterial = marker.material as THREE.MeshBasicMaterial;
-        markerMaterial.opacity = active ? 0.72 : 0.16 + Math.sin(elapsed * 1.5) * 0.045;
-      }
       if (cameraMove) {
         const progress = Math.min(1, (timestamp - cameraMove.startedAt) / cameraMove.duration);
         const eased = progress * progress * progress * (progress * (progress * 6 - 15) + 10);
@@ -3362,6 +3383,7 @@ export default function InteractiveRoom() {
       desktopBootTimers.forEach((timer) => window.clearTimeout(timer));
       focusRef.current = () => undefined;
       dismissRef.current = () => undefined;
+      previewRef.current = () => undefined;
       document.body.classList.remove("room-focus-active");
       document.body.classList.remove("room-default-view");
       room.traverse((object) => {
@@ -3376,6 +3398,15 @@ export default function InteractiveRoom() {
       signalMoteGeometry.dispose();
       signalMoteMaterial.dispose();
       loadedStudioTextures.forEach((texture) => texture.dispose());
+      if (reflectiveBoundary instanceof Reflector) reflectiveBoundary.getRenderTarget().dispose();
+      reflectiveBoundary.geometry.dispose();
+      const reflectiveBoundaryMaterial = reflectiveBoundary.material;
+      if (Array.isArray(reflectiveBoundaryMaterial)) reflectiveBoundaryMaterial.forEach((surface) => surface.dispose());
+      else reflectiveBoundaryMaterial.dispose();
+      reflectiveBoundaryTint.geometry.dispose();
+      const reflectiveBoundaryTintMaterial = reflectiveBoundaryTint.material;
+      if (Array.isArray(reflectiveBoundaryTintMaterial)) reflectiveBoundaryTintMaterial.forEach((surface) => surface.dispose());
+      else reflectiveBoundaryTintMaterial.dispose();
       environmentRenderTarget.dispose();
       renderer.dispose();
       renderer.domElement.remove();
@@ -3414,6 +3445,34 @@ export default function InteractiveRoom() {
       <div className="room-canvas" ref={hostRef} />
       <div className="room-target-cursor" aria-hidden="true"><i /><i /><i /><i /></div>
       <div className="room-click-spark" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /></div>
+      <nav className="room-side-index" aria-label="Quick room navigation">
+        <header><span>ROOM INDEX</span><strong>{visitedKeys.length}/{DIRECTORY.length}</strong></header>
+        <button
+          type="button"
+          onMouseEnter={() => previewRef.current("__desktop")}
+          onMouseLeave={() => previewRef.current(null)}
+          onFocus={() => previewRef.current("__desktop")}
+          onBlur={() => previewRef.current(null)}
+          onClick={() => focusRef.current("__desktop")}
+        >
+          <span>00</span><i />Computer
+        </button>
+        {DIRECTORY.map(([key, entry]) => (
+          <button
+            type="button"
+            data-viewed={visitedKeys.includes(key) || undefined}
+            aria-current={activeKey === key ? "page" : undefined}
+            onMouseEnter={() => previewRef.current(key)}
+            onMouseLeave={() => previewRef.current(null)}
+            onFocus={() => previewRef.current(key)}
+            onBlur={() => previewRef.current(null)}
+            onClick={() => focusRef.current(key)}
+            key={key}
+          >
+            <span>{entry.number}</span><i />{entry.title}
+          </button>
+        ))}
+      </nav>
       {desktopActive && <DesktopOs onExit={() => focusRef.current("__desktop-off")} />}
       <div className="room-fluid-hint" aria-hidden="true">
         <span><i /> SCENE RESPONSIVE</span>

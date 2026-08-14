@@ -33,6 +33,8 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.match(html, /Inspiration file/);
   assert.match(html, /INDEX/);
   assert.match(html, /room-index-panel/);
+  assert.match(html, /room-side-index/);
+  assert.match(html, /Quick room navigation/);
   assert.doesNotMatch(html, /Room controls/);
   assert.doesNotMatch(html, /08 ACTIVE OBJECTS/);
   assert.doesNotMatch(html, /href="#room-directory"/);
@@ -213,6 +215,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   const assetCredits = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../THIRD_PARTY_ASSETS.md", import.meta.url), "utf8"),
   );
+  const designReferences = await import("node:fs/promises").then(({ readFile }) =>
+    readFile(new URL("../DESIGN_REFERENCES.md", import.meta.url), "utf8"),
+  );
   assert.match(room, /OrbitControls/);
   assert.match(room, /RoundedBoxGeometry/);
   assert.match(room, /MeshPhysicalMaterial/);
@@ -233,6 +238,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /https:\/\/github\.com\/rachelqrwei\/personalwebsite/);
   assert.match(room, /https:\/\/threejs\.org\//);
   assert.match(room, /RoomEnvironment/);
+  assert.match(room, /Reflector/);
+  assert.match(room, /out-of-bounds-reflective-surface/);
+  assert.match(room, /out-of-bounds-reflection-tint/);
+  assert.match(room, /reflectionResolution/);
   assert.match(room, /GLTFLoader/);
   assert.match(room, /loadStudioAsset/);
   assert.match(room, /wooden_display_shelves_01_1k\.gltf/);
@@ -451,8 +460,8 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /pointerParallax/);
   assert.match(room, /pointerParallaxTarget/);
   assert.match(room, /arcHeight/);
-  assert.match(room, /interactionMarkers/);
-  assert.match(room, /addInteractionMarker\("__desktop", desktopPowerTarget, cyan\)/);
+  assert.doesNotMatch(room, /interactionMarkers/);
+  assert.doesNotMatch(room, /addInteractionMarker/);
   assert.match(room, /MOVE \/ DRAG \/ SELECT/);
   assert.match(room, /SCENE RESPONSIVE/);
   assert.match(room, /affan-lab-discoveries/);
@@ -482,12 +491,19 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /Three\.js Resources\.url/);
   assert.match(desktopOs, /Poly Haven\.url/);
   assert.match(desktopOs, /Studio Reference\.url/);
+  assert.match(desktopOs, /Perry Wang\.url/);
+  assert.match(desktopOs, /3D Assets Directory\.url/);
+  assert.match(desktopOs, /TurboSquid Review\.url/);
   assert.match(assetCredits, /Creative Commons CC0 1\.0 Universal/);
   assert.match(assetCredits, /Rajil Jose Macatangay/);
   assert.match(assetCredits, /Vibrant Nordic/);
   assert.match(assetCredits, /James Ray Cock/);
   assert.match(assetCredits, /Yann Kervran and Kuutti Siitonen/);
   assert.match(assetCredits, /not downloadable/);
+  assert.match(designReferences, /Rachel Wei source repository/);
+  assert.match(designReferences, /Perry Wang portfolio/);
+  assert.match(designReferences, /Three\.js Resources 3D-assets directory/);
+  assert.match(designReferences, /No TurboSquid model is included/);
   assert.match(desktopOs, /Archtech\.project/);
   assert.match(desktopOs, /SSIK\.website/);
   assert.match(desktopOs, /Password Manager\.py/);
@@ -528,6 +544,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(styles, /@media \(pointer: coarse\)/);
   assert.match(styles, /\.room-canvas canvas \{ touch-action: none; \}/);
   assert.match(styles, /room-index-panel/);
+  assert.match(styles, /room-side-index/);
   assert.match(styles, /room-target-cursor/);
   assert.match(styles, /room-click-spark/);
   assert.match(styles, /room-secret-toast/);

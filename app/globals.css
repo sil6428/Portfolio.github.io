@@ -3058,6 +3058,91 @@ body.room-default-view .room-fluid-hint {
   outline: 0;
   background: rgba(119,231,255,.07);
 }
+.room-side-index {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  z-index: 11;
+  width: 184px;
+  max-height: calc(100svh - 150px);
+  padding: 7px;
+  display: grid;
+  gap: 2px;
+  overflow-y: auto;
+  border: 1px solid rgba(119,231,255,.18);
+  color: #8da1a8;
+  background: rgba(24,22,26,.74);
+  box-shadow: 0 24px 70px rgba(23,18,20,.24);
+  backdrop-filter: blur(16px);
+  transform: translateY(-50%);
+  transition: opacity .24s ease, transform .24s ease;
+}
+.room-side-index header {
+  min-height: 28px;
+  padding: 0 7px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(119,231,255,.12);
+  color: #bfd0d3;
+  font: 7px "DM Mono",monospace;
+  letter-spacing: .12em;
+}
+.room-side-index header strong { color: var(--topology-cyan); font-weight: 500; }
+.room-side-index button {
+  min-height: 27px;
+  padding: 0 7px;
+  display: grid;
+  grid-template-columns: 22px 5px minmax(0,1fr);
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  color: #89999e;
+  background: transparent;
+  font: 7px "DM Mono",monospace;
+  letter-spacing: .055em;
+  text-align: left;
+  cursor: pointer;
+  transition: color .18s ease, padding-left .18s ease, background .18s ease;
+}
+.room-side-index button span { color: #65777c; }
+.room-side-index button i {
+  width: 4px;
+  height: 4px;
+  border: 1px solid rgba(119,231,255,.38);
+  border-radius: 50%;
+}
+.room-side-index button[data-viewed] i {
+  border-color: #68e0ae;
+  background: #68e0ae;
+  box-shadow: 0 0 8px rgba(104,224,174,.55);
+}
+.room-side-index button:hover,
+.room-side-index button:focus-visible,
+.room-side-index button[aria-current="page"] {
+  padding-left: 11px;
+  color: #f3fbfa;
+  outline: 0;
+  background: linear-gradient(90deg,rgba(119,231,255,.11),rgba(119,231,255,.015));
+}
+.room-side-index button:hover i,
+.room-side-index button:focus-visible i {
+  border-color: var(--topology-cyan);
+  background: var(--topology-cyan);
+  box-shadow: 0 0 10px rgba(119,231,255,.64);
+}
+.room-has-popup .room-side-index,
+.room-desktop-active .room-side-index {
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(14px,-50%);
+}
+@media (min-width: 1101px) {
+  .immersive-home .room-index-toggle { display: none; }
+}
+@media (max-width: 1100px) {
+  .room-side-index { display: none; }
+}
 .room-target-cursor,
 .room-click-spark {
   position: absolute;
