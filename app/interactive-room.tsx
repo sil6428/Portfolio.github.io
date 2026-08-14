@@ -705,6 +705,40 @@ export default function InteractiveRoom() {
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     room.add(floor);
+    const floorboardColors = ["#121a24", "#151e28", "#101821", "#17202a"];
+    for (let board = 0; board < 8; board += 1) {
+      const floorboard = roundedBox(
+        room,
+        [11.82, 0.018, 0.96],
+        [0, 0.009, -3.69 + board * 1.04],
+        floorboardColors[board % floorboardColors.length],
+        0.018,
+        { metalness: 0.04, roughness: 0.94 },
+      );
+      floorboard.name = "dark-broad-floorboard";
+    }
+    const makerFloorMat = roundedBox(room, [3.65, 0.035, 2.15], [3.42, 0.036, 0.78], "#0d131c", 0.14, {
+      metalness: 0.08,
+      roughness: 0.98,
+    });
+    makerFloorMat.name = "graphite-maker-floor-mat";
+    const makerMatInset = roundedBox(room, [3.38, 0.012, 1.88], [3.42, 0.058, 0.78], "#182231", 0.11, {
+      metalness: 0.05,
+      roughness: 0.96,
+    });
+    makerMatInset.name = "maker-floor-mat-inset";
+    for (const [width, depth, x, z] of [
+      [3.36, 0.025, 3.42, -0.14],
+      [3.36, 0.025, 3.42, 1.7],
+      [0.025, 1.84, 1.75, 0.78],
+      [0.025, 1.84, 5.09, 0.78],
+    ] as const) {
+      const matPiping = box(room, [width, 0.012, depth], [x, 0.068, z], "#332b4f", {
+        metalness: 0.18,
+        roughness: 0.7,
+      });
+      matPiping.name = "maker-floor-mat-piping";
+    }
     const floatingPlatformBase = roundedBox(room, [12.2, 0.24, 8.7], [0, -0.14, 0], "#090d13", 0.045, {
       metalness: 0.42,
       roughness: 0.42,
