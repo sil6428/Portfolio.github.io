@@ -249,7 +249,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "Inspiration file",
     label: "CREDITS / WEB INSPIRATION",
     title: "Sites that shaped the lab",
-    summary: "Nine references helped set the standard for the room, its rendering, interactions, desktop interface, and licensed 3D asset direction.",
+    summary: "Ten references helped set the standard for the room, its rendering, interactions, desktop interface, and licensed 3D asset direction.",
     details: ["Interactive 3D", "Environment lighting", "CC0 assets", "Targeted feedback", "Room index", "Original implementation"],
     sections: [
       {
@@ -270,7 +270,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
       {
         heading: "Rachel Wei",
-        body: "Rachel Wei's room portfolio inspired the optional in-scene index that makes every object reachable without returning to a permanent header, footer, or bottom directory.",
+        body: "Rachel Wei's public repository clarified how the original room links named invisible hitboxes to visible props, highlights the complete target on hover, waits for its GLB scene to load, and opens content over the same 3D world. This portfolio uses an original lightweight grouped-material highlight and keeps its own object index and camera system.",
       },
       {
         heading: "Three.js",
@@ -295,6 +295,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       { label: "Visit Jesse Zhou", href: "https://www.jesse-zhou.com/" },
       { label: "Visit React Bits", href: "https://reactbits.dev/get-started/introduction" },
       { label: "Visit Rachel Wei", href: "https://rachelqrwei.ca/use" },
+      { label: "View Rachel Wei's source", href: "https://github.com/rachelqrwei/personalwebsite" },
       { label: "Visit Three.js", href: "https://threejs.org/" },
       { label: "Visit Three.js Resources", href: "https://threejsresources.com/category/models" },
       { label: "Visit Poly Haven", href: "https://polyhaven.com/" },
@@ -3012,6 +3013,35 @@ export default function InteractiveRoom() {
     let pressedAt = { x: 0, y: 0 };
     let hovered: THREE.Object3D | null = null;
     let interactionSparkTimer = 0;
+    const hoverMaterialState = new Map<THREE.MeshStandardMaterial, { emissive: THREE.Color; intensity: number }>();
+    const restoreHoverTreatment = () => {
+      hoverMaterialState.forEach((original, surface) => {
+        surface.emissive.copy(original.emissive);
+        surface.emissiveIntensity = original.intensity;
+      });
+      hoverMaterialState.clear();
+    };
+    const applyHoverTreatment = (target: THREE.Object3D | null) => {
+      restoreHoverTreatment();
+      if (!target || coarsePointer) return;
+      target.traverse((object) => {
+        if (!(object instanceof THREE.Mesh) || !object.visible) return;
+        const surfaces = Array.isArray(object.material) ? object.material : [object.material];
+        surfaces.forEach((surface) => {
+          if (!(surface instanceof THREE.MeshStandardMaterial) || (surface.transparent && surface.opacity < 0.15)) return;
+          if (!hoverMaterialState.has(surface)) {
+            hoverMaterialState.set(surface, {
+              emissive: surface.emissive.clone(),
+              intensity: surface.emissiveIntensity,
+            });
+          }
+          const original = hoverMaterialState.get(surface);
+          if (!original) return;
+          surface.emissive.copy(original.emissive).lerp(cyan, 0.2);
+          surface.emissiveIntensity = Math.max(original.intensity, 0.52);
+        });
+      });
+    };
 
     const pick = (event: PointerEvent) => {
       const bounds = renderer.domElement.getBoundingClientRect();
@@ -3057,6 +3087,7 @@ export default function InteractiveRoom() {
         stage.classList.toggle("room-target-active", Boolean(next));
       }
       if (next === hovered) return;
+      applyHoverTreatment(next);
       hovered = next;
       renderer.domElement.style.cursor = hovered ? "pointer" : "grab";
       setHoverLabel(hovered?.userData.label ?? "");
@@ -3090,6 +3121,7 @@ export default function InteractiveRoom() {
     };
 
     const handlePointerLeave = () => {
+      restoreHoverTreatment();
       hovered = null;
       pointerParallaxTarget.set(0, 0);
       renderer.domElement.style.cursor = "grab";
@@ -3325,6 +3357,7 @@ export default function InteractiveRoom() {
       window.removeEventListener("affan-room-cat", handleCatCommand);
       window.clearTimeout(roomSecretTimeout);
       window.clearTimeout(interactionSparkTimer);
+      restoreHoverTreatment();
       stage?.classList.remove("room-target-active", "room-spark-active");
       desktopBootTimers.forEach((timer) => window.clearTimeout(timer));
       focusRef.current = () => undefined;
