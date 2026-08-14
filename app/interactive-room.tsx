@@ -364,9 +364,10 @@ export default function InteractiveRoom() {
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x080a0f, 9, 19);
 
+    const ROOM_ELEVATION = 0.48;
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
-    camera.position.set(5.2, 4.3, 6.5);
-    camera.lookAt(0, 1.55, -0.7);
+    camera.position.set(5.2, 4.3 + ROOM_ELEVATION, 6.5);
+    camera.lookAt(0, 1.55 + ROOM_ELEVATION, -0.7);
 
     const highDetail = window.matchMedia("(min-width: 901px) and (pointer: fine)").matches;
     const renderer = new THREE.WebGLRenderer({
@@ -399,7 +400,7 @@ export default function InteractiveRoom() {
     });
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 1.55, -0.7);
+    controls.target.set(0, 1.55 + ROOM_ELEVATION, -0.7);
     controls.enableDamping = true;
     controls.dampingFactor = 0.055;
     controls.enablePan = true;
@@ -425,6 +426,7 @@ export default function InteractiveRoom() {
 
     const room = new THREE.Group();
     room.rotation.y = -0.08;
+    room.position.y = ROOM_ELEVATION;
     scene.add(room);
 
     const reflectiveBoundaryGeometry = new THREE.PlaneGeometry(42, 42);
@@ -703,6 +705,16 @@ export default function InteractiveRoom() {
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     room.add(floor);
+    const floatingPlatformBase = roundedBox(room, [12.2, 0.24, 8.7], [0, -0.14, 0], "#090d13", 0.045, {
+      metalness: 0.42,
+      roughness: 0.42,
+    });
+    floatingPlatformBase.name = "floating-room-platform-base";
+    const floatingPlatformTrim = roundedBox(room, [12.34, 0.07, 8.84], [0, -0.295, 0], "#171d25", 0.025, {
+      metalness: 0.58,
+      roughness: 0.32,
+    });
+    floatingPlatformTrim.name = "floating-room-platform-lower-trim";
     box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#111622", { metalness: 0.04, roughness: 0.94 });
     box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#0e1920", { metalness: 0.04, roughness: 0.92 });
     const rearBaseboard = roundedBox(room, [11.75, 0.16, 0.1], [0, 0.08, -4.16], "#26323b", 0.035, {
@@ -806,15 +818,6 @@ export default function InteractiveRoom() {
         );
       }
     });
-
-    const grid = new THREE.GridHelper(12, 24, 0x254a57, 0x15232b);
-    grid.position.y = 0.012;
-    const gridMaterials = Array.isArray(grid.material) ? grid.material : [grid.material];
-    gridMaterials.forEach((surface) => {
-      surface.transparent = true;
-      surface.opacity = 0.12;
-    });
-    room.add(grid);
 
     const desk = new THREE.Group();
     room.add(desk);
@@ -2744,7 +2747,7 @@ export default function InteractiveRoom() {
 
     scene.add(new THREE.HemisphereLight(0xb8deea, 0x12101b, 1.65));
     const cyanLight = new THREE.PointLight(0x77e7ff, 27, 10, 2);
-    cyanLight.position.set(-1.3, 3.3, -0.2);
+    cyanLight.position.set(-1.3, 3.3 + ROOM_ELEVATION, -0.2);
     cyanLight.castShadow = true;
     cyanLight.shadow.mapSize.set(highDetail ? 2048 : 1024, highDetail ? 2048 : 1024);
     cyanLight.shadow.bias = -0.00035;
@@ -2752,14 +2755,14 @@ export default function InteractiveRoom() {
     cyanLight.shadow.radius = highDetail ? 4 : 2;
     scene.add(cyanLight);
     const violetLight = new THREE.PointLight(0x9f91ff, 22, 9, 2);
-    violetLight.position.set(3.1, 3.8, 2.2);
+    violetLight.position.set(3.1, 3.8 + ROOM_ELEVATION, 2.2);
     scene.add(violetLight);
     const warmLight = new THREE.PointLight(0xffbd72, 14, 7, 2);
-    warmLight.position.set(-4.2, 2.8, 1.5);
+    warmLight.position.set(-4.2, 2.8 + ROOM_ELEVATION, 1.5);
     scene.add(warmLight);
     const studioFill = new THREE.DirectionalLight(0xdcecff, 1.25);
     studioFill.name = "room-studio-fill-light";
-    studioFill.position.set(5.5, 7.5, 5.2);
+    studioFill.position.set(5.5, 7.5 + ROOM_ELEVATION, 5.2);
     scene.add(studioFill);
 
     room.traverse((object) => {
@@ -2775,8 +2778,8 @@ export default function InteractiveRoom() {
     });
     room.updateMatrixWorld(true);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const overviewPosition = new THREE.Vector3(5.2, 4.3, 6.5);
-    const overviewTarget = new THREE.Vector3(0, 1.55, -0.7);
+    const overviewPosition = new THREE.Vector3(5.2, 4.3 + ROOM_ELEVATION, 6.5);
+    const overviewTarget = new THREE.Vector3(0, 1.55 + ROOM_ELEVATION, -0.7);
     const roomBaseRotation = -0.08;
     const pointerParallax = new THREE.Vector2();
     const pointerParallaxTarget = new THREE.Vector2();
@@ -3149,16 +3152,16 @@ export default function InteractiveRoom() {
       const phonePortrait = width <= 600 && height > width;
       const phoneLandscape = height <= 520 && width > height;
       if (phonePortrait) {
-        overviewPosition.set(4.55, 4.05, 7.7);
-        overviewTarget.set(-0.72, 1.5, -0.62);
+        overviewPosition.set(4.55, 4.05 + ROOM_ELEVATION, 7.7);
+        overviewTarget.set(-0.72, 1.5 + ROOM_ELEVATION, -0.62);
         camera.fov = 52;
       } else if (phoneLandscape) {
-        overviewPosition.set(5.2, 4.3, 7.35);
-        overviewTarget.set(-0.2, 1.55, -0.68);
+        overviewPosition.set(5.2, 4.3 + ROOM_ELEVATION, 7.35);
+        overviewTarget.set(-0.2, 1.55 + ROOM_ELEVATION, -0.68);
         camera.fov = 43;
       } else {
-        overviewPosition.set(5.2, 4.3, 6.5);
-        overviewTarget.set(0, 1.55, -0.7);
+        overviewPosition.set(5.2, 4.3 + ROOM_ELEVATION, 6.5);
+        overviewTarget.set(0, 1.55 + ROOM_ELEVATION, -0.7);
         camera.fov = 40;
       }
       camera.aspect = width / Math.max(height, 1);
@@ -3290,7 +3293,7 @@ export default function InteractiveRoom() {
           parallaxEase,
         );
         cyanLight.position.x = THREE.MathUtils.lerp(cyanLight.position.x, -1.3 + pointerParallax.x * 0.75, parallaxEase);
-        cyanLight.position.y = THREE.MathUtils.lerp(cyanLight.position.y, 3.3 + pointerParallax.y * 0.22, parallaxEase);
+        cyanLight.position.y = THREE.MathUtils.lerp(cyanLight.position.y, 3.3 + ROOM_ELEVATION + pointerParallax.y * 0.22, parallaxEase);
         violetLight.position.z = THREE.MathUtils.lerp(violetLight.position.z, 2.2 - pointerParallax.x * 0.45, parallaxEase);
       }
 

@@ -241,6 +241,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /Reflector/);
   assert.match(room, /out-of-bounds-reflective-surface/);
   assert.match(room, /out-of-bounds-reflection-tint/);
+  assert.match(room, /ROOM_ELEVATION = 0\.48/);
+  assert.match(room, /floating-room-platform-base/);
+  assert.match(room, /floating-room-platform-lower-trim/);
+  assert.doesNotMatch(room, /new THREE\.GridHelper/);
   assert.match(room, /reflectionResolution/);
   assert.match(room, /GLTFLoader/);
   assert.match(room, /loadStudioAsset/);

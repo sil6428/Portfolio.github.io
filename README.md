@@ -55,6 +55,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Raycast hover anticipation, a lightweight cyan silhouette border around the complete target, focused-object motion, and direct click or tap selection without floor circles
 - A persistent desktop side index for direct model navigation, with the compact INDEX menu retained for smaller screens
 - A performance-scaled reflective surface beyond the room floor, with a polished physical-material fallback on touch-first devices
+- A raised two-layer room platform with a visible air gap above the mirrored boundary, giving the lab a deliberate floating-diorama separation without the former floor grid
 - A lightweight target cursor and click-spark response influenced by React Bits, implemented locally and disabled for coarse pointers and reduced-motion visitors
 - An optional original in-scene object index that provides direct access without restoring the retired bottom directory
 - Image-based room lighting generated from Three.js `RoomEnvironment`, giving metal, glass, and clearcoat materials more natural depth without loading an external environment asset
