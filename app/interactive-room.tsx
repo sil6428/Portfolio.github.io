@@ -364,11 +364,11 @@ export default function InteractiveRoom() {
     const stage = host.closest(".room-stage") as HTMLElement | null;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x1a1712, 11.5, 24);
+    scene.fog = new THREE.Fog(0x18120d, 13.5, 27);
 
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
-    camera.position.set(6.4, 5.35, 8.25);
-    camera.lookAt(-1.15, 1.35, -0.72);
+    camera.position.set(6.1, 4.72, 9.15);
+    camera.lookAt(-1.28, 1.45, -0.82);
 
     const highDetail = window.matchMedia("(min-width: 901px) and (pointer: fine)").matches;
     const renderer = new THREE.WebGLRenderer({
@@ -377,7 +377,7 @@ export default function InteractiveRoom() {
       powerPreference: "high-performance",
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, highDetail ? 2 : 1.45));
-    renderer.setClearColor(0x1a1712, 1);
+    renderer.setClearColor(0x18120d, 1);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1;
@@ -401,7 +401,7 @@ export default function InteractiveRoom() {
     });
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 1.55, -0.7);
+    controls.target.set(-1.28, 1.45, -0.82);
     controls.enableDamping = true;
     controls.dampingFactor = 0.055;
     controls.enablePan = true;
@@ -427,9 +427,9 @@ export default function InteractiveRoom() {
 
     const room = new THREE.Group();
     room.name = "compact-cutaway-studio";
-    room.position.set(-1.6, 0.24, -0.1);
-    room.scale.setScalar(0.72);
-    room.rotation.y = -0.12;
+    room.position.set(-1.72, 0.28, -0.2);
+    room.scale.setScalar(0.78);
+    room.rotation.y = -0.065;
     scene.add(room);
 
     const reflectiveBoundaryGeometry = new THREE.PlaneGeometry(42, 42);
@@ -705,30 +705,94 @@ export default function InteractiveRoom() {
       );
     };
 
-    const roomPlatform = box(room, [12, 0.42, 8.5], [0, -0.21, 0], "#574532", {
+    const roomPlatform = box(room, [11.2, 0.42, 6.75], [0, -0.21, -0.02], "#574532", {
       metalness: 0.02,
       roughness: 0.88,
     });
     roomPlatform.name = "cutaway-room-platform";
     const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(12, 8.5),
-      material("#a47a49", { metalness: 0.01, roughness: 0.9 }),
+      new THREE.PlaneGeometry(11.2, 6.75),
+      material("#9a7146", { metalness: 0.01, roughness: 0.91 }),
     );
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     room.add(floor);
-    box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#d8c17f", { metalness: 0, roughness: 0.97 });
-    box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#c9b374", { metalness: 0, roughness: 0.97 });
-    const rearBaseboard = roundedBox(room, [11.75, 0.16, 0.1], [0, 0.08, -4.16], "#74645b", 0.035, {
+    box(room, [11.2, 4.65, 0.12], [0, 2.325, -3.395], "#c8a76f", { metalness: 0, roughness: 0.97 });
+    box(room, [0.12, 4.65, 6.75], [-5.55, 2.325, -0.02], "#b99766", { metalness: 0, roughness: 0.97 });
+    const rearBaseboard = roundedBox(room, [10.96, 0.16, 0.1], [0, 0.08, -3.31], "#6d5140", 0.035, {
       metalness: 0.08,
       roughness: 0.68,
     });
     rearBaseboard.name = "room-rear-baseboard";
-    const sideBaseboard = roundedBox(room, [0.1, 0.16, 8.25], [-5.86, 0.08, 0], "#74645b", 0.035, {
+    const sideBaseboard = roundedBox(room, [0.1, 0.16, 6.5], [-5.46, 0.08, -0.02], "#6d5140", 0.035, {
       metalness: 0.08,
       roughness: 0.68,
     });
     sideBaseboard.name = "room-side-baseboard";
+
+    // A large warm window anchors the lounge side of the room and breaks up
+    // the back wall in the same way the portfolio cover uses one clear focal
+    // element instead of many small decorations.
+    const studioWindow = new THREE.Group();
+    studioWindow.name = "warm-studio-window";
+    room.add(studioWindow);
+    const windowCenterX = -2.55;
+    const windowCenterY = 2.65;
+    const windowZ = -3.315;
+    const windowView = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.25, 1.52),
+      new THREE.MeshBasicMaterial({ color: "#253b46", toneMapped: false }),
+    );
+    windowView.position.set(windowCenterX, windowCenterY, windowZ + 0.012);
+    studioWindow.add(windowView);
+    const windowGlow = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.15, 1.42),
+      new THREE.MeshBasicMaterial({ color: "#e8ad67", transparent: true, opacity: 0.22, toneMapped: false }),
+    );
+    windowGlow.position.set(windowCenterX, windowCenterY, windowZ + 0.02);
+    studioWindow.add(windowGlow);
+    const skylineMaterial = material("#19272d", { roughness: 0.92 });
+    for (let building = 0; building < 8; building += 1) {
+      const width = 0.19 + (building % 3) * 0.045;
+      const height = 0.22 + ((building * 7) % 5) * 0.095;
+      const skyline = new THREE.Mesh(new THREE.BoxGeometry(width, height, 0.025), skylineMaterial);
+      skyline.position.set(windowCenterX - 0.92 + building * 0.27, windowCenterY - 0.72 + height / 2, windowZ + 0.035);
+      studioWindow.add(skyline);
+    }
+    for (const x of [-1.18, 1.18]) {
+      roundedBox(studioWindow, [0.11, 1.76, 0.11], [windowCenterX + x, windowCenterY, windowZ + 0.075], "#5f4434", 0.025, {
+        metalness: 0.04,
+        roughness: 0.78,
+      });
+    }
+    for (const y of [-0.88, 0.88]) {
+      roundedBox(studioWindow, [2.46, 0.11, 0.11], [windowCenterX, windowCenterY + y, windowZ + 0.075], "#5f4434", 0.025, {
+        metalness: 0.04,
+        roughness: 0.78,
+      });
+    }
+    box(studioWindow, [0.07, 1.55, 0.09], [windowCenterX, windowCenterY, windowZ + 0.085], "#6f5240", { roughness: 0.78 });
+    box(studioWindow, [2.28, 0.07, 0.09], [windowCenterX, windowCenterY, windowZ + 0.085], "#6f5240", { roughness: 0.78 });
+    const windowSill = roundedBox(studioWindow, [2.68, 0.13, 0.34], [windowCenterX, windowCenterY - 0.94, windowZ + 0.18], "#76533c", 0.035, {
+      metalness: 0.02,
+      roughness: 0.76,
+    });
+    windowSill.name = "studio-window-sill";
+    const windowLight = new THREE.PointLight(0xffc982, 7.5, 5.5, 2);
+    windowLight.position.set(windowCenterX, windowCenterY, -2.85);
+    studioWindow.add(windowLight);
+
+    const roomTopBeam = roundedBox(room, [11.28, 0.2, 0.2], [0, 4.7, -3.34], "#654631", 0.04, {
+      metalness: 0.02,
+      roughness: 0.8,
+    });
+    roomTopBeam.name = "cutaway-top-beam";
+    for (const x of [-5.48, 5.48]) {
+      roundedBox(room, [0.18, 4.82, 0.18], [x, 2.31, -3.31], "#654631", 0.035, {
+        metalness: 0.02,
+        roughness: 0.8,
+      });
+    }
 
     const wallDecor = new THREE.Group();
     wallDecor.name = "wall-decor-collection";
@@ -821,8 +885,9 @@ export default function InteractiveRoom() {
       }
     });
 
-    const grid = new THREE.GridHelper(12, 24, 0x6d5034, 0x6d5034);
+    const grid = new THREE.GridHelper(11.2, 22, 0x6d5034, 0x6d5034);
     grid.position.y = 0.012;
+    grid.position.z = -0.02;
     const gridMaterials = Array.isArray(grid.material) ? grid.material : [grid.material];
     gridMaterials.forEach((surface) => {
       surface.transparent = true;
@@ -865,11 +930,11 @@ export default function InteractiveRoom() {
     stringLights.name = "warm-string-lights";
     room.add(stringLights);
     const lightCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-5.25, 3.82, -4.1),
-      new THREE.Vector3(-2.9, 3.5, -4.1),
-      new THREE.Vector3(-0.3, 3.72, -4.1),
-      new THREE.Vector3(2.4, 3.42, -4.1),
-      new THREE.Vector3(4.45, 3.68, -4.1),
+      new THREE.Vector3(-5.05, 4.05, -3.27),
+      new THREE.Vector3(-2.85, 3.74, -3.27),
+      new THREE.Vector3(-0.55, 3.92, -3.27),
+      new THREE.Vector3(2.05, 3.66, -3.27),
+      new THREE.Vector3(4.85, 3.93, -3.27),
     ]);
     const lightCable = new THREE.Mesh(
       new THREE.TubeGeometry(lightCurve, 64, 0.016, 5, false),
@@ -888,8 +953,8 @@ export default function InteractiveRoom() {
     }
 
     const desk = new THREE.Group();
-    desk.position.set(1.25, 0.18, 0.02);
-    desk.scale.set(0.76, 0.82, 0.76);
+    desk.position.set(1.48, 0.18, 0.14);
+    desk.scale.set(0.63, 0.74, 0.63);
     room.add(desk);
     const deskTop = roundedBox(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#72503d", 0.07, {
       metalness: 0.08,
@@ -936,8 +1001,8 @@ export default function InteractiveRoom() {
 
     const workstation = new THREE.Group();
     workstation.name = "compact-desktop-pc-setup";
-    workstation.position.set(-0.25, 1.28, -3.08);
-    workstation.scale.setScalar(0.8);
+    workstation.position.set(0.08, 1.12, -2.68);
+    workstation.scale.setScalar(0.72);
     room.add(workstation);
     const keyboardDeck = roundedBox(workstation, [2.72, 0.08, 0.78], [-0.2, 0.07, 0.4], "#151e24", 0.035, {
       metalness: 0.55,
@@ -1283,8 +1348,8 @@ export default function InteractiveRoom() {
     workstation.add(pcPower);
 
     const rack = hotspot("rack", "PROXMOX SERVER RACK");
-    rack.position.set(4.05, 0, -3.42);
-    rack.scale.setScalar(0.48);
+    rack.position.set(4.55, 0, -2.93);
+    rack.scale.setScalar(0.35);
     const rackBase = roundedBox(rack, [1.9, 0.16, 1.46], [0, 0.1, 0], "#151d24", 0.045, {
       metalness: 0.7,
       roughness: 0.36,
@@ -1396,8 +1461,8 @@ export default function InteractiveRoom() {
     serverBeacon.add(serverBeaconLight);
 
     const printer = hotspot("printer", "3D PRINTER");
-    printer.position.set(2.42, 1.28, -3.12);
-    printer.scale.setScalar(0.6);
+    printer.position.set(2.68, 1.04, -2.73);
+    printer.scale.setScalar(0.46);
     const printerBase = roundedBox(printer, [2.05, 0.14, 1.7], [0, 0.08, 0], "#222d34", 0.055, {
       metalness: 0.55,
       roughness: 0.38,
@@ -2016,7 +2081,7 @@ export default function InteractiveRoom() {
 
     const bookshelf = new THREE.Group();
     bookshelf.name = "built-in-stylized-bookshelf";
-    bookshelf.position.set(-5.4, 0, 0.85);
+    bookshelf.position.set(-5.02, 0, 0.35);
     room.add(bookshelf);
     box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#5b4336", { metalness: 0.02, roughness: 0.84 });
     for (const z of [-1.5, 1.5]) {
@@ -2036,14 +2101,14 @@ export default function InteractiveRoom() {
         );
         shelfFastener.name = "shelf-fastener";
         shelfFastener.rotation.z = Math.PI / 2;
-        shelfFastener.position.set(-4.95, y, 0.85 + z);
+        shelfFastener.position.set(-4.57, y, 0.35 + z);
         room.add(shelfFastener);
       }
     }
     const shelfSwordBaseY = 0.38;
     const shelfSword = easterHotspot("relic", "TOUCH THE PRINTED KATANA");
     shelfSword.name = "bottom-shelf-printed-katana";
-    shelfSword.position.set(-4.98, shelfSwordBaseY, 0.72);
+    shelfSword.position.set(-4.6, shelfSwordBaseY, 0.22);
     const shelfSwordBladeMaterial = material("#f1f2ed", {
       emissive: "#30353a",
       emissiveIntensity: 0.2,
@@ -2159,7 +2224,7 @@ export default function InteractiveRoom() {
     shelfPommel.position.set(0, 0.025, -1.055);
     shelfSword.add(shelfPommel);
     for (const z of [-0.3, 0.9]) {
-      box(room, [0.24, 0.08, 0.1], [-5.02, 0.27, 0.72 + z], "#1b252d", {
+      box(room, [0.24, 0.08, 0.1], [-4.64, 0.27, 0.22 + z], "#1b252d", {
         metalness: 0.58,
         roughness: 0.38,
       });
@@ -2169,7 +2234,7 @@ export default function InteractiveRoom() {
     shelfSword.add(shelfSwordLight);
 
     const books = hotspot("books", "READING SHELF");
-    books.position.set(-4.99, 1.3, 1.08);
+    books.position.set(-4.61, 1.3, 0.58);
     const bookColors = ["#4d6170", "#7965be", "#9a6c45", "#355968", "#a86a65", "#65518e"];
     const bookWidths = [0.21, 0.24, 0.19, 0.28, 0.22, 0.25];
     let bookZ = -1.04;
@@ -2217,7 +2282,7 @@ export default function InteractiveRoom() {
     box(books, [0.02, 0.11, 0.72], [0.23, 0.08, 0.9], "#d8d1bb", { roughness: 1 });
 
     const cameraGroup = hotspot("camera", "PHOTOGRAPHY");
-    cameraGroup.position.set(-5.4, 2.8, 0.34);
+    cameraGroup.position.set(-5.02, 2.8, -0.16);
     const cameraBody = roundedBox(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", 0.09, {
       metalness: 0.7,
       roughness: 0.34,
@@ -2362,24 +2427,24 @@ export default function InteractiveRoom() {
     loadStudioAsset(
       "/models/polyhaven/modern_arm_chair_01/modern_arm_chair_01_1k.gltf",
       room,
-      [1.42, 1.55, 1.42],
-      [2.92, 0.72, 1.18],
-      -0.52,
+      [1.48, 1.56, 1.48],
+      [0.82, 0.72, -0.35],
+      -0.04,
       { palette: ["#789887", "#587466", "#343a35"], roughness: 0.86 },
     );
     loadStudioAsset(
       "/models/polyhaven/side_table_01/side_table_01_1k.gltf",
       room,
-      [0.86, 0.72, 0.86],
-      [4.05, 0.34, 0.72],
-      0.28,
+      [1.34, 0.54, 1.34],
+      [-1.55, 0.26, 1.05],
+      0.08,
       { palette: ["#775746", "#403938", "#9a7558"], roughness: 0.82 },
     );
     loadStudioAsset(
       "/models/polyhaven/potted_plant_04/potted_plant_04_1k.gltf",
       room,
-      [0.46, 0.5, 0.46],
-      [4.05, 0.96, 0.72],
+      [0.92, 1.42, 0.92],
+      [-1.45, 0.7, -2.37],
       -0.25,
       { palette: ["#4e705b", "#315443", "#a36d4a"], roughness: 0.88 },
     );
@@ -2387,16 +2452,17 @@ export default function InteractiveRoom() {
       "/models/polyhaven/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf",
       desk,
       [0.76, 1.02, 0.76],
-      [-4.15, 1.98, -3.2],
+      [-4.05, 2.0, -3.05],
       0.62,
       { palette: ["#d6814d", "#313940", "#e6b263"], metalness: 0.18, roughness: 0.64 },
     );
 
     const racket = hotspot("racket", "BADMINTON");
-    racket.position.set(-4.35, 3.52, -4.08);
+    racket.position.set(3.73, 3.18, -3.25);
+    racket.scale.setScalar(0.72);
     racket.rotation.z = -0.14;
     const racketMount = new THREE.Group();
-    racketMount.position.set(-4.5, 2.42, -4.16);
+    racketMount.position.set(3.62, 2.42, -3.3);
     room.add(racketMount);
     const racketWallPlate = roundedBox(racketMount, [0.4, 0.12, 0.06], [0, 0, 0], "#303a46", 0.025, {
       metalness: 0.62,
@@ -2826,28 +2892,6 @@ export default function InteractiveRoom() {
     floorRug.position.set(-3.18, 0.022, 0.34);
     room.add(floorRug);
     box(room, [3.32, 0.018, 0.035], [-3.18, 0.05, 0.34], "#b6c6ad", { roughness: 0.95 });
-    const ceilingPanelColors = ["#77e7ff", "#9f91ff", "#ffbd72", "#68e0ae"];
-    for (let panel = 0; panel < 4; panel += 1) {
-      box(room, [1.85, 0.055, 0.08], [-3.6 + panel * 2.35, 4.42, -4.34], ceilingPanelColors[panel], {
-        emissive: ceilingPanelColors[panel],
-        emissiveIntensity: 0.6,
-        metalness: 0.5,
-      });
-    }
-    for (let accent = 0; accent < 3; accent += 1) {
-      box(room, [0.32, 1.2 + accent * 0.18, 0.035], [2.8 + accent * 0.52, 3.15, -4.17], ceilingPanelColors[accent], {
-        emissive: ceilingPanelColors[accent],
-        emissiveIntensity: 0.46,
-        roughness: 0.4,
-      });
-    }
-    const ceilingLight = box(room, [3.6, 0.06, 0.5], [0.7, 4.72, -1.1], "#b8f6ff", {
-      emissive: "#77e7ff",
-      emissiveIntensity: 1.2,
-      roughness: 0.25,
-    });
-    ceilingLight.rotation.x = 0.02;
-
     scene.add(new THREE.HemisphereLight(0xffefc7, 0x4a3d2c, 1.65));
     const cyanLight = new THREE.PointLight(0xffdba3, 19, 10, 2);
     cyanLight.position.set(-1.3, 3.3, -0.2);
@@ -2881,9 +2925,9 @@ export default function InteractiveRoom() {
     });
     room.updateMatrixWorld(true);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const overviewPosition = new THREE.Vector3(6.4, 5.35, 8.25);
-    const overviewTarget = new THREE.Vector3(-1.15, 1.35, -0.72);
-    const roomBaseRotation = -0.12;
+    const overviewPosition = new THREE.Vector3(6.1, 4.72, 9.15);
+    const overviewTarget = new THREE.Vector3(-1.28, 1.45, -0.82);
+    const roomBaseRotation = -0.065;
     const pointerParallax = new THREE.Vector2();
     const pointerParallaxTarget = new THREE.Vector2();
     let focusedKey: string | null = null;
@@ -3250,16 +3294,16 @@ export default function InteractiveRoom() {
       const phonePortrait = width <= 600 && height > width;
       const phoneLandscape = height <= 520 && width > height;
       if (phonePortrait) {
-        overviewPosition.set(7.8, 6.8, 13.2);
-        overviewTarget.set(-1.3, 1.3, -0.7);
-        camera.fov = 58;
+        overviewPosition.set(8.9, 7.1, 16.8);
+        overviewTarget.set(-1.5, 1.18, -0.7);
+        camera.fov = 60;
       } else if (phoneLandscape) {
-        overviewPosition.set(5.2, 4.3, 7.35);
-        overviewTarget.set(-0.2, 1.55, -0.68);
+        overviewPosition.set(5.75, 4.35, 8.25);
+        overviewTarget.set(-0.82, 1.5, -0.74);
         camera.fov = 43;
       } else {
-        overviewPosition.set(6.4, 5.35, 8.25);
-        overviewTarget.set(-1.15, 1.35, -0.72);
+        overviewPosition.set(6.1, 4.72, 9.15);
+        overviewTarget.set(-1.28, 1.45, -0.82);
         camera.fov = 42;
       }
       camera.aspect = width / Math.max(height, 1);
@@ -3322,8 +3366,8 @@ export default function InteractiveRoom() {
         cyanLight.color.set(paletteActive ? "#b8ff6a" : "#ffdba3");
         violetLight.color.set(paletteActive ? "#ff83bd" : "#b7c78f");
         warmLight.color.set(paletteActive ? "#ffd76d" : "#ffbd72");
-        renderer.setClearColor(paletteActive ? 0x162217 : 0x1a1712, 1);
-        if (scene.fog) scene.fog.color.set(paletteActive ? "#162217" : "#1a1712");
+        renderer.setClearColor(paletteActive ? 0x162217 : 0x18120d, 1);
+        if (scene.fog) scene.fog.color.set(paletteActive ? "#162217" : "#18120d");
       }
       const relicActive = timestamp < relicSecretUntil;
       const signalActive = timestamp < signalSecretUntil;
@@ -3397,10 +3441,12 @@ export default function InteractiveRoom() {
 
       const scaleEase = reducedMotion ? 1 : 1 - Math.pow(0.00015, delta);
       for (const object of clickable) {
+        const baseScale = Number(object.userData.baseScale ?? object.scale.x);
+        object.userData.baseScale = baseScale;
         const isHovered = object === hovered;
         const isFocused = object.userData.key === focusedKey;
         const breathing = isFocused && !reducedMotion ? Math.sin(elapsed * 2.1) * 0.006 : 0;
-        const targetScale = (isHovered ? 1.045 : isFocused ? 1.018 : 1) + breathing;
+        const targetScale = baseScale * ((isHovered ? 1.045 : isFocused ? 1.018 : 1) + breathing);
         const nextScale = THREE.MathUtils.lerp(object.scale.x, targetScale, scaleEase);
         object.scale.setScalar(nextScale);
       }

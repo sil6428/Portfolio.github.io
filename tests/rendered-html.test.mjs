@@ -257,8 +257,11 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /cutaway-room-platform/);
   assert.match(room, /left-lounge-daybed/);
   assert.match(room, /warm-string-lights/);
-  assert.match(room, /#d8c17f/);
-  assert.match(room, /#c9b374/);
+  assert.match(room, /#c8a76f/);
+  assert.match(room, /#b99766/);
+  assert.match(room, /warm-studio-window/);
+  assert.match(room, /studio-window-sill/);
+  assert.match(room, /baseScale/);
   assert.match(room, /ambient-signal-motes/);
   assert.match(room, /THREE\.Points/);
   assert.match(room, /room-target-cursor/);
@@ -372,9 +375,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /printableParts/);
   assert.match(room, /desk-cyan-edge/);
   assert.match(room, /racketMount/);
-  assert.match(room, /racketMount\.position\.set\(-4\.5, 2\.42, -4\.16\)/);
-  assert.match(room, /racket\.position\.set\(-4\.35, 3\.52, -4\.08\)/);
-  assert.match(room, /cameraGroup\.position\.set\(-5\.4, 2\.8, 0\.34\)/);
+  assert.match(room, /racketMount\.position\.set\(3\.62, 2\.42, -3\.3\)/);
+  assert.match(room, /racket\.position\.set\(3\.73, 3\.18, -3\.25\)/);
+  assert.match(room, /cameraGroup\.position\.set\(-5\.02, 2\.8, -0\.16\)/);
   assert.match(room, /camera-beveled-body/);
   assert.match(room, /camera-focus-ring/);
   assert.match(room, /camera-rear-lcd/);
@@ -382,7 +385,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /camera-lens-aperture/);
   assert.match(room, /camera-lens-glint/);
   assert.match(room, /camera-hot-shoe/);
-  assert.match(room, /ceilingPanelColors/);
+  assert.match(room, /cutaway-top-beam/);
   assert.doesNotMatch(room, /let brace/);
   assert.match(room, /PRINT_DURATION_MS = 180_000/);
   assert.match(room, /drawPrinterDisplay/);

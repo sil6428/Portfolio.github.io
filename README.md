@@ -59,6 +59,9 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - An optional original in-scene object index that provides direct access without restoring the retired bottom directory
 - Image-based room lighting generated from Three.js `RoomEnvironment`, giving metal, glass, and clearcoat materials more natural depth without loading an external environment asset
 - A compact warm creative-studio redesign with ochre walls, wood flooring, a left lounge and black cat, a right workstation, string lights, and restrained amber, sage, and technical accents
+- A cover-image-led three-zone layout that keeps the lounge, workstation, and maker equipment at believable relative scales instead of scattering them across an oversized floor
+- A framed evening window with a subtle skyline, sill, crossbars, and warm room light, plus simplified architectural beams that make the cutaway read as one finished room
+- Corrected selectable-object scaling so the server rack, 3D printer, racket, and cat retain their authored sizes while still responding to hover and focus
 - A scene-loading gate that keeps incomplete geometry and shader compilation out of view until all five external studio assets are ready
 - Five locally hosted 1K glTF models from Poly Haven for the camera, armchair, side table, plant, and desk lamp. Their geometry is re-shaded with the room's flat, limited-color material system so external and custom objects share one visual language. All five are released under CC0 and documented in [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md)
 - A custom fitted bookshelf replaces the mismatched external shelf model and keeps the books, camera, racket, and printed katana aligned with their supports
