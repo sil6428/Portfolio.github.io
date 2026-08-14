@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import DesktopOs from "./desktop-os";
 import { playSiteSfx } from "./site-sfx";
 
@@ -248,8 +249,8 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "Inspiration file",
     label: "CREDITS / WEB INSPIRATION",
     title: "Sites that shaped the lab",
-    summary: "Six references helped set the standard for the room, its rendering, feedback, camera movement, object index, and desktop computer interface.",
-    details: ["Interactive 3D", "Environment lighting", "Efficient particles", "Targeted feedback", "Room index", "Original implementation"],
+    summary: "Nine references helped set the standard for the room, its rendering, interactions, desktop interface, and licensed 3D asset direction.",
+    details: ["Interactive 3D", "Environment lighting", "CC0 assets", "Targeted feedback", "Room index", "Original implementation"],
     sections: [
       {
         heading: "Bruno Simon",
@@ -275,6 +276,18 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         heading: "Three.js",
         body: "The official Three.js documentation and examples informed the room's OrbitControls, raycast selection, physical materials, image-based environment lighting, and lightweight ambient point field.",
       },
+      {
+        heading: "Three.js Resources",
+        body: "Three.js Resources was used as a directory for locating reputable model libraries and evaluating formats, download terms, and sources before adding any external asset.",
+      },
+      {
+        heading: "Poly Haven",
+        body: "Poly Haven supplied the downloadable 1K glTF camera, shelf, chair, table, plant, and desk-lamp models. Every selected asset is released under CC0 and its author is recorded in THIRD_PARTY_ASSETS.md.",
+      },
+      {
+        heading: "Sketchfab room reference",
+        body: "The linked Project room by abhayexe was used only as visual direction for a warmer, brighter creative workspace. It is not downloadable and no geometry, textures, or code were copied from it.",
+      },
     ],
     links: [
       { label: "Visit Bruno Simon", href: "https://bruno-simon.com/" },
@@ -283,6 +296,9 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       { label: "Visit React Bits", href: "https://reactbits.dev/get-started/introduction" },
       { label: "Visit Rachel Wei", href: "https://rachelqrwei.ca/use" },
       { label: "Visit Three.js", href: "https://threejs.org/" },
+      { label: "Visit Three.js Resources", href: "https://threejsresources.com/category/models" },
+      { label: "Visit Poly Haven", href: "https://polyhaven.com/" },
+      { label: "View the Sketchfab reference", href: "https://sketchfab.com/3d-models/project-793e99898ff14f2a89c73a3ccb5d7d10" },
     ],
     cameraOffset: [0, 0.1, 3.05],
     targetOffset: [0, 0, 0],
@@ -336,7 +352,7 @@ export default function InteractiveRoom() {
     const stage = host.closest(".room-stage") as HTMLElement | null;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x080a0f, 9, 19);
+    scene.fog = new THREE.Fog(0x302a32, 10.5, 21);
 
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
     camera.position.set(5.2, 4.3, 6.5);
@@ -349,10 +365,10 @@ export default function InteractiveRoom() {
       powerPreference: "high-performance",
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, highDetail ? 2 : 1.45));
-    renderer.setClearColor(0x080a0f, 0.82);
+    renderer.setClearColor(0x211d25, 0.9);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 1.16;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.domElement.setAttribute("aria-hidden", "true");
@@ -362,7 +378,7 @@ export default function InteractiveRoom() {
     const lightingEnvironment = new RoomEnvironment();
     const environmentRenderTarget = pmremGenerator.fromScene(lightingEnvironment, 0.04);
     scene.environment = environmentRenderTarget.texture;
-    scene.environmentIntensity = highDetail ? 0.42 : 0.32;
+    scene.environmentIntensity = highDetail ? 0.58 : 0.42;
     pmremGenerator.dispose();
     lightingEnvironment.traverse((object) => {
       if (!(object instanceof THREE.Mesh)) return;
@@ -535,23 +551,91 @@ export default function InteractiveRoom() {
       return group;
     };
 
+    const gltfLoader = new GLTFLoader();
+    const loadedStudioTextures = new Set<THREE.Texture>();
+    let roomDisposed = false;
+    const disposeLoadedRoot = (root: THREE.Object3D) => {
+      root.traverse((object) => {
+        if (!(object instanceof THREE.Mesh)) return;
+        object.geometry.dispose();
+        const surfaces = Array.isArray(object.material) ? object.material : [object.material];
+        surfaces.forEach((surface) => {
+          Object.values(surface).forEach((value) => {
+            if (value instanceof THREE.Texture) value.dispose();
+          });
+          surface.dispose();
+        });
+      });
+    };
+    const loadStudioAsset = (
+      url: string,
+      parent: THREE.Object3D,
+      targetSize: [number, number, number],
+      targetCenter: [number, number, number],
+      rotationY = 0,
+      onReady?: (model: THREE.Object3D) => void,
+    ) => {
+      gltfLoader.load(
+        url,
+        ({ scene: model }) => {
+          if (roomDisposed) {
+            disposeLoadedRoot(model);
+            return;
+          }
+          model.name = `cc0-studio-asset-${url.split("/").at(-1)?.replace("_1k.gltf", "") ?? "model"}`;
+          model.rotation.y = rotationY;
+          model.updateMatrixWorld(true);
+          const initialBounds = new THREE.Box3().setFromObject(model);
+          const initialSize = initialBounds.getSize(new THREE.Vector3());
+          const fit = Math.min(
+            targetSize[0] / Math.max(initialSize.x, 0.001),
+            targetSize[1] / Math.max(initialSize.y, 0.001),
+            targetSize[2] / Math.max(initialSize.z, 0.001),
+          );
+          model.scale.setScalar(fit);
+          model.updateMatrixWorld(true);
+          const fittedCenter = new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3());
+          model.position.add(new THREE.Vector3(...targetCenter).sub(fittedCenter));
+          const maxAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+          model.traverse((object) => {
+            if (!(object instanceof THREE.Mesh)) return;
+            object.castShadow = true;
+            object.receiveShadow = true;
+            const surfaces = Array.isArray(object.material) ? object.material : [object.material];
+            surfaces.forEach((surface) => {
+              if (surface instanceof THREE.MeshStandardMaterial) surface.envMapIntensity = 0.72;
+              Object.values(surface).forEach((value) => {
+                if (!(value instanceof THREE.Texture)) return;
+                value.anisotropy = maxAnisotropy;
+                loadedStudioTextures.add(value);
+              });
+            });
+          });
+          parent.add(model);
+          onReady?.(model);
+        },
+        undefined,
+        (error) => console.warn(`Unable to load studio asset: ${url}`, error),
+      );
+    };
+
     const floor = new THREE.Mesh(
       new THREE.PlaneGeometry(12, 8.5),
-      material("#111a24", { metalness: 0.05, roughness: 0.95 }),
+      material("#8b684f", { metalness: 0.02, roughness: 0.82 }),
     );
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     room.add(floor);
-    box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#111622");
-    box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#0e1920");
-    const rearBaseboard = roundedBox(room, [11.75, 0.16, 0.1], [0, 0.08, -4.16], "#26323b", 0.035, {
-      metalness: 0.4,
-      roughness: 0.46,
+    box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#d8cbb8", { metalness: 0, roughness: 0.96 });
+    box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#c4d3ce", { metalness: 0, roughness: 0.94 });
+    const rearBaseboard = roundedBox(room, [11.75, 0.16, 0.1], [0, 0.08, -4.16], "#74645b", 0.035, {
+      metalness: 0.08,
+      roughness: 0.68,
     });
     rearBaseboard.name = "room-rear-baseboard";
-    const sideBaseboard = roundedBox(room, [0.1, 0.16, 8.25], [-5.86, 0.08, 0], "#26323b", 0.035, {
-      metalness: 0.4,
-      roughness: 0.46,
+    const sideBaseboard = roundedBox(room, [0.1, 0.16, 8.25], [-5.86, 0.08, 0], "#74645b", 0.035, {
+      metalness: 0.08,
+      roughness: 0.68,
     });
     sideBaseboard.name = "room-side-baseboard";
 
@@ -648,13 +732,18 @@ export default function InteractiveRoom() {
 
     const grid = new THREE.GridHelper(12, 24, 0x254a57, 0x15232b);
     grid.position.y = 0.012;
+    const gridMaterials = Array.isArray(grid.material) ? grid.material : [grid.material];
+    gridMaterials.forEach((surface) => {
+      surface.transparent = true;
+      surface.opacity = 0.12;
+    });
     room.add(grid);
 
     const desk = new THREE.Group();
     room.add(desk);
-    const deskTop = roundedBox(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#30364c", 0.07, {
-      metalness: 0.45,
-      roughness: 0.48,
+    const deskTop = roundedBox(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#72503d", 0.07, {
+      metalness: 0.08,
+      roughness: 0.66,
     });
     deskTop.name = "beveled-desk-top";
     const deskGrommet = new THREE.Mesh(
@@ -1785,6 +1874,7 @@ export default function InteractiveRoom() {
         roughness: 0.54,
       });
     }
+    const proceduralBookshelfParts = [...bookshelf.children];
     for (const y of [0.2, 1.2, 2.38]) {
       for (const z of [-1.36, 1.36]) {
         const shelfFastener = new THREE.Mesh(
@@ -1797,6 +1887,19 @@ export default function InteractiveRoom() {
         room.add(shelfFastener);
       }
     }
+    loadStudioAsset(
+      "/models/polyhaven/wooden_display_shelves_01/wooden_display_shelves_01_1k.gltf",
+      bookshelf,
+      [0.82, 2.48, 3.18],
+      [0.1, 1.24, 0],
+      Math.PI / 2,
+      () => {
+        proceduralBookshelfParts.forEach((part) => { part.visible = false; });
+        room.children
+          .filter((child) => child.name === "shelf-fastener")
+          .forEach((fastener) => { fastener.visible = false; });
+      },
+    );
     const shelfSwordBaseY = 0.38;
     const shelfSword = easterHotspot("relic", "TOUCH THE PRINTED KATANA");
     shelfSword.name = "bottom-shelf-printed-katana";
@@ -2105,6 +2208,44 @@ export default function InteractiveRoom() {
       material("#202629", { roughness: 0.95 }),
     );
     cameraGroup.add(strap);
+    const proceduralCameraParts = [...cameraGroup.children];
+    loadStudioAsset(
+      "/models/polyhaven/Camera_01/Camera_01_1k.gltf",
+      cameraGroup,
+      [0.92, 0.72, 1.08],
+      [0, 0, 0],
+      Math.PI / 2,
+      () => proceduralCameraParts.forEach((part) => { part.visible = false; }),
+    );
+
+    loadStudioAsset(
+      "/models/polyhaven/modern_arm_chair_01/modern_arm_chair_01_1k.gltf",
+      room,
+      [1.42, 1.55, 1.42],
+      [3.72, 0.78, 1.72],
+      -0.74,
+    );
+    loadStudioAsset(
+      "/models/polyhaven/side_table_01/side_table_01_1k.gltf",
+      room,
+      [0.86, 0.72, 0.86],
+      [4.7, 0.36, 0.42],
+      0.28,
+    );
+    loadStudioAsset(
+      "/models/polyhaven/potted_plant_04/potted_plant_04_1k.gltf",
+      room,
+      [0.46, 0.5, 0.46],
+      [4.7, 1.01, 0.42],
+      -0.25,
+    );
+    loadStudioAsset(
+      "/models/polyhaven/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf",
+      desk,
+      [0.76, 1.02, 0.76],
+      [-4.15, 1.98, -3.2],
+      0.62,
+    );
 
     const racket = hotspot("racket", "BADMINTON");
     racket.position.set(-4.35, 3.52, -4.08);
@@ -2601,8 +2742,8 @@ export default function InteractiveRoom() {
     }
     addInteractionMarker("__desktop", desktopPowerTarget, cyan);
 
-    scene.add(new THREE.HemisphereLight(0xb8deea, 0x12101b, 1.65));
-    const cyanLight = new THREE.PointLight(0x77e7ff, 27, 10, 2);
+    scene.add(new THREE.HemisphereLight(0xfff0dc, 0x49404a, 2.05));
+    const cyanLight = new THREE.PointLight(0x77e7ff, 19, 10, 2);
     cyanLight.position.set(-1.3, 3.3, -0.2);
     cyanLight.castShadow = true;
     cyanLight.shadow.mapSize.set(highDetail ? 2048 : 1024, highDetail ? 2048 : 1024);
@@ -2610,13 +2751,13 @@ export default function InteractiveRoom() {
     cyanLight.shadow.normalBias = 0.035;
     cyanLight.shadow.radius = highDetail ? 4 : 2;
     scene.add(cyanLight);
-    const violetLight = new THREE.PointLight(0x9f91ff, 22, 9, 2);
+    const violetLight = new THREE.PointLight(0x9f91ff, 15, 9, 2);
     violetLight.position.set(3.1, 3.8, 2.2);
     scene.add(violetLight);
-    const warmLight = new THREE.PointLight(0xffbd72, 14, 7, 2);
+    const warmLight = new THREE.PointLight(0xffbd72, 21, 8, 2);
     warmLight.position.set(-4.2, 2.8, 1.5);
     scene.add(warmLight);
-    const studioFill = new THREE.DirectionalLight(0xdcecff, 1.25);
+    const studioFill = new THREE.DirectionalLight(0xffead5, 1.72);
     studioFill.name = "room-studio-fill-light";
     studioFill.position.set(5.5, 7.5, 5.2);
     scene.add(studioFill);
@@ -3168,6 +3309,7 @@ export default function InteractiveRoom() {
     render();
 
     return () => {
+      roomDisposed = true;
       window.cancelAnimationFrame(frame);
       resizeObserver.disconnect();
       controls.removeEventListener("start", markCameraExploring);
@@ -3200,6 +3342,7 @@ export default function InteractiveRoom() {
       printerDisplayTexture.dispose();
       signalMoteGeometry.dispose();
       signalMoteMaterial.dispose();
+      loadedStudioTextures.forEach((texture) => texture.dispose());
       environmentRenderTarget.dispose();
       renderer.dispose();
       renderer.domElement.remove();

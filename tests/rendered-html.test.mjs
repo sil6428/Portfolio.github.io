@@ -210,6 +210,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   const desktopOs = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../app/desktop-os.tsx", import.meta.url), "utf8"),
   );
+  const assetCredits = await import("node:fs/promises").then(({ readFile }) =>
+    readFile(new URL("../THIRD_PARTY_ASSETS.md", import.meta.url), "utf8"),
+  );
   assert.match(room, /OrbitControls/);
   assert.match(room, /RoundedBoxGeometry/);
   assert.match(room, /MeshPhysicalMaterial/);
@@ -229,6 +232,16 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /https:\/\/rachelqrwei\.ca\/use/);
   assert.match(room, /https:\/\/threejs\.org\//);
   assert.match(room, /RoomEnvironment/);
+  assert.match(room, /GLTFLoader/);
+  assert.match(room, /loadStudioAsset/);
+  assert.match(room, /wooden_display_shelves_01_1k\.gltf/);
+  assert.match(room, /Camera_01_1k\.gltf/);
+  assert.match(room, /modern_arm_chair_01_1k\.gltf/);
+  assert.match(room, /side_table_01_1k\.gltf/);
+  assert.match(room, /potted_plant_04_1k\.gltf/);
+  assert.match(room, /desk_lamp_arm_01_1k\.gltf/);
+  assert.match(room, /#d8cbb8/);
+  assert.match(room, /#c4d3ce/);
   assert.match(room, /ambient-signal-motes/);
   assert.match(room, /THREE\.Points/);
   assert.match(room, /room-target-cursor/);
@@ -461,6 +474,15 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /React Bits\.url/);
   assert.match(desktopOs, /Rachel Wei\.url/);
   assert.match(desktopOs, /Three\.js\.url/);
+  assert.match(desktopOs, /Three\.js Resources\.url/);
+  assert.match(desktopOs, /Poly Haven\.url/);
+  assert.match(desktopOs, /Studio Reference\.url/);
+  assert.match(assetCredits, /Creative Commons CC0 1\.0 Universal/);
+  assert.match(assetCredits, /Rajil Jose Macatangay/);
+  assert.match(assetCredits, /Vibrant Nordic/);
+  assert.match(assetCredits, /James Ray Cock/);
+  assert.match(assetCredits, /Yann Kervran and Kuutti Siitonen/);
+  assert.match(assetCredits, /not downloadable/);
   assert.match(desktopOs, /Archtech\.project/);
   assert.match(desktopOs, /SSIK\.website/);
   assert.match(desktopOs, /Password Manager\.py/);

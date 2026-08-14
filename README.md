@@ -1,6 +1,6 @@
 # Affan Shaikh Portfolio
 
-A dark, multi-page personal portfolio for Affan Shaikh, a Networking and Cybersecurity student at Ontario Tech University.
+An interactive 3D personal portfolio for Affan Shaikh, a Networking and Cybersecurity student at Ontario Tech University.
 
 [View the live portfolio](https://affan-shaikh-portfolio.sil6428-archtech.workers.dev)
 
@@ -48,7 +48,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - One computer interaction marker replaces the retired cluster of six overlapping desktop-file markers
 - A continuous boot handoff keeps the monitor on its completed loading frame until the current AFFAN_OS interface is mounted, preventing the retired desktop from flashing between states
 - Keyboard-friendly buttons, focus management, live announcements, Escape behavior, readable mobile windows, and a screen-reader power control
-- An Inspiration file that credits Bruno Simon, Ida's Gameboy, Jesse Zhou, React Bits, Rachel Wei, and Three.js, with direct links and notes on what each source influenced
+- An Inspiration file that credits the interaction, interface, and asset references, with direct links and notes on what each source influenced
 - Dark retro monitor interface with the reference-inspired desktop layout, cyan grid, outlined folders, and taskbar
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
@@ -56,6 +56,8 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A lightweight target cursor and click-spark response influenced by React Bits, implemented locally and disabled for coarse pointers and reduced-motion visitors
 - An optional in-scene object index influenced by Rachel Wei's room portfolio, providing direct access without restoring the retired bottom directory
 - Image-based room lighting generated from Three.js `RoomEnvironment`, giving metal, glass, and clearcoat materials more natural depth without loading an external environment asset
+- A warmer creative-studio redesign with cream and sage walls, a walnut desk and floor, balanced practical lighting, and retained cyan, violet, and amber technical accents
+- Six locally hosted 1K PBR glTF models from Poly Haven for the camera, display shelf, armchair, side table, plant, and desk lamp, all released under CC0 and documented in [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md)
 - A deterministic, GPU-friendly Three.js `Points` field that adds subtle cyan, violet, and amber signal motes with fewer particles on touch-first devices
 - Device-local discovery progress that marks each inspected station without creating an account
 - Ambient systems including a synchronized printer carriage and nozzle, moving 3D cat tail, animated yarn ball, pulsing lights, and responsive interaction markers
@@ -73,7 +75,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Tighter room boundaries, a more centered overview, and reduced close-up camera offset
 - Brighter ambient lighting with cyan, violet, amber, and mint accents across the desk, rug, shelf, and wall
 - Removed the front shelf braces that crossed through the book models
-- Refined procedural models for the desktop PC, server rack, 3D printer, books, camera, badminton racket, room, and detailed 3D black cat with a bandana, tag, yarn ball, toy mouse, and water bowl
+- Refined custom models for the desktop PC, server rack, 3D printer, books, badminton racket, room, and detailed 3D black cat with a bandana, tag, yarn ball, toy mouse, and water bowl
 - High-detail geometry pass with softened edges, improved materials, modeled hardware, and object-specific details while retaining a performance-conscious procedural scene
 - Beveled monitor, keyboard, mouse, and glass-sided PC tower with visible motherboard traces, internal lighting, cooling rings, webcam, and individual rounded keycaps
 - Rear-mounted monitor support with a shortened stand and hinge that stop at the lower bezel without crossing the display
@@ -123,9 +125,9 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 
 ## Interaction references
 
-[Ida's Gameboy](https://idas-gameboy.netlify.app/) and [Jesse's Ramen](https://www.jesse-zhou.com/) informed the scene-first direction, subtle pointer response, and fluid transitions between a shared 3D world and its interface. [Bruno Simon's portfolio](https://bruno-simon.com/) informed an earlier game-control experiment, which remains preserved only on the backup branch `backup/rover-world-v6-2026-07-29`. [React Bits](https://reactbits.dev/get-started/introduction) informed the targeted cursor and click-feedback language, while [Rachel Wei's portfolio](https://rachelqrwei.ca/use) informed the compact in-scene index. The official [Three.js](https://threejs.org/) documentation and examples informed the room's controls, raycasting, physical materials, environment lighting, and efficient point rendering.
+[Ida's Gameboy](https://idas-gameboy.netlify.app/) and [Jesse's Ramen](https://www.jesse-zhou.com/) informed the scene-first direction, subtle pointer response, and fluid transitions between a shared 3D world and its interface. [Bruno Simon's portfolio](https://bruno-simon.com/) informed an earlier game-control experiment, which remains preserved only on the backup branch `backup/rover-world-v6-2026-07-29`. [React Bits](https://reactbits.dev/get-started/introduction) informed the targeted cursor and click-feedback language, while [Rachel Wei's portfolio](https://rachelqrwei.ca/use) informed the compact in-scene index. The official [Three.js](https://threejs.org/) documentation and examples informed the room's controls, raycasting, physical materials, environment lighting, and efficient point rendering. [Three.js Resources](https://threejsresources.com/category/models) helped locate reputable asset libraries. [Poly Haven](https://polyhaven.com/) supplies the six CC0 furnishing and camera models used in the room. The linked [Sketchfab Project room](https://sketchfab.com/3d-models/project-793e99898ff14f2a89c73a3ccb5d7d10) was used only as visual direction for a brighter studio and is not copied into the project.
 
-The current portfolio uses an original cyber-lab concept, code, procedural models, copy, interface, and interaction system. No source code, models, textures, music, or other visual assets from these reference sites are included.
+The portfolio's concept, code, copy, interface, interactions, and custom interactive models remain original. The only external 3D assets included are the explicitly documented CC0 Poly Haven models.
 
 ## Local development
 

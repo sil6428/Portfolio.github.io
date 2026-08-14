@@ -58,7 +58,7 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
       { id: "experience", label: "Experience", meta: "2 files", icon: "folder", view: { kind: "folder", id: "experience" } },
       { id: "interests", label: "Interests", meta: "5 files", icon: "folder", view: { kind: "folder", id: "interests" } },
       { id: "contact", label: "Contact", meta: "5 links", icon: "folder", view: { kind: "folder", id: "contact" } },
-      { id: "inspiration", label: "Inspiration", meta: "6 links", icon: "folder", view: { kind: "folder", id: "inspiration" } },
+      { id: "inspiration", label: "Inspiration", meta: "9 links", icon: "folder", view: { kind: "folder", id: "inspiration" } },
       { id: "about", label: "About.txt", meta: "Text document", icon: "text", view: { kind: "document", id: "about" } },
       { id: "skills", label: "Skills.md", meta: "Markdown", icon: "code", view: { kind: "document", id: "skills" } },
       { id: "resume", label: "Resume.pdf", meta: "PDF document", icon: "pdf", view: { kind: "document", id: "resume" } },
@@ -133,6 +133,9 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
       { id: "react-bits", label: "React Bits.url", meta: "Motion feedback reference", icon: "link", href: "https://reactbits.dev/get-started/introduction" },
       { id: "rachel", label: "Rachel Wei.url", meta: "Room index reference", icon: "link", href: "https://rachelqrwei.ca/use" },
       { id: "three-js", label: "Three.js.url", meta: "3D rendering reference", icon: "link", href: "https://threejs.org/" },
+      { id: "three-resources", label: "Three.js Resources.url", meta: "Model library directory", icon: "link", href: "https://threejsresources.com/category/models" },
+      { id: "poly-haven", label: "Poly Haven.url", meta: "CC0 PBR models", icon: "link", href: "https://polyhaven.com/" },
+      { id: "studio-reference", label: "Studio Reference.url", meta: "Lighting and layout reference", icon: "link", href: "https://sketchfab.com/3d-models/project-793e99898ff14f2a89c73a3ccb5d7d10" },
     ],
   },
 };
