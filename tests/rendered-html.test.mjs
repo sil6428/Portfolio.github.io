@@ -245,9 +245,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /floating-room-platform-base/);
   assert.match(room, /floating-room-platform-lower-trim/);
   assert.match(room, /dark-broad-floorboard/);
-  assert.match(room, /graphite-maker-floor-mat/);
-  assert.match(room, /maker-floor-mat-inset/);
-  assert.match(room, /maker-floor-mat-piping/);
+  assert.doesNotMatch(room, /graphite-maker-floor-mat/);
+  assert.doesNotMatch(room, /maker-floor-mat-inset/);
+  assert.doesNotMatch(room, /maker-floor-mat-piping/);
   assert.doesNotMatch(room, /new THREE\.GridHelper/);
   assert.match(room, /reflectionResolution/);
   assert.match(room, /GLTFLoader/);

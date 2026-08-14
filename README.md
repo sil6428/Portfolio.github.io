@@ -56,7 +56,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A persistent desktop side index for direct model navigation, with the compact INDEX menu retained for smaller screens
 - A performance-scaled reflective surface beyond the room floor, with a polished physical-material fallback on touch-first devices
 - A raised two-layer room platform with a visible air gap above the mirrored boundary, giving the lab a deliberate floating-diorama separation without the former floor grid
-- Broad alternating dark floorboards and a low graphite maker mat with muted-violet piping, adding visual depth to the open floor without restoring removed furniture or a technical grid
+- Broad alternating dark floorboards that add visual depth while keeping the circular cat rug as the single floor focal point
 - A lightweight target cursor and click-spark response influenced by React Bits, implemented locally and disabled for coarse pointers and reduced-motion visitors
 - An optional original in-scene object index that provides direct access without restoring the retired bottom directory
 - Image-based room lighting generated from Three.js `RoomEnvironment`, giving metal, glass, and clearcoat materials more natural depth without loading an external environment asset
