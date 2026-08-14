@@ -334,7 +334,6 @@ export default function InteractiveRoom() {
   const [visitedKeys, setVisitedKeys] = useState<string[]>([]);
   const [roomSecret, setRoomSecret] = useState("");
   const [directoryOpen, setDirectoryOpen] = useState(false);
-  const [sceneReady, setSceneReady] = useState(false);
   const focusRef = useRef<(key: string) => void>(() => undefined);
   const dismissRef = useRef<() => void>(() => undefined);
   const previewRef = useRef<(key: string | null) => void>(() => undefined);
@@ -360,15 +359,14 @@ export default function InteractiveRoom() {
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    setSceneReady(false);
     const stage = host.closest(".room-stage") as HTMLElement | null;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x18120d, 13.5, 27);
+    scene.fog = new THREE.Fog(0x080a0f, 9, 19);
 
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
-    camera.position.set(6.1, 4.72, 9.15);
-    camera.lookAt(-1.28, 1.45, -0.82);
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
+    camera.position.set(5.2, 4.3, 6.5);
+    camera.lookAt(0, 1.55, -0.7);
 
     const highDetail = window.matchMedia("(min-width: 901px) and (pointer: fine)").matches;
     const renderer = new THREE.WebGLRenderer({
@@ -377,10 +375,10 @@ export default function InteractiveRoom() {
       powerPreference: "high-performance",
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, highDetail ? 2 : 1.45));
-    renderer.setClearColor(0x18120d, 1);
+    renderer.setClearColor(0x080a0f, 0.82);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
+    renderer.toneMappingExposure = 1.08;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.domElement.setAttribute("aria-hidden", "true");
@@ -401,7 +399,7 @@ export default function InteractiveRoom() {
     });
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(-1.28, 1.45, -0.82);
+    controls.target.set(0, 1.55, -0.7);
     controls.enableDamping = true;
     controls.dampingFactor = 0.055;
     controls.enablePan = true;
@@ -426,52 +424,52 @@ export default function InteractiveRoom() {
     controls.maxAzimuthAngle = 0.82;
 
     const room = new THREE.Group();
-    room.name = "compact-cutaway-studio";
-    room.position.set(-1.72, 0.28, -0.2);
-    room.scale.setScalar(0.78);
-    room.rotation.y = -0.065;
+    room.rotation.y = -0.08;
     scene.add(room);
 
     const reflectiveBoundaryGeometry = new THREE.PlaneGeometry(42, 42);
     const reflectionResolution = Math.min(
-      highDetail ? 1280 : 560,
-      Math.max(highDetail ? 640 : 320, Math.round(Math.max(host.clientWidth, host.clientHeight) * window.devicePixelRatio * (highDetail ? 0.62 : 0.34))),
+      1024,
+      Math.max(480, Math.round(Math.max(host.clientWidth, host.clientHeight) * window.devicePixelRatio * 0.42)),
     );
     const reflectiveBoundary = highDetail
       ? new Reflector(reflectiveBoundaryGeometry, {
           clipBias: 0.003,
           textureWidth: reflectionResolution,
           textureHeight: reflectionResolution,
-          color: 0x858078,
+           color: 0x263340,
           multisample: 2,
         })
       : new THREE.Mesh(
           reflectiveBoundaryGeometry,
           new THREE.MeshPhysicalMaterial({
-            color: "#28231e",
-            metalness: 0.78,
-            roughness: 0.2,
-            clearcoat: 0.9,
-            clearcoatRoughness: 0.14,
+            color: "#0b1118",
+            metalness: 0.84,
+            roughness: 0.12,
+            clearcoat: 1,
+            clearcoatRoughness: 0.08,
           }),
         );
     reflectiveBoundary.name = "out-of-bounds-reflective-surface";
     reflectiveBoundary.rotation.x = -Math.PI / 2;
-    reflectiveBoundary.position.y = -0.16;
+    reflectiveBoundary.position.y = -0.04;
     reflectiveBoundary.receiveShadow = true;
     scene.add(reflectiveBoundary);
     const reflectiveBoundaryTint = new THREE.Mesh(
       new THREE.PlaneGeometry(42, 42),
-      new THREE.MeshBasicMaterial({
-        color: "#201b16",
+      new THREE.MeshPhysicalMaterial({
+        color: "#070b10",
+        metalness: 0.22,
+        roughness: 0.32,
+        clearcoat: 0.92,
+        clearcoatRoughness: 0.16,
         transparent: true,
-        opacity: highDetail ? 0.48 : 0.12,
-        depthWrite: false,
+        opacity: 0.58,
       }),
     );
     reflectiveBoundaryTint.name = "out-of-bounds-reflection-tint";
     reflectiveBoundaryTint.rotation.x = -Math.PI / 2;
-    reflectiveBoundaryTint.position.y = -0.15;
+    reflectiveBoundaryTint.position.y = -0.03;
     scene.add(reflectiveBoundaryTint);
 
     const signalMoteCount = highDetail ? 72 : 32;
@@ -610,11 +608,6 @@ export default function InteractiveRoom() {
 
     const gltfLoader = new GLTFLoader();
     let roomDisposed = false;
-    let studioAssetsPending = 5;
-    const markStudioAssetFinished = () => {
-      studioAssetsPending = Math.max(0, studioAssetsPending - 1);
-      if (studioAssetsPending === 0 && !roomDisposed) setSceneReady(true);
-    };
     const disposeLoadedRoot = (root: THREE.Object3D) => {
       root.traverse((object) => {
         if (!(object instanceof THREE.Mesh)) return;
@@ -677,122 +670,51 @@ export default function InteractiveRoom() {
                 if (value instanceof THREE.Texture) retiredTextures.add(value);
               });
               retiredMaterials.add(surface);
-              const stylizedSurface = new THREE.MeshStandardMaterial({
-                color,
-                emissive: new THREE.Color(color).multiplyScalar(0.025),
-                emissiveIntensity: 0.18,
-                flatShading: true,
-                metalness: style.metalness ?? 0.08,
-                roughness: style.roughness ?? 0.76,
-              });
-              stylizedSurface.envMapIntensity = 0.38;
+              const stylizedSurface = new THREE.MeshPhysicalMaterial({
+                 color,
+                 emissive: new THREE.Color(color).multiplyScalar(0.035),
+                 emissiveIntensity: 0.22,
+                 flatShading: false,
+                 metalness: style.metalness ?? 0.14,
+                 roughness: style.roughness ?? 0.58,
+                 clearcoat: 0.34,
+                 clearcoatRoughness: 0.28,
+               });
+              stylizedSurface.envMapIntensity = 0.68;
               return stylizedSurface;
             });
             object.material = Array.isArray(object.material) ? stylizedSurfaces : stylizedSurfaces[0];
           });
           retiredTextures.forEach((texture) => texture.dispose());
           retiredMaterials.forEach((surface) => surface.dispose());
-          model.userData.visualStyle = "stylized-flat-palette";
+          model.userData.visualStyle = "dark-studio-pbr-palette";
           parent.add(model);
           onReady?.(model);
-          markStudioAssetFinished();
         },
         undefined,
-        (error) => {
-          console.warn(`Unable to load studio asset: ${url}`, error);
-          markStudioAssetFinished();
-        },
+        (error) => console.warn(`Unable to load studio asset: ${url}`, error),
       );
     };
 
-    const roomPlatform = box(room, [11.2, 0.42, 6.75], [0, -0.21, -0.02], "#574532", {
-      metalness: 0.02,
-      roughness: 0.88,
-    });
-    roomPlatform.name = "cutaway-room-platform";
     const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(11.2, 6.75),
-      material("#9a7146", { metalness: 0.01, roughness: 0.91 }),
+      new THREE.PlaneGeometry(12, 8.5),
+      material("#111a24", { metalness: 0.05, roughness: 0.95 }),
     );
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     room.add(floor);
-    box(room, [11.2, 4.65, 0.12], [0, 2.325, -3.395], "#c8a76f", { metalness: 0, roughness: 0.97 });
-    box(room, [0.12, 4.65, 6.75], [-5.55, 2.325, -0.02], "#b99766", { metalness: 0, roughness: 0.97 });
-    const rearBaseboard = roundedBox(room, [10.96, 0.16, 0.1], [0, 0.08, -3.31], "#6d5140", 0.035, {
+    box(room, [12, 4.8, 0.12], [0, 2.4, -4.25], "#111622", { metalness: 0.04, roughness: 0.94 });
+    box(room, [0.12, 4.8, 8.5], [-5.95, 2.4, 0], "#0e1920", { metalness: 0.04, roughness: 0.92 });
+    const rearBaseboard = roundedBox(room, [11.75, 0.16, 0.1], [0, 0.08, -4.16], "#26323b", 0.035, {
       metalness: 0.08,
       roughness: 0.68,
     });
     rearBaseboard.name = "room-rear-baseboard";
-    const sideBaseboard = roundedBox(room, [0.1, 0.16, 6.5], [-5.46, 0.08, -0.02], "#6d5140", 0.035, {
+    const sideBaseboard = roundedBox(room, [0.1, 0.16, 8.25], [-5.86, 0.08, 0], "#26323b", 0.035, {
       metalness: 0.08,
       roughness: 0.68,
     });
     sideBaseboard.name = "room-side-baseboard";
-
-    // A large warm window anchors the lounge side of the room and breaks up
-    // the back wall in the same way the portfolio cover uses one clear focal
-    // element instead of many small decorations.
-    const studioWindow = new THREE.Group();
-    studioWindow.name = "warm-studio-window";
-    room.add(studioWindow);
-    const windowCenterX = -2.55;
-    const windowCenterY = 2.65;
-    const windowZ = -3.315;
-    const windowView = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.25, 1.52),
-      new THREE.MeshBasicMaterial({ color: "#253b46", toneMapped: false }),
-    );
-    windowView.position.set(windowCenterX, windowCenterY, windowZ + 0.012);
-    studioWindow.add(windowView);
-    const windowGlow = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.15, 1.42),
-      new THREE.MeshBasicMaterial({ color: "#e8ad67", transparent: true, opacity: 0.22, toneMapped: false }),
-    );
-    windowGlow.position.set(windowCenterX, windowCenterY, windowZ + 0.02);
-    studioWindow.add(windowGlow);
-    const skylineMaterial = material("#19272d", { roughness: 0.92 });
-    for (let building = 0; building < 8; building += 1) {
-      const width = 0.19 + (building % 3) * 0.045;
-      const height = 0.22 + ((building * 7) % 5) * 0.095;
-      const skyline = new THREE.Mesh(new THREE.BoxGeometry(width, height, 0.025), skylineMaterial);
-      skyline.position.set(windowCenterX - 0.92 + building * 0.27, windowCenterY - 0.72 + height / 2, windowZ + 0.035);
-      studioWindow.add(skyline);
-    }
-    for (const x of [-1.18, 1.18]) {
-      roundedBox(studioWindow, [0.11, 1.76, 0.11], [windowCenterX + x, windowCenterY, windowZ + 0.075], "#5f4434", 0.025, {
-        metalness: 0.04,
-        roughness: 0.78,
-      });
-    }
-    for (const y of [-0.88, 0.88]) {
-      roundedBox(studioWindow, [2.46, 0.11, 0.11], [windowCenterX, windowCenterY + y, windowZ + 0.075], "#5f4434", 0.025, {
-        metalness: 0.04,
-        roughness: 0.78,
-      });
-    }
-    box(studioWindow, [0.07, 1.55, 0.09], [windowCenterX, windowCenterY, windowZ + 0.085], "#6f5240", { roughness: 0.78 });
-    box(studioWindow, [2.28, 0.07, 0.09], [windowCenterX, windowCenterY, windowZ + 0.085], "#6f5240", { roughness: 0.78 });
-    const windowSill = roundedBox(studioWindow, [2.68, 0.13, 0.34], [windowCenterX, windowCenterY - 0.94, windowZ + 0.18], "#76533c", 0.035, {
-      metalness: 0.02,
-      roughness: 0.76,
-    });
-    windowSill.name = "studio-window-sill";
-    const windowLight = new THREE.PointLight(0xffc982, 7.5, 5.5, 2);
-    windowLight.position.set(windowCenterX, windowCenterY, -2.85);
-    studioWindow.add(windowLight);
-
-    const roomTopBeam = roundedBox(room, [11.28, 0.2, 0.2], [0, 4.7, -3.34], "#654631", 0.04, {
-      metalness: 0.02,
-      roughness: 0.8,
-    });
-    roomTopBeam.name = "cutaway-top-beam";
-    for (const x of [-5.48, 5.48]) {
-      roundedBox(room, [0.18, 4.82, 0.18], [x, 2.31, -3.31], "#654631", 0.035, {
-        metalness: 0.02,
-        roughness: 0.8,
-      });
-    }
 
     const wallDecor = new THREE.Group();
     wallDecor.name = "wall-decor-collection";
@@ -885,76 +807,16 @@ export default function InteractiveRoom() {
       }
     });
 
-    const grid = new THREE.GridHelper(11.2, 22, 0x6d5034, 0x6d5034);
+    const grid = new THREE.GridHelper(12, 24, 0x254a57, 0x15232b);
     grid.position.y = 0.012;
-    grid.position.z = -0.02;
     const gridMaterials = Array.isArray(grid.material) ? grid.material : [grid.material];
     gridMaterials.forEach((surface) => {
       surface.transparent = true;
-      surface.opacity = 0.14;
+      surface.opacity = 0.12;
     });
     room.add(grid);
 
-    const daybed = new THREE.Group();
-    daybed.name = "left-lounge-daybed";
-    room.add(daybed);
-    roundedBox(daybed, [3.45, 0.52, 2.15], [-3.38, 0.28, -0.55], "#7d6041", 0.08, {
-      metalness: 0.01,
-      roughness: 0.88,
-    });
-    roundedBox(daybed, [3.18, 0.3, 1.98], [-3.38, 0.69, -0.55], "#d8c68f", 0.12, {
-      metalness: 0,
-      roughness: 0.98,
-    });
-    roundedBox(daybed, [0.76, 0.34, 1.52], [-4.45, 1.02, -0.62], "#aaa471", 0.12, {
-      metalness: 0,
-      roughness: 0.98,
-    }).rotation.z = -0.08;
-    roundedBox(daybed, [0.68, 0.26, 1.36], [-3.77, 0.98, -0.62], "#b99369", 0.1, {
-      metalness: 0,
-      roughness: 0.98,
-    }).rotation.z = 0.12;
-    roundedBox(daybed, [1.2, 0.08, 1.86], [-2.5, 0.87, -0.53], "#7e9a8c", 0.04, {
-      metalness: 0,
-      roughness: 0.96,
-    });
-    for (const x of [-4.45, -2.32]) {
-      const drawerPull = roundedBox(daybed, [0.42, 0.045, 0.05], [x, 0.29, 0.545], "#3c352c", 0.018, {
-        metalness: 0.28,
-        roughness: 0.55,
-      });
-      drawerPull.name = "daybed-drawer-pull";
-    }
-
-    const stringLights = new THREE.Group();
-    stringLights.name = "warm-string-lights";
-    room.add(stringLights);
-    const lightCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-5.05, 4.05, -3.27),
-      new THREE.Vector3(-2.85, 3.74, -3.27),
-      new THREE.Vector3(-0.55, 3.92, -3.27),
-      new THREE.Vector3(2.05, 3.66, -3.27),
-      new THREE.Vector3(4.85, 3.93, -3.27),
-    ]);
-    const lightCable = new THREE.Mesh(
-      new THREE.TubeGeometry(lightCurve, 64, 0.016, 5, false),
-      material("#3b352b", { roughness: 0.88 }),
-    );
-    stringLights.add(lightCable);
-    for (let bulbIndex = 0; bulbIndex <= 14; bulbIndex += 1) {
-      const bulbPoint = lightCurve.getPoint(bulbIndex / 14);
-      const bulb = new THREE.Mesh(
-        new THREE.SphereGeometry(0.065, 10, 8),
-        material("#ffe3a4", { emissive: "#ffd27d", emissiveIntensity: 2.2, roughness: 0.28 }),
-      );
-      bulb.name = "warm-string-light-bulb";
-      bulb.position.copy(bulbPoint).add(new THREE.Vector3(0, -0.1, 0.02));
-      stringLights.add(bulb);
-    }
-
     const desk = new THREE.Group();
-    desk.position.set(1.48, 0.18, 0.14);
-    desk.scale.set(0.63, 0.74, 0.63);
     room.add(desk);
     const deskTop = roundedBox(desk, [7.65, 0.18, 2.2], [-1.32, 1.35, -3.15], "#72503d", 0.07, {
       metalness: 0.08,
@@ -1001,8 +863,7 @@ export default function InteractiveRoom() {
 
     const workstation = new THREE.Group();
     workstation.name = "compact-desktop-pc-setup";
-    workstation.position.set(0.08, 1.12, -2.68);
-    workstation.scale.setScalar(0.72);
+    workstation.position.set(-1.75, 1.46, -3.12);
     room.add(workstation);
     const keyboardDeck = roundedBox(workstation, [2.72, 0.08, 0.78], [-0.2, 0.07, 0.4], "#151e24", 0.035, {
       metalness: 0.55,
@@ -1348,8 +1209,7 @@ export default function InteractiveRoom() {
     workstation.add(pcPower);
 
     const rack = hotspot("rack", "PROXMOX SERVER RACK");
-    rack.position.set(4.55, 0, -2.93);
-    rack.scale.setScalar(0.35);
+    rack.position.set(4.45, 0, -3.35);
     const rackBase = roundedBox(rack, [1.9, 0.16, 1.46], [0, 0.1, 0], "#151d24", 0.045, {
       metalness: 0.7,
       roughness: 0.36,
@@ -1461,8 +1321,7 @@ export default function InteractiveRoom() {
     serverBeacon.add(serverBeaconLight);
 
     const printer = hotspot("printer", "3D PRINTER");
-    printer.position.set(2.68, 1.04, -2.73);
-    printer.scale.setScalar(0.46);
+    printer.position.set(1.28, 1.45, -3.18);
     const printerBase = roundedBox(printer, [2.05, 0.14, 1.7], [0, 0.08, 0], "#222d34", 0.055, {
       metalness: 0.55,
       roughness: 0.38,
@@ -2081,16 +1940,16 @@ export default function InteractiveRoom() {
 
     const bookshelf = new THREE.Group();
     bookshelf.name = "built-in-stylized-bookshelf";
-    bookshelf.position.set(-5.02, 0, 0.35);
+    bookshelf.position.set(-5.4, 0, 0.85);
     room.add(bookshelf);
-    box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#5b4336", { metalness: 0.02, roughness: 0.84 });
+    box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#111a22", { metalness: 0.24, roughness: 0.7 });
     for (const z of [-1.5, 1.5]) {
-      box(bookshelf, [0.72, 2.45, 0.16], [0.1, 1.23, z], "#765744", { metalness: 0.03, roughness: 0.8 });
+      box(bookshelf, [0.72, 2.45, 0.16], [0.1, 1.23, z], "#26323d", { metalness: 0.32, roughness: 0.62 });
     }
     for (const y of [0.16, 1.17, 2.35]) {
-      box(bookshelf, [0.72, 0.14, 3.15], [0.1, y, 0], y === 1.17 ? "#654c41" : "#806047", {
-        metalness: 0.03,
-        roughness: 0.8,
+      box(bookshelf, [0.72, 0.14, 3.15], [0.1, y, 0], y === 1.17 ? "#1c2832" : "#2f3b46", {
+        metalness: 0.3,
+        roughness: 0.62,
       });
     }
     for (const y of [0.2, 1.2, 2.38]) {
@@ -2101,14 +1960,14 @@ export default function InteractiveRoom() {
         );
         shelfFastener.name = "shelf-fastener";
         shelfFastener.rotation.z = Math.PI / 2;
-        shelfFastener.position.set(-4.57, y, 0.35 + z);
+        shelfFastener.position.set(-4.95, y, 0.85 + z);
         room.add(shelfFastener);
       }
     }
     const shelfSwordBaseY = 0.38;
     const shelfSword = easterHotspot("relic", "TOUCH THE PRINTED KATANA");
     shelfSword.name = "bottom-shelf-printed-katana";
-    shelfSword.position.set(-4.6, shelfSwordBaseY, 0.22);
+    shelfSword.position.set(-4.98, shelfSwordBaseY, 0.72);
     const shelfSwordBladeMaterial = material("#f1f2ed", {
       emissive: "#30353a",
       emissiveIntensity: 0.2,
@@ -2224,7 +2083,7 @@ export default function InteractiveRoom() {
     shelfPommel.position.set(0, 0.025, -1.055);
     shelfSword.add(shelfPommel);
     for (const z of [-0.3, 0.9]) {
-      box(room, [0.24, 0.08, 0.1], [-4.64, 0.27, 0.22 + z], "#1b252d", {
+      box(room, [0.24, 0.08, 0.1], [-5.02, 0.27, 0.72 + z], "#1b252d", {
         metalness: 0.58,
         roughness: 0.38,
       });
@@ -2234,7 +2093,7 @@ export default function InteractiveRoom() {
     shelfSword.add(shelfSwordLight);
 
     const books = hotspot("books", "READING SHELF");
-    books.position.set(-4.61, 1.3, 0.58);
+    books.position.set(-4.99, 1.3, 1.08);
     const bookColors = ["#4d6170", "#7965be", "#9a6c45", "#355968", "#a86a65", "#65518e"];
     const bookWidths = [0.21, 0.24, 0.19, 0.28, 0.22, 0.25];
     let bookZ = -1.04;
@@ -2282,7 +2141,7 @@ export default function InteractiveRoom() {
     box(books, [0.02, 0.11, 0.72], [0.23, 0.08, 0.9], "#d8d1bb", { roughness: 1 });
 
     const cameraGroup = hotspot("camera", "PHOTOGRAPHY");
-    cameraGroup.position.set(-5.02, 2.8, -0.16);
+    cameraGroup.position.set(-5.4, 2.8, 0.34);
     const cameraBody = roundedBox(cameraGroup, [0.52, 0.76, 1.08], [0, 0, 0], "#1a2025", 0.09, {
       metalness: 0.7,
       roughness: 0.34,
@@ -2427,24 +2286,24 @@ export default function InteractiveRoom() {
     loadStudioAsset(
       "/models/polyhaven/modern_arm_chair_01/modern_arm_chair_01_1k.gltf",
       room,
-      [1.48, 1.56, 1.48],
-      [0.82, 0.72, -0.35],
-      -0.04,
-      { palette: ["#789887", "#587466", "#343a35"], roughness: 0.86 },
+      [1.42, 1.55, 1.42],
+      [3.72, 0.78, 1.72],
+      -0.74,
+      { palette: ["#735fa5", "#544779", "#2f3237"], roughness: 0.86 },
     );
     loadStudioAsset(
       "/models/polyhaven/side_table_01/side_table_01_1k.gltf",
       room,
-      [1.34, 0.54, 1.34],
-      [-1.55, 0.26, 1.05],
-      0.08,
+      [0.86, 0.72, 0.86],
+      [4.7, 0.36, 0.42],
+      0.28,
       { palette: ["#775746", "#403938", "#9a7558"], roughness: 0.82 },
     );
     loadStudioAsset(
       "/models/polyhaven/potted_plant_04/potted_plant_04_1k.gltf",
       room,
-      [0.92, 1.42, 0.92],
-      [-1.45, 0.7, -2.37],
+      [0.46, 0.5, 0.46],
+      [4.7, 1.01, 0.42],
       -0.25,
       { palette: ["#4e705b", "#315443", "#a36d4a"], roughness: 0.88 },
     );
@@ -2452,17 +2311,16 @@ export default function InteractiveRoom() {
       "/models/polyhaven/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf",
       desk,
       [0.76, 1.02, 0.76],
-      [-4.05, 2.0, -3.05],
+      [-4.15, 1.98, -3.2],
       0.62,
       { palette: ["#d6814d", "#313940", "#e6b263"], metalness: 0.18, roughness: 0.64 },
     );
 
     const racket = hotspot("racket", "BADMINTON");
-    racket.position.set(3.73, 3.18, -3.25);
-    racket.scale.setScalar(0.72);
+    racket.position.set(-4.35, 3.52, -4.08);
     racket.rotation.z = -0.14;
     const racketMount = new THREE.Group();
-    racketMount.position.set(3.62, 2.42, -3.3);
+    racketMount.position.set(-4.5, 2.42, -4.16);
     room.add(racketMount);
     const racketWallPlate = roundedBox(racketMount, [0.4, 0.12, 0.06], [0, 0, 0], "#303a46", 0.025, {
       metalness: 0.62,
@@ -2586,10 +2444,8 @@ export default function InteractiveRoom() {
     }
 
     const cat = new THREE.Group();
-    const catBaseY = 0.88;
-    cat.position.set(-3.22, catBaseY, -0.38);
+    cat.position.set(-0.2, 0.24, 0.95);
     cat.rotation.y = -0.32;
-    cat.scale.setScalar(0.86);
     cat.userData = { easterEgg: "cat", label: "PET THE CAT" } satisfies HotspotData;
     clickable.push(cat);
     room.add(cat);
@@ -2795,7 +2651,7 @@ export default function InteractiveRoom() {
 
     const yarnBall = new THREE.Group();
     yarnBall.name = "cat-rug-yarn-ball";
-    yarnBall.position.set(-2.15, 0.16, 1.18);
+    yarnBall.position.set(0.7, 0.16, 1.58);
     room.add(yarnBall);
     const yarnCore = new THREE.Mesh(
       new THREE.SphereGeometry(0.145, 18, 14),
@@ -2825,7 +2681,7 @@ export default function InteractiveRoom() {
 
     const toyMouse = new THREE.Group();
     toyMouse.name = "cat-rug-toy-mouse";
-    toyMouse.position.set(-3.35, 0.13, 1.38);
+    toyMouse.position.set(-1.05, 0.13, 1.56);
     toyMouse.rotation.y = -0.35;
     room.add(toyMouse);
     const mouseBody = new THREE.Mesh(
@@ -2863,7 +2719,7 @@ export default function InteractiveRoom() {
 
     const waterBowl = new THREE.Group();
     waterBowl.name = "cat-rug-water-bowl";
-    waterBowl.position.set(-2.48, 0.065, 0.68);
+    waterBowl.position.set(0.57, 0.065, 0.35);
     room.add(waterBowl);
     const bowlBase = new THREE.Mesh(
       new THREE.CylinderGeometry(0.16, 0.205, 0.09, 24),
@@ -2886,14 +2742,50 @@ export default function InteractiveRoom() {
     waterBowl.add(waterSurface);
 
     const floorRug = new THREE.Mesh(
-      new RoundedBoxGeometry(3.75, 0.035, 2.72, 5, 0.12),
-      material("#688d84", { metalness: 0.01, roughness: 1 }),
+      new THREE.CircleGeometry(1.45, 48),
+      material("#1c2437", { metalness: 0.02, roughness: 1 }),
     );
-    floorRug.position.set(-3.18, 0.022, 0.34);
+    floorRug.rotation.x = -Math.PI / 2;
+    floorRug.position.set(-0.2, 0.022, 0.95);
     room.add(floorRug);
-    box(room, [3.32, 0.018, 0.035], [-3.18, 0.05, 0.34], "#b6c6ad", { roughness: 0.95 });
-    scene.add(new THREE.HemisphereLight(0xffefc7, 0x4a3d2c, 1.65));
-    const cyanLight = new THREE.PointLight(0xffdba3, 19, 10, 2);
+    const rugColors = ["#77e7ff", "#9f91ff", "#ffbd72"];
+    for (let ring = 1; ring <= 3; ring += 1) {
+      const rugRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.35 * ring, 0.012, 5, 48),
+        material(rugColors[ring - 1], {
+          emissive: rugColors[ring - 1],
+          emissiveIntensity: 0.25,
+          roughness: 0.72,
+        }),
+      );
+      rugRing.rotation.x = Math.PI / 2;
+      rugRing.position.set(-0.2, 0.03, 0.95);
+      room.add(rugRing);
+    }
+    const ceilingPanelColors = ["#77e7ff", "#9f91ff", "#ffbd72", "#68e0ae"];
+    for (let panel = 0; panel < 4; panel += 1) {
+      box(room, [1.85, 0.055, 0.08], [-3.6 + panel * 2.35, 4.42, -4.34], ceilingPanelColors[panel], {
+        emissive: ceilingPanelColors[panel],
+        emissiveIntensity: 0.6,
+        metalness: 0.5,
+      });
+    }
+    for (let accent = 0; accent < 3; accent += 1) {
+      box(room, [0.32, 1.2 + accent * 0.18, 0.035], [2.8 + accent * 0.52, 3.15, -4.17], ceilingPanelColors[accent], {
+        emissive: ceilingPanelColors[accent],
+        emissiveIntensity: 0.46,
+        roughness: 0.4,
+      });
+    }
+    const ceilingLight = box(room, [3.6, 0.06, 0.5], [0.7, 4.72, -1.1], "#b8f6ff", {
+      emissive: "#77e7ff",
+      emissiveIntensity: 1.2,
+      roughness: 0.25,
+    });
+    ceilingLight.rotation.x = 0.02;
+
+    scene.add(new THREE.HemisphereLight(0xb8deea, 0x12101b, 1.65));
+    const cyanLight = new THREE.PointLight(0x77e7ff, 27, 10, 2);
     cyanLight.position.set(-1.3, 3.3, -0.2);
     cyanLight.castShadow = true;
     cyanLight.shadow.mapSize.set(highDetail ? 2048 : 1024, highDetail ? 2048 : 1024);
@@ -2901,13 +2793,13 @@ export default function InteractiveRoom() {
     cyanLight.shadow.normalBias = 0.035;
     cyanLight.shadow.radius = highDetail ? 4 : 2;
     scene.add(cyanLight);
-    const violetLight = new THREE.PointLight(0xb7c78f, 15, 9, 2);
+    const violetLight = new THREE.PointLight(0x9f91ff, 22, 9, 2);
     violetLight.position.set(3.1, 3.8, 2.2);
     scene.add(violetLight);
-    const warmLight = new THREE.PointLight(0xffbd72, 21, 8, 2);
+    const warmLight = new THREE.PointLight(0xffbd72, 14, 7, 2);
     warmLight.position.set(-4.2, 2.8, 1.5);
     scene.add(warmLight);
-    const studioFill = new THREE.DirectionalLight(0xffead5, 1.05);
+    const studioFill = new THREE.DirectionalLight(0xdcecff, 1.25);
     studioFill.name = "room-studio-fill-light";
     studioFill.position.set(5.5, 7.5, 5.2);
     scene.add(studioFill);
@@ -2925,9 +2817,9 @@ export default function InteractiveRoom() {
     });
     room.updateMatrixWorld(true);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const overviewPosition = new THREE.Vector3(6.1, 4.72, 9.15);
-    const overviewTarget = new THREE.Vector3(-1.28, 1.45, -0.82);
-    const roomBaseRotation = -0.065;
+    const overviewPosition = new THREE.Vector3(5.2, 4.3, 6.5);
+    const overviewTarget = new THREE.Vector3(0, 1.55, -0.7);
+    const roomBaseRotation = -0.08;
     const pointerParallax = new THREE.Vector2();
     const pointerParallaxTarget = new THREE.Vector2();
     let focusedKey: string | null = null;
@@ -3294,17 +3186,17 @@ export default function InteractiveRoom() {
       const phonePortrait = width <= 600 && height > width;
       const phoneLandscape = height <= 520 && width > height;
       if (phonePortrait) {
-        overviewPosition.set(8.9, 7.1, 16.8);
-        overviewTarget.set(-1.5, 1.18, -0.7);
-        camera.fov = 60;
+        overviewPosition.set(4.55, 4.05, 7.7);
+        overviewTarget.set(-0.72, 1.5, -0.62);
+        camera.fov = 52;
       } else if (phoneLandscape) {
-        overviewPosition.set(5.75, 4.35, 8.25);
-        overviewTarget.set(-0.82, 1.5, -0.74);
+        overviewPosition.set(5.2, 4.3, 7.35);
+        overviewTarget.set(-0.2, 1.55, -0.68);
         camera.fov = 43;
       } else {
-        overviewPosition.set(6.1, 4.72, 9.15);
-        overviewTarget.set(-1.28, 1.45, -0.82);
-        camera.fov = 42;
+        overviewPosition.set(5.2, 4.3, 6.5);
+        overviewTarget.set(0, 1.55, -0.7);
+        camera.fov = 40;
       }
       camera.aspect = width / Math.max(height, 1);
       camera.updateProjectionMatrix();
@@ -3363,11 +3255,11 @@ export default function InteractiveRoom() {
       const paletteActive = timestamp < paletteSecretUntil;
       if (paletteActive !== paletteWasActive) {
         paletteWasActive = paletteActive;
-        cyanLight.color.set(paletteActive ? "#b8ff6a" : "#ffdba3");
-        violetLight.color.set(paletteActive ? "#ff83bd" : "#b7c78f");
+        cyanLight.color.set(paletteActive ? "#b8ff6a" : "#77e7ff");
+        violetLight.color.set(paletteActive ? "#ff83bd" : "#9f91ff");
         warmLight.color.set(paletteActive ? "#ffd76d" : "#ffbd72");
-        renderer.setClearColor(paletteActive ? 0x162217 : 0x18120d, 1);
-        if (scene.fog) scene.fog.color.set(paletteActive ? "#162217" : "#18120d");
+        renderer.setClearColor(paletteActive ? 0x162217 : 0x080a0f, paletteActive ? 0.9 : 0.82);
+        if (scene.fog) scene.fog.color.set(paletteActive ? "#162217" : "#080a0f");
       }
       const relicActive = timestamp < relicSecretUntil;
       const signalActive = timestamp < signalSecretUntil;
@@ -3381,22 +3273,22 @@ export default function InteractiveRoom() {
         signalMotes.rotation.y = Math.sin(elapsed * 0.11) * 0.035;
         signalMotes.position.y = Math.sin(elapsed * 0.24) * 0.018;
         cyanLight.intensity = signalActive
-          ? 18 + Math.abs(Math.sin(elapsed * 5.2)) * 18
-          : 15 + Math.sin(elapsed * 1.4) * 1.4;
+          ? 24 + Math.abs(Math.sin(elapsed * 5.2)) * 25
+          : 27 + Math.sin(elapsed * 1.4) * 2;
         violetLight.intensity = signalActive
-          ? 14 + Math.abs(Math.sin(elapsed * 5.2 + 1.1)) * 18
-          : 12;
+          ? 16 + Math.abs(Math.sin(elapsed * 5.2 + 1.1)) * 25
+          : 22;
         warmLight.intensity = signalActive
-          ? 10 + Math.abs(Math.sin(elapsed * 5.2 + 2.2)) * 18
-          : 10;
+          ? 10 + Math.abs(Math.sin(elapsed * 5.2 + 2.2)) * 22
+          : 14;
         shelfSword.position.y = relicActive
           ? shelfSwordBaseY + 0.1 + Math.sin(elapsed * 3.2) * 0.045
           : shelfSwordBaseY;
         shelfSword.rotation.y = relicActive ? Math.sin(elapsed * 1.4) * 0.22 : 0;
         const catSecretActive = timestamp < catSecretUntil;
         cat.position.y = catSecretActive
-          ? catBaseY + Math.abs(Math.sin(elapsed * 7)) * 0.55
-          : catBaseY + Math.sin(elapsed * 1.15) * 0.012;
+          ? 0.24 + Math.abs(Math.sin(elapsed * 7)) * 0.55
+          : 0.24 + Math.sin(elapsed * 1.15) * 0.012;
         cat.rotation.y = catSecretActive ? -0.32 + Math.sin(elapsed * 5) * 0.5 : -0.32;
         if (animatedCatTail) animatedCatTail.rotation.y = Math.sin(elapsed * 0.72) * 0.11;
         if (catYarnBall) {
@@ -3566,15 +3458,10 @@ export default function InteractiveRoom() {
         </div>
       </div>
       <div className="room-canvas" ref={hostRef} />
-      <div className="room-loading-gate" data-ready={sceneReady || undefined} role="status" aria-live="polite">
-        <span>AFFAN&apos;S ROOM</span>
-        <strong>{sceneReady ? "ROOM READY" : "ARRANGING THE STUDIO"}</strong>
-        <i />
-      </div>
       <div className="room-target-cursor" aria-hidden="true"><i /><i /><i /><i /></div>
       <div className="room-click-spark" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /></div>
       <nav className="room-side-index" aria-label="Quick room navigation">
-        <header><strong>affan shaikh</strong><span>networking &amp; cybersecurity</span></header>
+        <header><span>ROOM INDEX</span><strong>{visitedKeys.length}/{DIRECTORY.length}</strong></header>
         <button
           type="button"
           onMouseEnter={() => previewRef.current("__desktop")}

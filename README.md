@@ -4,9 +4,9 @@ An interactive 3D personal portfolio for Affan Shaikh, a Networking and Cybersec
 
 [View the live portfolio](https://affan-shaikh-portfolio.sil6428-archtech.workers.dev)
 
-![Affan Shaikh portfolio preview](public/og-cutaway-v3.png)
+![Affan Shaikh portfolio preview](public/og-lab-v2.png)
 
-The social cover reflects the current warm cutaway-room direction, with the studio and its darker mirror image shown as one diorama. The favicon remains a compact wireframe room mark.
+The social cover uses an editorial, isometric indie-game poster treatment. The live scene returns to the earlier dark cyber-lab direction, with deep navy surfaces and restrained cyan, violet, amber, and mint lighting. The favicon remains a compact wireframe lab-room mark.
 
 ## Overview
 
@@ -34,7 +34,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - A focused, full-screen homepage without a conventional header, footer, or visible directory bar
 - Expandable project and interest pages
 - Custom CSS illustrations for badminton and 3D printing
-- Full-screen Three.js cutaway studio with selectable objects and cinematic close-ups
+- Full-screen Three.js cyber lab with selectable objects and cinematic close-ups
 - Compact desktop PC setup that starts as one powered-off screen and boots into a complete original AFFAN_OS interface
 - Linux Plasma and Windows-inspired desktop patterns with a top system panel, wallpaper, taskbar, searchable launcher, clock, system tray, running-app indicator, and show-desktop control
 - Desktop icons divided into Folders, Documents, and System groups instead of one left-side stack, with folder contents automatically ordered by file type
@@ -53,17 +53,14 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Pointer-responsive room parallax and lighting that make the diorama feel alive before selection
 - Constrained orbit controls with damping for smooth, predictable mouse and touch movement
 - Raycast hover anticipation, a lightweight whole-object material accent on pointer hover, focused-object motion, and direct click or tap selection without floor circles
-- A simple name-led desktop navigation list placed beside the room, with the compact INDEX menu retained for smaller screens
-- A true desktop mirror plane below the raised room platform, darkened to keep the reflection readable, with a polished physical-material fallback on touch-first devices
+- A persistent desktop side index for direct model navigation, with the compact INDEX menu retained for smaller screens
+- A performance-scaled reflective surface beyond the room floor, with a polished physical-material fallback on touch-first devices
 - A lightweight target cursor and click-spark response influenced by React Bits, implemented locally and disabled for coarse pointers and reduced-motion visitors
 - An optional original in-scene object index that provides direct access without restoring the retired bottom directory
 - Image-based room lighting generated from Three.js `RoomEnvironment`, giving metal, glass, and clearcoat materials more natural depth without loading an external environment asset
-- A compact warm creative-studio redesign with ochre walls, wood flooring, a left lounge and black cat, a right workstation, string lights, and restrained amber, sage, and technical accents
-- A cover-image-led three-zone layout that keeps the lounge, workstation, and maker equipment at believable relative scales instead of scattering them across an oversized floor
-- A framed evening window with a subtle skyline, sill, crossbars, and warm room light, plus simplified architectural beams that make the cutaway read as one finished room
-- Corrected selectable-object scaling so the server rack, 3D printer, racket, and cat retain their authored sizes while still responding to hover and focus
-- A scene-loading gate that keeps incomplete geometry and shader compilation out of view until all five external studio assets are ready
-- Five locally hosted 1K glTF models from Poly Haven for the camera, armchair, side table, plant, and desk lamp. Their geometry is re-shaded with the room's flat, limited-color material system so external and custom objects share one visual language. All five are released under CC0 and documented in [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md)
+- The restored dark cyber-lab composition, with charcoal and deep-navy architecture, brighter object separation, and cyan, violet, amber, and mint practical lighting
+- Five locally hosted 1K glTF models from Poly Haven for the camera, armchair, side table, plant, and desk lamp. Their geometry is re-shaded with smooth physically based materials, restrained clearcoat, and shared environment lighting so external and procedural objects fit one dark-studio visual language. All five are released under CC0 and documented in [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md)
+- Corrected selectable-object scaling so authored model sizes survive hover and focus animation
 - A custom fitted bookshelf replaces the mismatched external shelf model and keeps the books, camera, racket, and printed katana aligned with their supports
 - A deterministic, GPU-friendly Three.js `Points` field that adds subtle cyan, violet, and amber signal motes with fewer particles on touch-first devices
 - Device-local discovery progress that marks each inspected station without creating an account
