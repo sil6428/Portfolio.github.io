@@ -607,7 +607,6 @@ export default function InteractiveRoom() {
     };
 
     const gltfLoader = new GLTFLoader();
-    const loadedStudioTextures = new Set<THREE.Texture>();
     let roomDisposed = false;
     const disposeLoadedRoot = (root: THREE.Object3D) => {
       root.traverse((object) => {
@@ -628,6 +627,11 @@ export default function InteractiveRoom() {
       targetSize: [number, number, number],
       targetCenter: [number, number, number],
       rotationY = 0,
+      style: {
+        palette: string[];
+        metalness?: number;
+        roughness?: number;
+      },
       onReady?: (model: THREE.Object3D) => void,
     ) => {
       gltfLoader.load(
@@ -651,21 +655,37 @@ export default function InteractiveRoom() {
           model.updateMatrixWorld(true);
           const fittedCenter = new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3());
           model.position.add(new THREE.Vector3(...targetCenter).sub(fittedCenter));
-          const maxAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+          const retiredMaterials = new Set<THREE.Material>();
+          const retiredTextures = new Set<THREE.Texture>();
+          let surfaceIndex = 0;
           model.traverse((object) => {
             if (!(object instanceof THREE.Mesh)) return;
             object.castShadow = true;
             object.receiveShadow = true;
             const surfaces = Array.isArray(object.material) ? object.material : [object.material];
-            surfaces.forEach((surface) => {
-              if (surface instanceof THREE.MeshStandardMaterial) surface.envMapIntensity = 0.72;
+            const stylizedSurfaces = surfaces.map((surface) => {
+              const color = style.palette[surfaceIndex % style.palette.length];
+              surfaceIndex += 1;
               Object.values(surface).forEach((value) => {
-                if (!(value instanceof THREE.Texture)) return;
-                value.anisotropy = maxAnisotropy;
-                loadedStudioTextures.add(value);
+                if (value instanceof THREE.Texture) retiredTextures.add(value);
               });
+              retiredMaterials.add(surface);
+              const stylizedSurface = new THREE.MeshStandardMaterial({
+                color,
+                emissive: new THREE.Color(color).multiplyScalar(0.025),
+                emissiveIntensity: 0.18,
+                flatShading: true,
+                metalness: style.metalness ?? 0.08,
+                roughness: style.roughness ?? 0.76,
+              });
+              stylizedSurface.envMapIntensity = 0.38;
+              return stylizedSurface;
             });
+            object.material = Array.isArray(object.material) ? stylizedSurfaces : stylizedSurfaces[0];
           });
+          retiredTextures.forEach((texture) => texture.dispose());
+          retiredMaterials.forEach((surface) => surface.dispose());
+          model.userData.visualStyle = "stylized-flat-palette";
           parent.add(model);
           onReady?.(model);
         },
@@ -1917,19 +1937,19 @@ export default function InteractiveRoom() {
     printer.add(printCompletionLight);
 
     const bookshelf = new THREE.Group();
+    bookshelf.name = "built-in-stylized-bookshelf";
     bookshelf.position.set(-5.4, 0, 0.85);
     room.add(bookshelf);
-    box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#19262c", { metalness: 0.34, roughness: 0.62 });
+    box(bookshelf, [0.22, 2.4, 3.15], [-0.18, 1.2, 0], "#5b4336", { metalness: 0.02, roughness: 0.84 });
     for (const z of [-1.5, 1.5]) {
-      box(bookshelf, [0.72, 2.45, 0.16], [0.1, 1.23, z], "#51466f", { metalness: 0.42, roughness: 0.54 });
+      box(bookshelf, [0.72, 2.45, 0.16], [0.1, 1.23, z], "#765744", { metalness: 0.03, roughness: 0.8 });
     }
     for (const y of [0.16, 1.17, 2.35]) {
-      box(bookshelf, [0.72, 0.14, 3.15], [0.1, y, 0], y === 1.17 ? "#315765" : "#3a465e", {
-        metalness: 0.42,
-        roughness: 0.54,
+      box(bookshelf, [0.72, 0.14, 3.15], [0.1, y, 0], y === 1.17 ? "#654c41" : "#806047", {
+        metalness: 0.03,
+        roughness: 0.8,
       });
     }
-    const proceduralBookshelfParts = [...bookshelf.children];
     for (const y of [0.2, 1.2, 2.38]) {
       for (const z of [-1.36, 1.36]) {
         const shelfFastener = new THREE.Mesh(
@@ -1942,19 +1962,6 @@ export default function InteractiveRoom() {
         room.add(shelfFastener);
       }
     }
-    loadStudioAsset(
-      "/models/polyhaven/wooden_display_shelves_01/wooden_display_shelves_01_1k.gltf",
-      bookshelf,
-      [0.82, 2.48, 3.18],
-      [0.1, 1.24, 0],
-      Math.PI / 2,
-      () => {
-        proceduralBookshelfParts.forEach((part) => { part.visible = false; });
-        room.children
-          .filter((child) => child.name === "shelf-fastener")
-          .forEach((fastener) => { fastener.visible = false; });
-      },
-    );
     const shelfSwordBaseY = 0.38;
     const shelfSword = easterHotspot("relic", "TOUCH THE PRINTED KATANA");
     shelfSword.name = "bottom-shelf-printed-katana";
@@ -2270,6 +2277,7 @@ export default function InteractiveRoom() {
       [0.92, 0.72, 1.08],
       [0, 0, 0],
       Math.PI / 2,
+      { palette: ["#22282b", "#3f494d", "#7c898d"], metalness: 0.24, roughness: 0.58 },
       () => proceduralCameraParts.forEach((part) => { part.visible = false; }),
     );
 
@@ -2279,6 +2287,7 @@ export default function InteractiveRoom() {
       [1.42, 1.55, 1.42],
       [3.72, 0.78, 1.72],
       -0.74,
+      { palette: ["#735fa5", "#544779", "#2f3237"], roughness: 0.86 },
     );
     loadStudioAsset(
       "/models/polyhaven/side_table_01/side_table_01_1k.gltf",
@@ -2286,6 +2295,7 @@ export default function InteractiveRoom() {
       [0.86, 0.72, 0.86],
       [4.7, 0.36, 0.42],
       0.28,
+      { palette: ["#775746", "#403938", "#9a7558"], roughness: 0.82 },
     );
     loadStudioAsset(
       "/models/polyhaven/potted_plant_04/potted_plant_04_1k.gltf",
@@ -2293,6 +2303,7 @@ export default function InteractiveRoom() {
       [0.46, 0.5, 0.46],
       [4.7, 1.01, 0.42],
       -0.25,
+      { palette: ["#4e705b", "#315443", "#a36d4a"], roughness: 0.88 },
     );
     loadStudioAsset(
       "/models/polyhaven/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf",
@@ -2300,6 +2311,7 @@ export default function InteractiveRoom() {
       [0.76, 1.02, 0.76],
       [-4.15, 1.98, -3.2],
       0.62,
+      { palette: ["#d6814d", "#313940", "#e6b263"], metalness: 0.18, roughness: 0.64 },
     );
 
     const racket = hotspot("racket", "BADMINTON");
@@ -3397,7 +3409,6 @@ export default function InteractiveRoom() {
       printerDisplayTexture.dispose();
       signalMoteGeometry.dispose();
       signalMoteMaterial.dispose();
-      loadedStudioTextures.forEach((texture) => texture.dispose());
       if (reflectiveBoundary instanceof Reflector) reflectiveBoundary.getRenderTarget().dispose();
       reflectiveBoundary.geometry.dispose();
       const reflectiveBoundaryMaterial = reflectiveBoundary.material;

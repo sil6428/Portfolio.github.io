@@ -244,7 +244,10 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /reflectionResolution/);
   assert.match(room, /GLTFLoader/);
   assert.match(room, /loadStudioAsset/);
-  assert.match(room, /wooden_display_shelves_01_1k\.gltf/);
+  assert.doesNotMatch(room, /wooden_display_shelves_01_1k\.gltf/);
+  assert.match(room, /built-in-stylized-bookshelf/);
+  assert.match(room, /stylized-flat-palette/);
+  assert.match(room, /flatShading: true/);
   assert.match(room, /Camera_01_1k\.gltf/);
   assert.match(room, /modern_arm_chair_01_1k\.gltf/);
   assert.match(room, /side_table_01_1k\.gltf/);

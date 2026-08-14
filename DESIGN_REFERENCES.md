@@ -26,7 +26,7 @@ This file records the sites, repositories, documentation, and asset directories 
 | --- | --- |
 | [Three.js Resources model directory](https://threejsresources.com/category/models) | Directory used to find reputable free-model sources. |
 | [Three.js Resources 3D-assets directory](https://threejsresources.com/tool/3d-assets) | Directory used to compare asset tools, libraries, and formats. |
-| [Poly Haven](https://polyhaven.com/) | Source of the six included CC0 1K glTF models. See `THIRD_PARTY_ASSETS.md`. |
+| [Poly Haven](https://polyhaven.com/) | Source of the five included CC0 1K glTF models. Their geometry is retained while the room applies its own simplified flat materials. See `THIRD_PARTY_ASSETS.md`. |
 | [TurboSquid free furnishings](https://www.turbosquid.com/Search/3D-Models/furnishings?max_price=0) | Reviewed during research. No TurboSquid model is included. |
 | [Project by abhayexe on Sketchfab](https://sketchfab.com/3d-models/project-793e99898ff14f2a89c73a3ccb5d7d10) | Visual direction for a warmer creative workspace. The model is not downloadable and no geometry or textures were copied. |
 

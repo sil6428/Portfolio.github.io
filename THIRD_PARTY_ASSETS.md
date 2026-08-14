@@ -11,9 +11,10 @@ Poly Haven states that its assets are CC0, including commercial use, modificatio
 | Modern Arm Chair 01 | Vibrant Nordic | Studio seating | [Poly Haven](https://polyhaven.com/a/modern_arm_chair_01) |
 | Potted Plant 04 | James Ray Cock | Side-table plant | [Poly Haven](https://polyhaven.com/a/potted_plant_04) |
 | Side Table 01 | James Ray Cock | Small studio side table | [Poly Haven](https://polyhaven.com/a/side_table_01) |
-| Wooden Display Shelves 01 | James Ray Cock | Reading and display shelf | [Poly Haven](https://polyhaven.com/a/wooden_display_shelves_01) |
 
 Licence: [Poly Haven licence and CC0 explanation](https://polyhaven.com/license)
+
+The source geometry is retained, but the portfolio replaces the imported surface maps at runtime with simplified flat-shaded materials and a limited room palette. The bookshelf is an original scene object rather than an external model.
 
 ## Research and visual references
 
