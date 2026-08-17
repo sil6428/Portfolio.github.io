@@ -13,6 +13,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/interests/photography`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${baseUrl}/interests/home-lab`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${baseUrl}/work/archtech`, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${baseUrl}/work/ssik`, changeFrequency: "monthly", priority: 0.8 },
   ];
 }

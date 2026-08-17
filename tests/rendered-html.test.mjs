@@ -23,8 +23,8 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.match(html, /Move your pointer to shift the room/);
   assert.match(html, /Interactive 3D portfolio/);
   assert.match(html, /3D room objects/);
-  assert.match(html, /Archtech file/);
-  assert.match(html, /SSIK file/);
+  assert.match(html, /Nonprofit operations/);
+  assert.match(html, /Integrity file/);
   assert.match(html, /Server rack/);
   assert.match(html, /3D printer/);
   assert.match(html, /About file/);
@@ -48,26 +48,15 @@ test("renders the full-screen interactive portfolio", async () => {
   assert.doesNotMatch(html, /Arch Narrative/i);
 });
 
-test("renders both project case studies", async () => {
+test("renders the current nonprofit operations case study", async () => {
   const archtechResponse = await render("/work/archtech");
   assert.equal(archtechResponse.status, 200);
   const archtech = await archtechResponse.text();
-  assert.match(archtech, /Why I started it/);
-  assert.match(archtech, /Stage 4\.5/);
-  assert.match(archtech, /\/projects\/archtech-home\.png/);
-  assert.doesNotMatch(archtech, /_next\/image/);
-  assert.match(archtech, /still a work in progress/i);
-
-  const ssikResponse = await render("/work/ssik");
-  assert.equal(ssikResponse.status, 200);
-  const ssik = await ssikResponse.text();
-  assert.match(ssik, /The goal/);
-  assert.match(ssik, /GitHub Pages/);
-  assert.match(ssik, /\/projects\/ssik-home\.png/);
-  assert.doesNotMatch(ssik, /_next\/image/);
-  assert.match(ssik, /View source/);
-  assert.match(ssik, /sole site creator/);
-  assert.match(ssik, /independently created the entire public website/);
+  assert.match(archtech, /Google Workspace foundation/);
+  assert.match(archtech, /Hosting responsibility/);
+  assert.match(archtech, /Website team coordination/);
+  assert.match(archtech, /Repository.*Private/s);
+  assert.match(archtech, /website source and internal project material remain private/i);
 });
 
 test("publishes crawler and structured profile metadata", async () => {
@@ -84,7 +73,6 @@ test("publishes crawler and structured profile metadata", async () => {
   assert.equal(sitemapResponse.status, 200);
   const sitemap = await sitemapResponse.text();
   assert.match(sitemap, /work\/archtech/);
-  assert.match(sitemap, /work\/ssik/);
 
   const robotsResponse = await render("/robots.txt");
   assert.equal(robotsResponse.status, 200);
@@ -228,7 +216,6 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(room, /highDetail/);
   assert.doesNotMatch(room, /addDesktopFile/);
   assert.doesNotMatch(room, /OPEN ARCHTECH FILE/);
-  assert.doesNotMatch(room, /OPEN SSIK FILE/);
   assert.doesNotMatch(room, /OPEN ABOUT FILE/);
   assert.doesNotMatch(room, /OPEN CONTACT FILE/);
   assert.doesNotMatch(room, /OPEN RESUME PDF/);
@@ -527,8 +514,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(designReferences, /Perry Wang portfolio/);
   assert.match(designReferences, /Three\.js Resources 3D-assets directory/);
   assert.match(designReferences, /No TurboSquid model is included/);
-  assert.match(desktopOs, /Archtech\.project/);
-  assert.match(desktopOs, /SSIK\.website/);
+  assert.match(desktopOs, /Archtech Operations\.project/);
   assert.match(desktopOs, /File Integrity Monitor\.py/);
   assert.match(desktopOs, /Event Planner\.js/);
   assert.match(desktopOs, /Resume\.pdf/);
@@ -565,7 +551,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /Python · Built a SHA-256 file integrity monitor/);
   assert.match(desktopOs, /Three\.js · Built the interactive cyber lab/);
   assert.match(desktopOs, /Cloudflare Workers · Built and repeatedly deployed/);
-  assert.match(desktopOs, /Web delivery · Independently designed and built the SSIK/);
+  assert.match(desktopOs, /Google Workspace and web operations · Set up a nonprofit/);
   assert.match(desktopOs, /Minimize/);
   assert.match(desktopOs, /Maximize/);
   assert.match(desktopOs, /Return to 3D room/);

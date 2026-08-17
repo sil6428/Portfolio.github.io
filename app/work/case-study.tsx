@@ -5,8 +5,9 @@ type CaseStudyData = {
   title: string;
   label: string;
   summary: string;
-  image: string;
-  imageAlt: string;
+  image?: string;
+  imageAlt?: string;
+  imageCaption?: string;
   facts: Array<[string, string]>;
   links: Array<{ label: string; href: string }>;
   sections: Array<{
@@ -66,19 +67,21 @@ export default function CaseStudy({ data }: { data: CaseStudyData }) {
           </div>
         </header>
 
-        <figure className="case-cover">
-          {/* Static project captures are served directly because the Worker does not use an image-optimization service. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={data.image}
-            alt={data.imageAlt}
-            width="1280"
-            height="720"
-            loading="eager"
-            decoding="async"
-          />
-          <figcaption>Current public build</figcaption>
-        </figure>
+        {data.image && data.imageAlt && (
+          <figure className="case-cover">
+            {/* Static project captures are served directly because the Worker does not use an image-optimization service. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={data.image}
+              alt={data.imageAlt}
+              width="1280"
+              height="720"
+              loading="eager"
+              decoding="async"
+            />
+            <figcaption>{data.imageCaption ?? "Project preview"}</figcaption>
+          </figure>
+        )}
 
         <div className="case-layout">
           <aside className="case-facts" aria-label={`${data.title} project facts`}>

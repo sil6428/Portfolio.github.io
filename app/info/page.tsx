@@ -70,8 +70,9 @@ export default function Info() {
               concrete. Each project gives me a new system to understand and improve.
             </p>
             <p>
-              I&apos;m currently developing Archtech, an unreleased privacy-focused community platform, while preparing
-              for the CompTIA Security+ certification.
+              I currently handle Google Workspace and website hosting for a developing nonprofit, coordinate the team
+              building its website, and contribute a smaller share of the implementation while preparing for the
+              CompTIA Security+ certification.
             </p>
           </div>
         </div>

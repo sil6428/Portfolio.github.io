@@ -2,68 +2,61 @@ import type { Metadata } from "next";
 import CaseStudy from "../case-study";
 
 export const metadata: Metadata = {
-  title: "Archtech Case Study | Affan Shaikh",
-  description: "A work-in-progress privacy-focused community platform built by Affan Shaikh.",
+  title: "Archtech Nonprofit Technology Operations | Affan Shaikh",
+  description: "Google Workspace setup, team coordination, and website hosting for a developing nonprofit.",
 };
 
 const data = {
   index: "01",
-  title: "Archtech",
-  label: "Private build · Work in progress",
+  title: "Archtech Nonprofit Technology Operations",
+  label: "Nonprofit infrastructure · Active",
   summary:
-    "A privacy-focused community platform built around stories, secure connection, publishing, moderation, and community programs.",
-  image: "/projects/archtech-home.png",
-  imageAlt: "Archtech public homepage with editorial cards for listening, connecting, and creating",
+    "I set up Google Workspace for a developing nonprofit, coordinate the team building its website, and own the website hosting and deployment workflow.",
   facts: [
-    ["Role", "Design and development"],
-    ["Status", "Active, unreleased"],
-    ["Release", "Stage 4.5"],
-    ["Stack", "Next.js, TypeScript, Workers, D1, KV"],
-    ["Focus", "Privacy, community, access control"],
+    ["Role", "Google Workspace and web hosting"],
+    ["Status", "Active, private development"],
+    ["Team", "Website team coordination"],
+    ["Repository", "Private"],
+    ["Focus", "Collaboration, hosting, reliable releases"],
   ] as Array<[string, string]>,
-  links: [
-    {
-      label: "View public demo",
-      href: "https://sil6428-archtech-stage-4-5.sil6428-archtech.workers.dev/",
-    },
-  ],
+  links: [],
   sections: [
     {
-      title: "Why I started it",
+      title: "Google Workspace foundation",
       paragraphs: [
-        "Archtech began as an attempt to build a community space where people could share stories and connect without treating privacy as an afterthought. It is still a work in progress and has not been released.",
-        "I use the project to learn how product design, application security, moderation, and infrastructure decisions affect one another.",
+        "I set up the nonprofit's Google Workspace environment so the organization has a structured foundation for accounts, communication, and team collaboration.",
+        "This infrastructure work is my main focus. I treat access, ownership, and continuity as operational requirements instead of afterthoughts.",
       ],
     },
     {
-      title: "What I built",
+      title: "Team and website",
       paragraphs: [
-        "The current build is a multi-page platform with public storytelling, community information, and a protected connection area. I developed it through cumulative stages so every release kept the work from the previous one.",
+        "I coordinate the team currently building the organization's full website. I contribute to the implementation alongside them, but my development role is smaller than my Workspace and hosting responsibilities.",
       ],
       bullets: [
-        "Public pages for stories, programs, events, and participation",
-        "A protected messaging route with role-aware access",
-        "Publishing and moderation workflows",
-        "Cloudflare deployment using Workers, D1, and KV",
-        "Responsive navigation and accessible interaction states",
+        "Coordinate website work across the team",
+        "Support implementation where needed",
+        "Keep infrastructure and delivery responsibilities clear",
       ],
     },
     {
-      title: "Decisions and challenges",
+      title: "Hosting responsibility",
       paragraphs: [
-        "The hardest part has been making privacy and authorization visible in the product instead of hiding them behind technical language. Protected routes need clear boundaries, and community tools need to explain who sees each action.",
-        "Moving from a single-page concept to a routed application also forced me to think about deployment, durable data, navigation, and responsive behavior as one system.",
+        "I own the website hosting and deployment workflow. My role is to help the team's work reach a stable environment and keep releases organized as the site develops.",
+      ],
+      bullets: [
+        "Prepare and maintain the hosting environment",
+        "Coordinate deployments with the website team",
+        "Verify releases and troubleshoot hosting issues",
       ],
     },
     {
-      title: "What comes next",
+      title: "Private development",
       paragraphs: [
-        "The next stages focus on stronger authentication, durable messaging, clearer moderation tools, and more complete settings. I am also documenting threat assumptions and testing access-control paths before any public release.",
+        "The website source and internal project material remain private while the nonprofit is still developing. This portfolio describes my responsibilities without exposing the repository or unfinished internal work.",
       ],
     },
   ],
-  nextSlug: "/work/ssik",
-  nextTitle: "SSIK Website",
 };
 
 export default function ArchtechCaseStudy() {

@@ -9,7 +9,6 @@ type FolderId = StaticFolderId | LearningLogFolderId;
 type StaticDocumentId =
   | "about"
   | "archtech"
-  | "ssik"
   | "portfolio"
   | "cicids2017"
   | "file-integrity-monitor"
@@ -61,7 +60,7 @@ const baseFolders: Record<StaticFolderId, FolderContent> = {
     title: "Home",
     path: "/home/affan",
     items: [
-      { id: "projects", label: "Projects", meta: "6 items", icon: "folder", view: { kind: "folder", id: "projects" } },
+      { id: "projects", label: "Projects", meta: "5 items", icon: "folder", view: { kind: "folder", id: "projects" } },
       { id: "networking", label: "Network Labs", meta: "2 files", icon: "folder", view: { kind: "folder", id: "networking" } },
       { id: "education", label: "Education", meta: "2 files", icon: "folder", view: { kind: "folder", id: "education" } },
       { id: "experience", label: "Experience", meta: "2 files", icon: "folder", view: { kind: "folder", id: "experience" } },
@@ -79,8 +78,7 @@ const baseFolders: Record<StaticFolderId, FolderContent> = {
     title: "Projects",
     path: "/home/affan/Projects",
     items: [
-      { id: "archtech", label: "Archtech.project", meta: "Work in progress", icon: "code", view: { kind: "document", id: "archtech" } },
-      { id: "ssik", label: "SSIK.website", meta: "IT consulting", icon: "code", view: { kind: "document", id: "ssik" } },
+      { id: "archtech", label: "Archtech Operations.project", meta: "Nonprofit technology", icon: "code", view: { kind: "document", id: "archtech" } },
       { id: "portfolio", label: "Portfolio.repo", meta: "Three.js + React", icon: "code", view: { kind: "document", id: "portfolio" } },
       { id: "cicids2017", label: "CICIDS2017.research", meta: "Security data audit", icon: "code", view: { kind: "document", id: "cicids2017" } },
       { id: "integrity", label: "File Integrity Monitor.py", meta: "Python + SHA-256", icon: "code", view: { kind: "document", id: "file-integrity-monitor" } },
@@ -198,20 +196,15 @@ const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
     bullets: ["Networking and cybersecurity", "Full-stack development", "3D printing and design", "Badminton, photography, and home-lab projects"],
   },
   archtech: {
-    title: "Archtech.project",
-    type: "Project file · Work in progress",
-    intro: "Archtech is an unreleased privacy-focused community platform. I am building the product in stages, with secure messaging, publishing, moderation, and role-based access as core requirements.",
-    bullets: ["React and Next.js interface", "Cloudflare Workers deployment", "Privacy and access-control planning", "Public demo currently at Stage 4.5"],
-    links: [{ label: "Open Stage 4.5 demo", href: "https://sil6428-archtech-stage-4-5.sil6428-archtech.workers.dev" }],
-  },
-  ssik: {
-    title: "SSIK.website",
-    type: "Project file · IT consulting",
-    intro: "I independently designed and built the public SSIK website. It explains the consulting team's IT services and gives potential clients a clear way to understand the business.",
-    bullets: ["Sole website creator", "Service-focused information architecture", "Responsive frontend", "GitHub Pages deployment"],
-    links: [
-      { label: "Visit SSIK", href: "https://sil6428.github.io/SSIK-website/index.html" },
-      { label: "View source", href: "https://github.com/sil6428/SSIK-website" },
+    title: "Archtech Operations.project",
+    type: "Nonprofit technology operations · Active",
+    intro: "I set up Google Workspace for a developing nonprofit and coordinate the team building its website. My primary responsibility is website hosting and deployment, while I contribute a smaller share of the implementation.",
+    bullets: [
+      "Configured the nonprofit's Google Workspace environment",
+      "Coordinate the team building the full website",
+      "Own the website hosting and deployment workflow",
+      "Support development while keeping infrastructure as my main focus",
+      "Source code and internal project material remain private",
     ],
   },
   portfolio: {
@@ -258,17 +251,17 @@ const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
     bullets: [
       "Networking · Configured IPv4 and IPv6 addressing, subnetting, VLANs, access ports, 802.1Q trunks, DHCP, DNS, NAT, STP, and inter-VLAN routing in Cisco IOS and Packet Tracer labs",
       "Troubleshooting · Used ping, traceroute, show commands, Wireshark, packet captures, routing tables, and interface state to isolate connectivity and configuration problems",
-      "Cybersecurity · Applied authentication, authorization, role-based access control, encryption, hashing, vulnerability analysis, and privacy requirements while planning Archtech and completing security coursework",
+      "Cybersecurity · Applied authentication, authorization, role-based access control, encryption, hashing, and vulnerability analysis through security coursework and personal projects",
       "Security data research · Audited 2,830,743 CICIDS2017 flows, built deterministic cleaning and sampling pipelines, reproduced Random Forest baselines, measured split sensitivity, and documented limitations through 14 automated tests",
       "Python · Built a SHA-256 file integrity monitor with deterministic baselines, JSON reports, four change categories, script-friendly exit codes, and 7 automated tests",
       "JavaScript and DOM · Built an event-planning tool that adds, edits, displays, and removes events while keeping the page state synchronized",
       "TypeScript and React · Built AFFAN_OS, the portfolio interface, reusable components, window state, keyboard interactions, and accessible controls",
       "Three.js · Built the interactive cyber lab, procedural room models, material systems, raycast selection, camera transitions, printer animation, and separate touch controls",
       "Next.js and CSS · Built responsive routes, project case studies, mobile layouts, metadata, custom illustrations, and the desktop-style file environment",
-      "Cloudflare Workers · Built and repeatedly deployed the portfolio and Archtech demonstrations, then verified live Worker versions and public routes",
-      "Git and GitHub · Managed staged project repositories, backup branches, documentation, version history, tests, and public portfolio source",
+      "Cloudflare Workers · Built and repeatedly deployed this portfolio, then verified live Worker versions and public routes",
+      "Git and GitHub · Managed private team development, backup branches, documentation, version history, tests, and public portfolio source",
       "Linux and virtualization · Use Linux tools in coursework and personal systems work while converting older computers into a Proxmox home lab for virtual machines and isolated networks",
-      "Web delivery · Independently designed and built the SSIK IT consulting website, organized its service content, and published it through GitHub Pages",
+      "Google Workspace and web operations · Set up a nonprofit's Workspace environment, coordinate its website team, and own the website hosting and deployment workflow",
       "Systems tools · Worked with Windows Server, Cisco Packet Tracer, Wireshark, SecureCRT, and GitHub across labs and projects",
       "Communication and operations · Applied customer support, transaction accuracy, crowd flow, event coordination, conflict resolution, and team communication through paid and volunteer experience",
     ],

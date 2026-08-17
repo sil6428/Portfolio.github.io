@@ -21,8 +21,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 | `/` | Full-screen interactive 3D cyber lab |
 | `/info` | Education, skills, experience, volunteer work, resume, and contact links |
 | `/interests` | Personal interests and interactive visual cards |
-| `/work/archtech` | Archtech case study and current work-in-progress status |
-| `/work/ssik` | SSIK consulting website case study |
+| `/work/archtech` | Nonprofit Google Workspace, team coordination, and website-hosting role |
 | `/interests/badminton` | Regional badminton experience |
 | `/interests/3d-printing` | 3D printing and design projects |
 | `/interests/reading` | Current reading interests |
@@ -39,7 +38,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Linux Plasma and Windows-inspired desktop patterns with a top system panel, wallpaper, taskbar, searchable launcher, clock, system tray, running-app indicator, and show-desktop control
 - Desktop icons divided into Folders, Documents, and System groups instead of one left-side stack, with folder contents automatically ordered by file type
 - A windowed file manager with Home, Projects, Network Labs, Education, Experience, Interests, Learning Log, Contact, and Inspiration folders, plus back, home, breadcrumb, places, status, minimize, maximize, and close controls
-- Nested project files for Archtech, SSIK, the portfolio, CICIDS2017 research, File Integrity Monitor, and Event Planner, alongside degree, certification, employment, volunteer, lab, profile, skills, public contact, photography, reading, and reference files
+- Nested project files for nonprofit technology operations, the portfolio, CICIDS2017 research, File Integrity Monitor, and Event Planner, alongside degree, certification, employment, volunteer, lab, profile, skills, public contact, photography, reading, and reference files
 - Applied-skills documentation that identifies where each networking, security, programming, frontend, Three.js, Cloudflare, Git, Linux, virtualization, web-delivery, and communication skill was used
 - A public [learning log](https://github.com/sil6428/learning-log) synchronized into AFFAN_OS, grouped into month folders and rendered as complete readable Markdown entries without sending visitors away from the computer interface
 - A repeatable `npm run sync:learning-log` import step that preserves the standalone log repository as the source of truth while committing a deployment-safe generated snapshot to the portfolio
@@ -103,7 +102,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Rebuilt chess families with individual profile curves and recognizable pawn heads, rook crowns, knight snouts and manes, bishop mitres and slashes, queen crown spikes, and king orbs and crosses
 - Server handles and perforated rails, camera aperture and lens glint, labelled book spines, a katana scabbard with grip diamonds, and more expressive cat eyes and fur
 - Wall decor built directly into the Three.js room, including a framed network-topology display and a three-piece photography-inspired gallery above the bookshelf
-- Eleven expanded object files covering Archtech, SSIK, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, the resume, and design inspiration
+- Eleven expanded object files covering nonprofit technology operations, file integrity monitoring, the Proxmox lab, 3D printing, badminton, reading, photography, education, contact details, the resume, and design inspiration
 - Retired the page-level 2D cat, its footer house, and its page interactions in favour of the single 3D room cat
 - All main portfolio content stays inside the room instead of redirecting to internal pages
 - Screen-reader object controls, Escape-to-return behavior, touch support, and unlisted fallback routes
@@ -177,8 +176,7 @@ The production site is deployed to Cloudflare Workers:
 
 ## Project notes
 
-- Archtech remains unreleased and in development. This portfolio only includes information suitable for public viewing.
-- The SSIK case study describes my work building the consulting team’s public service website.
+- My nonprofit technology work focuses on Google Workspace, website-team coordination, hosting, and deployment. The source repository and internal work remain private.
 - Generated build output, local Cloudflare state, environment files, and deployment metadata are excluded from version control.
 
 ## License

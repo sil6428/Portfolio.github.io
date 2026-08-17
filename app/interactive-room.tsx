@@ -33,44 +33,40 @@ type RoomEntry = {
 const ROOM_ENTRIES: Record<string, RoomEntry> = {
   archtech: {
     number: "01",
-    directory: "Archtech file",
-    label: "PROJECT FILE / WORK IN PROGRESS",
-    title: "Archtech",
-    summary: "A privacy-focused community platform in development, built around secure communication, publishing, moderation, and controlled access.",
-    details: ["Privacy-first", "TypeScript + React", "Cloudflare", "Work in progress"],
+    directory: "Nonprofit operations",
+    label: "NONPROFIT / TECHNOLOGY OPERATIONS",
+    title: "Archtech nonprofit operations",
+    summary: "Google Workspace setup, website-team coordination, and hosting for a developing nonprofit.",
+    details: ["Google Workspace", "Team coordination", "Web hosting", "Private development"],
     sections: [
       {
-        heading: "What I am building",
-        body: "A stealth, work-in-progress nonprofit platform centered on private community messaging, publishing, moderation, role-based access, and program coordination. I have been building the interface, deployment flow, and privacy-aware access model across staged releases.",
+        heading: "Infrastructure role",
+        body: "I set up the nonprofit's Google Workspace environment and focus on the systems that support its work. My main website responsibility is hosting and deployment.",
       },
       {
-        heading: "Current stage",
-        body: "The project remains unreleased. I use staged repositories and deployments to preserve each milestone while I test the interface, access rules, and overall product direction.",
+        heading: "Team and website",
+        body: "I coordinate the team currently building the full website. I also contribute to implementation, but my development role is smaller than my Google Workspace and hosting responsibilities. The source repository remains private.",
       },
     ],
     cameraOffset: [0, 0.1, 3.05],
     targetOffset: [0, 0, 0],
   },
-  ssik: {
+  integrity: {
     number: "02",
-    directory: "SSIK file",
-    label: "PROJECT FILE / IT CONSULTING",
-    title: "SSIK website",
-    summary: "The public service website for our IT consulting team, independently designed and built by me.",
-    details: ["IT consulting", "Sole site creator", "Responsive design", "GitHub Pages"],
+    directory: "Integrity file",
+    label: "SECURITY PROJECT / PYTHON",
+    title: "File integrity monitor",
+    summary: "A command-line tool that builds trusted SHA-256 baselines and reports added, modified, deleted, and moved files.",
+    details: ["Python", "SHA-256", "45/45 changes", "7 tests"],
     sections: [
       {
-        heading: "The role",
-        body: "I am part of the SSIK consulting team and independently created its public website. The site explains our services and gives prospective clients a clear way to understand what the team offers.",
+        heading: "What I built",
+        body: "The monitor scans a target directory, stores a deterministic JSON baseline, and compares later scans against it. It identifies content changes, additions, deletions, and likely moves without relying on file size alone.",
       },
       {
-        heading: "What I learned",
-        body: "Building the complete site pushed me to plan its information architecture, responsive states, service copy, deployment, and maintenance instead of treating it as a static mockup.",
+        heading: "Validation",
+        body: "A controlled 500-file fixture detected 45 of 45 changes with zero scan errors. Seven automated tests cover tampering, additions, deletions, rename detection, and reporting behavior.",
       },
-    ],
-    links: [
-      { label: "View SSIK website", href: "https://sil6428.github.io/SSIK-website/index.html" },
-      { label: "View source", href: "https://github.com/sil6428/SSIK-website" },
     ],
     cameraOffset: [0, 0.1, 3.05],
     targetOffset: [0, 0, 0],
@@ -181,7 +177,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     directory: "About file",
     label: "PROFILE / 2028",
     title: "About Affan",
-    summary: "Cybersecurity student at Ontario Tech, part of the SSIK consulting team, and someone who learns best by building.",
+    summary: "Cybersecurity student at Ontario Tech, nonprofit technology coordinator, and someone who learns best by building.",
     details: ["Networking + security", "Development", "Ontario Tech 2028", "Oshawa"],
     sections: [
       {
@@ -190,7 +186,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
       },
       {
         heading: "Experience",
-        body: "I work in customer-facing retail, volunteer at community events, and contribute to the SSIK consulting team. Those roles strengthened my communication, troubleshooting, planning, and ability to explain technical choices clearly.",
+        body: "I work in customer-facing retail, volunteer at community events, and coordinate Google Workspace and website operations for a developing nonprofit. Those roles strengthened my communication, troubleshooting, planning, and ability to explain technical choices clearly.",
       },
       {
         heading: "Current direction",
@@ -238,7 +234,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
     sections: [
       {
         heading: "Current direction",
-        body: "The resume covers my technical projects, networking and security skills, SSIK work, customer-facing experience, and community volunteering.",
+        body: "The resume covers my cybersecurity projects, networking skills, nonprofit technology operations, customer-facing experience, and community volunteering.",
       },
     ],
     links: [{ label: "Open resume PDF", href: "/Affan_Shaikh_Resume.pdf" }],
@@ -969,8 +965,8 @@ export default function InteractiveRoom() {
       desktopContext.fillText("LAB ONLINE  •  08:28", 996, 614);
       desktopContext.textAlign = "left";
       const files = [
-        { x: 138, y: 78, width: 170, height: 172, color: "#4ea7c8", title: "ARCHTECH", note: "projects/" },
-        { x: 360, y: 78, width: 170, height: 172, color: "#7869bc", title: "SSIK", note: "consulting/" },
+        { x: 138, y: 78, width: 170, height: 172, color: "#4ea7c8", title: "ARCH OPS", note: "workspace + hosting/" },
+        { x: 360, y: 78, width: 170, height: 172, color: "#7869bc", title: "INTEGRITY", note: "security/" },
         { x: 582, y: 78, width: 170, height: 172, color: "#c4865d", title: "ABOUT", note: "profile.doc" },
         { x: 804, y: 78, width: 184, height: 172, color: "#d6b85d", title: "INSPIRATION", note: "credits/" },
         { x: 250, y: 306, width: 184, height: 168, color: "#4f9d7d", title: "CONTACT", note: "links.file" },
