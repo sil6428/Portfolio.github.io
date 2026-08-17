@@ -237,6 +237,7 @@ const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
       "Passed 7 automated tests, including same-size content tampering and rename detection",
       "Uses only the Python standard library and documents its security limitations",
     ],
+    links: [{ label: "View public repository", href: "https://github.com/sil6428/file-integrity-monitor" }],
   },
   "event-planner": {
     title: "Event Planner.js",

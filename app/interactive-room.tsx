@@ -68,6 +68,7 @@ const ROOM_ENTRIES: Record<string, RoomEntry> = {
         body: "A controlled 500-file fixture detected 45 of 45 changes with zero scan errors. Seven automated tests cover tampering, additions, deletions, rename detection, and reporting behavior.",
       },
     ],
+    links: [{ label: "View public repository", href: "https://github.com/sil6428/file-integrity-monitor" }],
     cameraOffset: [0, 0.1, 3.05],
     targetOffset: [0, 0, 0],
   },

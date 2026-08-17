@@ -516,6 +516,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(designReferences, /No TurboSquid model is included/);
   assert.match(desktopOs, /Archtech Operations\.project/);
   assert.match(desktopOs, /File Integrity Monitor\.py/);
+  assert.match(desktopOs, /github\.com\/sil6428\/file-integrity-monitor/);
   assert.match(desktopOs, /Event Planner\.js/);
   assert.match(desktopOs, /Resume\.pdf/);
   assert.match(desktopOs, /Affan_Shaikh_Resume\.pdf\?v=2026-08-17#view=FitH/);
