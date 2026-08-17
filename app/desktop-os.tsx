@@ -361,7 +361,7 @@ const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
   resume: {
     title: "Resume.pdf",
     type: "PDF document",
-    intro: "Affan Shaikh's current one-page IT resume.",
+    intro: "Affan Shaikh's one-page cybersecurity resume, led by reproducible intrusion-detection research, networking labs, and applied technical skills.",
   },
   terminal: {
     title: "Terminal",
