@@ -529,7 +529,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(designReferences, /No TurboSquid model is included/);
   assert.match(desktopOs, /Archtech\.project/);
   assert.match(desktopOs, /SSIK\.website/);
-  assert.match(desktopOs, /Password Manager\.py/);
+  assert.match(desktopOs, /File Integrity Monitor\.py/);
   assert.match(desktopOs, /Event Planner\.js/);
   assert.match(desktopOs, /Resume\.pdf/);
   assert.match(desktopOs, /Affan_Shaikh_Resume\.pdf#view=FitH/);
@@ -562,7 +562,7 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(learningLog, /learning-log-entry-2026-07-27/);
   assert.match(learningLog, /Set up a genuine learning log/);
   assert.match(desktopOs, /Networking · Configured IPv4 and IPv6/);
-  assert.match(desktopOs, /Python · Built a command-line password manager/);
+  assert.match(desktopOs, /Python · Built a SHA-256 file integrity monitor/);
   assert.match(desktopOs, /Three\.js · Built the interactive cyber lab/);
   assert.match(desktopOs, /Cloudflare Workers · Built and repeatedly deployed/);
   assert.match(desktopOs, /Web delivery · Independently designed and built the SSIK/);

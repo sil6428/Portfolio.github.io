@@ -39,7 +39,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Linux Plasma and Windows-inspired desktop patterns with a top system panel, wallpaper, taskbar, searchable launcher, clock, system tray, running-app indicator, and show-desktop control
 - Desktop icons divided into Folders, Documents, and System groups instead of one left-side stack, with folder contents automatically ordered by file type
 - A windowed file manager with Home, Projects, Network Labs, Education, Experience, Interests, Learning Log, Contact, and Inspiration folders, plus back, home, breadcrumb, places, status, minimize, maximize, and close controls
-- Nested project files for Archtech, SSIK, the portfolio, Password Manager, and Event Planner, alongside degree, certification, employment, volunteer, lab, profile, skills, public contact, photography, reading, and reference files
+- Nested project files for Archtech, SSIK, the portfolio, CICIDS2017 research, File Integrity Monitor, and Event Planner, alongside degree, certification, employment, volunteer, lab, profile, skills, public contact, photography, reading, and reference files
 - Applied-skills documentation that identifies where each networking, security, programming, frontend, Three.js, Cloudflare, Git, Linux, virtualization, web-delivery, and communication skill was used
 - A public [learning log](https://github.com/sil6428/learning-log) synchronized into AFFAN_OS, grouped into month folders and rendered as complete readable Markdown entries without sending visitors away from the computer interface
 - A repeatable `npm run sync:learning-log` import step that preserves the standalone log repository as the source of truth while committing a deployment-safe generated snapshot to the portfolio

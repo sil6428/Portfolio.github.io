@@ -12,7 +12,7 @@ type StaticDocumentId =
   | "ssik"
   | "portfolio"
   | "cicids2017"
-  | "password-manager"
+  | "file-integrity-monitor"
   | "event-planner"
   | "skills"
   | "education"
@@ -83,7 +83,7 @@ const baseFolders: Record<StaticFolderId, FolderContent> = {
       { id: "ssik", label: "SSIK.website", meta: "IT consulting", icon: "code", view: { kind: "document", id: "ssik" } },
       { id: "portfolio", label: "Portfolio.repo", meta: "Three.js + React", icon: "code", view: { kind: "document", id: "portfolio" } },
       { id: "cicids2017", label: "CICIDS2017.research", meta: "Security data audit", icon: "code", view: { kind: "document", id: "cicids2017" } },
-      { id: "password", label: "Password Manager.py", meta: "Python", icon: "code", view: { kind: "document", id: "password-manager" } },
+      { id: "integrity", label: "File Integrity Monitor.py", meta: "Python + SHA-256", icon: "code", view: { kind: "document", id: "file-integrity-monitor" } },
       { id: "events", label: "Event Planner.js", meta: "JavaScript", icon: "code", view: { kind: "document", id: "event-planner" } },
     ],
   },
@@ -234,11 +234,16 @@ const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
     ],
     links: [{ label: "View public research repository", href: "https://github.com/sil6428/cicids2017-reproduction" }],
   },
-  "password-manager": {
-    title: "Password Manager.py",
-    type: "Python source note",
-    intro: "A command-line password manager built to practise password generation, validation, menu navigation, and encrypted storage fundamentals.",
-    bullets: ["Input validation", "Password generation", "Command-line menus", "Encryption fundamentals"],
+  "file-integrity-monitor": {
+    title: "File Integrity Monitor.py",
+    type: "Security project · Python + SHA-256",
+    intro: "A command-line integrity monitor that creates trusted SHA-256 baselines and reports added, modified, deleted, and moved files through deterministic JSON evidence.",
+    bullets: [
+      "Detected 45 of 45 controlled filesystem changes across 500 fixture files",
+      "Covered 20 modifications, 10 deletions, 10 additions, and 5 moves with zero scan errors",
+      "Passed 7 automated tests, including same-size content tampering and rename detection",
+      "Uses only the Python standard library and documents its security limitations",
+    ],
   },
   "event-planner": {
     title: "Event Planner.js",
@@ -255,7 +260,7 @@ const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
       "Troubleshooting · Used ping, traceroute, show commands, Wireshark, packet captures, routing tables, and interface state to isolate connectivity and configuration problems",
       "Cybersecurity · Applied authentication, authorization, role-based access control, encryption, hashing, vulnerability analysis, and privacy requirements while planning Archtech and completing security coursework",
       "Security data research · Audited 2,830,743 CICIDS2017 flows, built deterministic cleaning and sampling pipelines, reproduced Random Forest baselines, measured split sensitivity, and documented limitations through 14 automated tests",
-      "Python · Built a command-line password manager with generation, validation, menus, input handling, and encrypted-storage fundamentals",
+      "Python · Built a SHA-256 file integrity monitor with deterministic baselines, JSON reports, four change categories, script-friendly exit codes, and 7 automated tests",
       "JavaScript and DOM · Built an event-planning tool that adds, edits, displays, and removes events while keeping the page state synchronized",
       "TypeScript and React · Built AFFAN_OS, the portfolio interface, reusable components, window state, keyboard interactions, and accessible controls",
       "Three.js · Built the interactive cyber lab, procedural room models, material systems, raycast selection, camera transitions, printer animation, and separate touch controls",

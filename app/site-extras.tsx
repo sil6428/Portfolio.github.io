@@ -51,7 +51,7 @@ function runTerminalCommand(command: string) {
       "Cybersecurity student, builder, and regional badminton player.",
     ],
     projects: [
-      "Archtech / SSIK Website / Network Lab / Password Manager",
+      "CICIDS2017 Research / File Integrity Monitor / Network Lab / SSIK Website",
       "Browse the Work page for details.",
     ],
     interests: [
