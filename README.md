@@ -38,10 +38,11 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - Compact desktop PC setup that starts as one powered-off screen and boots into a complete original AFFAN_OS interface
 - Linux Plasma and Windows-inspired desktop patterns with a top system panel, wallpaper, taskbar, searchable launcher, clock, system tray, running-app indicator, and show-desktop control
 - Desktop icons divided into Folders, Documents, and System groups instead of one left-side stack, with folder contents automatically ordered by file type
-- A windowed file manager with Home, Projects, Network Labs, Education, Experience, Interests, Contact, and Inspiration folders, plus back, home, breadcrumb, places, status, minimize, maximize, and close controls
+- A windowed file manager with Home, Projects, Network Labs, Education, Experience, Interests, Learning Log, Contact, and Inspiration folders, plus back, home, breadcrumb, places, status, minimize, maximize, and close controls
 - Nested project files for Archtech, SSIK, the portfolio, Password Manager, and Event Planner, alongside degree, certification, employment, volunteer, lab, profile, skills, public contact, photography, reading, and reference files
 - Applied-skills documentation that identifies where each networking, security, programming, frontend, Three.js, Cloudflare, Git, Linux, virtualization, web-delivery, and communication skill was used
-- A private learning-log record without a public repository link
+- A public [learning log](https://github.com/sil6428/learning-log) synchronized into AFFAN_OS, grouped into month folders and rendered as complete readable Markdown entries without sending visitors away from the computer interface
+- A repeatable `npm run sync:learning-log` import step that preserves the standalone log repository as the source of truth while committing a deployment-safe generated snapshot to the portfolio
 - An in-system PDF reader for the complete resume, with full-size and download controls
 - A Bash-inspired AFFAN_OS terminal that opens from the taskbar or backtick key, tracks a working directory, navigates folders, reads and searches documents, opens files and links, recalls command history, completes commands with Tab, reports system information, and controls room Easter eggs
 - Full shutdown behavior: leaving AFFAN_OS turns off the monitor and PC power light, returns to the 3D room, and runs the boot sequence again on the next startup
@@ -116,7 +117,7 @@ Visitors move the pointer to subtly shift the diorama, drag to orbit within a re
 - GitHub, LinkedIn, VSCO, email, phone, and resume links
 - Metadata, Open Graph images, robots rules, and a generated sitemap
 - Motion with reduced-motion support
-- Rendered HTML tests for important routes, links, metadata, and private-content checks
+- Rendered HTML tests for important routes, links, metadata, public learning-log content, and interface checks
 - Cloudflare Workers deployment
 
 ## Technology

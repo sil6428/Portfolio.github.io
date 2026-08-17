@@ -212,6 +212,9 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   const desktopOs = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../app/desktop-os.tsx", import.meta.url), "utf8"),
   );
+  const learningLog = await import("node:fs/promises").then(({ readFile }) =>
+    readFile(new URL("../app/learning-log-data.generated.ts", import.meta.url), "utf8"),
+  );
   const assetCredits = await import("node:fs/promises").then(({ readFile }) =>
     readFile(new URL("../THIRD_PARTY_ASSETS.md", import.meta.url), "utf8"),
   );
@@ -547,9 +550,17 @@ test("includes the device-local soundtrack and hidden terminal", async () => {
   assert.match(desktopOs, /grep <term> <file>/);
   assert.match(desktopOs, /PORTFOLIO_MODE=interactive/);
   assert.match(desktopOs, /iconOrder/);
-  assert.match(desktopOs, /Learning Log\.private/);
-  assert.match(desktopOs, /Private project record/);
-  assert.doesNotMatch(desktopOs, /github\.com\/sil6428\/learning-log/);
+  assert.match(desktopOs, /Learning Log/);
+  assert.match(desktopOs, /public entries/);
+  assert.match(desktopOs, /github\.com\/sil6428\/learning-log/);
+  assert.match(desktopOs, /LearningLogMarkdown/);
+  assert.match(desktopOs, /learning-log-\$\{month\.year\}-\$\{month\.month\}/);
+  assert.doesNotMatch(desktopOs, /Learning Log\.private/);
+  assert.doesNotMatch(desktopOs, /Private project record/);
+  assert.match(learningLog, /learning-log-entry-2026-08-16/);
+  assert.match(learningLog, /Started a cybersecurity research reproduction project/);
+  assert.match(learningLog, /learning-log-entry-2026-07-27/);
+  assert.match(learningLog, /Set up a genuine learning log/);
   assert.match(desktopOs, /Networking · Configured IPv4 and IPv6/);
   assert.match(desktopOs, /Python · Built a command-line password manager/);
   assert.match(desktopOs, /Three\.js · Built the interactive cyber lab/);

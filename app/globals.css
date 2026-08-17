@@ -3539,6 +3539,21 @@ body.room-default-view .room-fluid-hint {
 .affan-os-document-actions a { min-height: 40px; padding: 0 14px; display: inline-flex; align-items: center; gap: 12px; border: 1px solid rgba(112,184,255,.3); border-radius: 7px; color: #d9edff; background: rgba(112,184,255,.09); font-size: 11px; text-decoration: none; }
 .affan-os-document-actions a:hover,
 .affan-os-document-actions a:focus-visible { border-color: var(--os-blue); outline: none; background: rgba(112,184,255,.16); }
+.affan-os-log-body { max-width: 760px; margin: 34px 0 12px; padding-top: 8px; border-top: 1px solid rgba(179,203,216,.16); color: #c8d3d8; }
+.affan-os-log-body h2 { margin: 34px 0 13px; color: #f2f7f8; font: 500 clamp(19px,2.4vw,27px)/1.2 Georgia,serif; }
+.affan-os-log-body h3 { margin: 27px 0 11px; color: #e3ecef; font: 600 15px/1.35 "DM Sans",sans-serif; }
+.affan-os-log-body p { margin: 0 0 11px; font-size: 13px; line-height: 1.72; }
+.affan-os-log-body strong { color: #edf6f4; font-weight: 600; }
+.affan-os-log-body code { padding: 2px 5px; border: 1px solid rgba(104,224,174,.16); border-radius: 4px; color: #aaf2cb; background: rgba(6,16,13,.55); font: 11px "DM Mono",monospace; }
+.affan-os-log-body a { color: #8bc7ff; text-decoration-color: rgba(139,199,255,.45); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.affan-os-log-body a:hover,
+.affan-os-log-body a:focus-visible { color: #c4e3ff; outline: none; text-decoration-color: currentColor; }
+.affan-os-log-space { display: block; height: 4px; }
+.affan-os-log-bullet,
+.affan-os-log-check { position: relative; padding-left: 21px; }
+.affan-os-log-bullet::before { content: ""; position: absolute; left: 2px; top: .72em; width: 7px; height: 2px; background: var(--os-mint); }
+.affan-os-log-check { display: flex; gap: 9px; align-items: flex-start; padding-left: 0; }
+.affan-os-log-check > span { color: var(--os-mint); font: 13px/1.72 "DM Mono",monospace; }
 .affan-os-document.is-terminal { color: #bfffe0; background: #06100d; font-family: "DM Mono",monospace; }
 .affan-os-document.is-terminal h1 { color: #effff5; font-family: "DM Mono",monospace; font-size: 28px; }
 .affan-os-document.is-terminal .affan-os-document-intro { color: #8ad7ae; font: 12px/1.8 "DM Mono",monospace; }

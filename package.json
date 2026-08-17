@@ -11,6 +11,7 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
+    "sync:learning-log": "node scripts/sync-learning-log.mjs",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },

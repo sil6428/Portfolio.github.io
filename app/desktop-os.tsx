@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { learningLogEntries } from "./learning-log-data.generated";
 
-type FolderId = "home" | "projects" | "networking" | "education" | "experience" | "interests" | "contact" | "inspiration";
-type DocumentId =
+type StaticFolderId = "home" | "projects" | "networking" | "education" | "experience" | "interests" | "contact" | "inspiration";
+type LearningLogFolderId = "learning-log" | `learning-log-${string}-${string}`;
+type FolderId = StaticFolderId | LearningLogFolderId;
+type StaticDocumentId =
   | "about"
   | "archtech"
   | "ssik"
@@ -15,7 +18,6 @@ type DocumentId =
   | "certification"
   | "work-experience"
   | "volunteer"
-  | "learning-log"
   | "vlan-lab"
   | "proxmox"
   | "reading"
@@ -25,6 +27,8 @@ type DocumentId =
   | "home-lab"
   | "resume"
   | "terminal";
+type LearningLogDocumentId = `learning-log-entry-${string}`;
+type DocumentId = StaticDocumentId | LearningLogDocumentId;
 
 type OsView =
   | { kind: "folder"; id: FolderId }
@@ -44,10 +48,14 @@ type DocumentContent = {
   type: string;
   intro: string;
   bullets?: string[];
+  body?: string;
+  publishedAt?: string;
   links?: Array<{ label: string; href: string }>;
 };
 
-const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }> = {
+type FolderContent = { title: string; path: string; items: OsItem[] };
+
+const baseFolders: Record<StaticFolderId, FolderContent> = {
   home: {
     title: "Home",
     path: "/home/affan",
@@ -62,7 +70,7 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
       { id: "about", label: "About.txt", meta: "Text document", icon: "text", view: { kind: "document", id: "about" } },
       { id: "skills", label: "Skills.md", meta: "Markdown", icon: "code", view: { kind: "document", id: "skills" } },
       { id: "resume", label: "Resume.pdf", meta: "PDF document", icon: "pdf", view: { kind: "document", id: "resume" } },
-      { id: "learning-log", label: "Learning Log.private", meta: "Private project record", icon: "text", view: { kind: "document", id: "learning-log" } },
+      { id: "learning-log", label: "Learning Log", meta: `${learningLogEntries.length} public entries`, icon: "folder", view: { kind: "folder", id: "learning-log" } },
       { id: "reading", label: "Reading-list.txt", meta: "Text document", icon: "text", view: { kind: "document", id: "reading" } },
     ],
   },
@@ -144,7 +152,43 @@ const folders: Record<FolderId, { title: string; path: string; items: OsItem[] }
   },
 };
 
-const documents: Record<DocumentId, DocumentContent> = {
+const learningLogMonths = Array.from(new Map(
+  learningLogEntries.map((entry) => [`${entry.year}-${entry.month}`, { year: entry.year, month: entry.month, monthLabel: entry.monthLabel }]),
+).values()).sort((a, b) => `${b.year}-${b.month}`.localeCompare(`${a.year}-${a.month}`));
+
+const learningLogFolders = Object.fromEntries([
+  ["learning-log", {
+    title: "Learning Log",
+    path: "/home/affan/Learning Log",
+    items: [
+      ...learningLogMonths.map((month) => ({
+        id: `learning-log-${month.year}-${month.month}`,
+        label: `${month.monthLabel} ${month.year}`,
+        meta: `${learningLogEntries.filter((entry) => entry.year === month.year && entry.month === month.month).length} entries`,
+        icon: "folder" as const,
+        view: { kind: "folder" as const, id: `learning-log-${month.year}-${month.month}` as LearningLogFolderId },
+      })),
+      { id: "learning-log-repository", label: "Repository.url", meta: "Public source on GitHub", icon: "link" as const, href: "https://github.com/sil6428/learning-log" },
+    ],
+  }],
+  ...learningLogMonths.map((month) => [`learning-log-${month.year}-${month.month}`, {
+    title: `${month.monthLabel} ${month.year}`,
+    path: `/home/affan/Learning Log/${month.year}/${month.monthLabel}`,
+    items: learningLogEntries
+      .filter((entry) => entry.year === month.year && entry.month === month.month)
+      .map((entry) => ({
+        id: entry.id,
+        label: `${entry.date}.md`,
+        meta: entry.title,
+        icon: "code" as const,
+        view: { kind: "document" as const, id: entry.id as LearningLogDocumentId },
+      })),
+  }]),
+]) as Record<LearningLogFolderId, FolderContent>;
+
+const folders = { ...baseFolders, ...learningLogFolders } as Record<FolderId, FolderContent>;
+
+const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
   about: {
     title: "About.txt",
     type: "Plain text",
@@ -256,12 +300,6 @@ const documents: Record<DocumentId, DocumentContent> = {
       "Coordinated event setup, logistics, front-line attendee assistance, and flow control",
     ],
   },
-  "learning-log": {
-    title: "Learning Log.private",
-    type: "Private project record",
-    intro: "A private record of genuine study sessions, networking labs, portfolio development, problems solved, evidence, and next steps. The repository is intentionally not linked from this public portfolio.",
-    bullets: ["Tracks completed work instead of artificial activity", "Records problems, decisions, evidence, and next steps", "Keeps private project context outside the public portfolio", "Updated alongside meaningful portfolio and technical work"],
-  },
   "vlan-lab": {
     title: "VLAN Lab.md",
     type: "Networking lab notes",
@@ -316,6 +354,16 @@ const documents: Record<DocumentId, DocumentContent> = {
   },
 };
 
+const learningLogDocuments = Object.fromEntries(learningLogEntries.map((entry) => [entry.id, {
+  title: entry.title,
+  type: "Public learning log · Markdown",
+  intro: `Published ${entry.date}. This complete entry is stored in the public learning-log repository and rendered locally inside AFFAN_OS.`,
+  body: entry.body,
+  publishedAt: entry.date,
+}])) as Record<LearningLogDocumentId, DocumentContent>;
+
+const documents = { ...baseDocuments, ...learningLogDocuments } as Record<DocumentId, DocumentContent>;
+
 const desktopGroups: Array<{ id: string; label: string; items: OsItem[] }> = [
   {
     id: "folders",
@@ -344,7 +392,7 @@ const desktopGroups: Array<{ id: string; label: string; items: OsItem[] }> = [
     label: "System",
     items: [
       { id: "terminal", label: "Terminal", meta: "AFFAN_OS shell", icon: "terminal", view: { kind: "document", id: "terminal" } },
-      { id: "learning-log", label: "Learning Log.private", meta: "Private build notes", icon: "text", view: { kind: "document", id: "learning-log" } },
+      { id: "learning-log", label: "Learning Log", meta: `${learningLogEntries.length} public entries`, icon: "folder", view: { kind: "folder", id: "learning-log" } },
     ],
   },
 ];
@@ -358,6 +406,37 @@ function FileIcon({ type }: { type: OsItem["icon"] }) {
 
 function ExternalMark() {
   return <span className="affan-os-external" aria-hidden="true">↗</span>;
+}
+
+function renderInlineMarkdown(value: string): ReactNode[] {
+  return value.split(/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\)|<https?:\/\/[^>]+>)/g).filter(Boolean).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith("`") && part.endsWith("`")) return <code key={`${part}-${index}`}>{part.slice(1, -1)}</code>;
+    const markdownLink = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (markdownLink) return <a href={markdownLink[2]} target="_blank" rel="noreferrer" key={`${part}-${index}`}>{markdownLink[1]}<span className="sr-only"> (opens in a new tab)</span></a>;
+    if (part.startsWith("<http") && part.endsWith(">")) {
+      const href = part.slice(1, -1);
+      return <a href={href} target="_blank" rel="noreferrer" key={`${part}-${index}`}>{href}<span className="sr-only"> (opens in a new tab)</span></a>;
+    }
+    return part;
+  });
+}
+
+function LearningLogMarkdown({ body }: { body: string }) {
+  return (
+    <div className="affan-os-log-body">
+      {body.split("\n").map((rawLine, index) => {
+        const line = rawLine.trim();
+        if (!line) return <span className="affan-os-log-space" aria-hidden="true" key={`space-${index}`} />;
+        if (line.startsWith("### ")) return <h3 key={`h3-${index}`}>{renderInlineMarkdown(line.slice(4))}</h3>;
+        if (line.startsWith("## ")) return <h2 key={`h2-${index}`}>{renderInlineMarkdown(line.slice(3))}</h2>;
+        const checkbox = line.match(/^- \[([ xX])\]\s+(.*)$/);
+        if (checkbox) return <p className="affan-os-log-check" key={`check-${index}`}><span aria-hidden="true">{checkbox[1].toLowerCase() === "x" ? "✓" : "○"}</span>{renderInlineMarkdown(checkbox[2])}</p>;
+        if (line.startsWith("- ")) return <p className="affan-os-log-bullet" key={`bullet-${index}`}>{renderInlineMarkdown(line.slice(2))}</p>;
+        return <p key={`paragraph-${index}`}>{renderInlineMarkdown(line)}</p>;
+      })}
+    </div>
+  );
 }
 
 export default function DesktopOs({ onExit }: { onExit: () => void }) {
@@ -462,6 +541,7 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
       lab: "networking", labs: "networking", network: "networking", networking: "networking",
       education: "education", experience: "experience", interest: "interests", interests: "interests",
       contact: "contact", inspiration: "inspiration", references: "inspiration",
+      log: "learning-log", logs: "learning-log", learning: "learning-log", "learning-log": "learning-log",
     };
     const normalized = normalizeShellTarget(target.split("/").filter(Boolean).at(-1) ?? target);
     if (aliases[normalized]) return aliases[normalized] ?? null;
@@ -503,6 +583,8 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
       experience: "experience",
       interests: "interests",
       contact: "contact",
+      "learning-log": "learning-log",
+      logs: "learning-log",
     };
     const documentCommands: Partial<Record<string, DocumentId>> = {
       resume: "resume",
@@ -516,7 +598,7 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
         "Room controls: lights, cat, relic, signal, print, room, shutdown",
         "Quote names containing spaces. Arrow keys recall history and Tab completes commands.",
       ],
-      ls: ["Folders: Projects  Network Labs  Education  Experience  Interests  Contact  Inspiration", "Files: About.txt  Skills.md  Resume.pdf  Learning Log.private"],
+      ls: ["Folders: Projects  Network Labs  Education  Experience  Interests  Contact  Inspiration  Learning Log", "Files: About.txt  Skills.md  Resume.pdf"],
       whoami: ["Affan Shaikh", "Networking and Cybersecurity student · Ontario Tech · Class of 2028"],
       status: ["AFFAN_OS online", "Current focus: portfolio systems, cybersecurity, networking, and a Proxmox home lab."],
       lights: ["Sending a colour override to the 3D room..."],
@@ -591,7 +673,7 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
       if (item?.view?.kind !== "document") appendOutput(`cat: ${target || "missing operand"}: No such text file`);
       else {
         const document = documents[item.view.id];
-        appendOutput(`# ${document.title}`, document.intro, ...(document.bullets ?? []).map((line) => `- ${line}`));
+        appendOutput(`# ${document.title}`, document.intro, ...(document.bullets ?? []).map((line) => `- ${line}`), ...(document.body?.split("\n") ?? []));
       }
       setTerminalInput("");
       return;
@@ -609,7 +691,7 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
       if (!pattern || item?.view?.kind !== "document") appendOutput("usage: grep <pattern> <file>");
       else {
         const document = documents[item.view.id];
-        const matches = [document.intro, ...(document.bullets ?? [])].filter((line) => line.toLowerCase().includes(pattern.toLowerCase()));
+        const matches = [document.intro, ...(document.bullets ?? []), ...(document.body?.split("\n") ?? [])].filter((line) => line.toLowerCase().includes(pattern.toLowerCase()));
         appendOutput(...(matches.length ? matches : [`grep: no matches for '${pattern}' in ${item.label}`]));
       }
       setTerminalInput("");
@@ -802,7 +884,7 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
               <div className="affan-os-file-layout">
                 <aside className="affan-os-places" aria-label="Places">
                   <strong>Places</strong>
-                  {(["home", "projects", "networking", "education", "experience", "interests", "contact"] as FolderId[]).map((folderId) => (
+                  {(["home", "projects", "networking", "education", "experience", "interests", "learning-log", "contact"] as FolderId[]).map((folderId) => (
                     <button className={view.id === folderId ? "is-current" : ""} type="button" onClick={() => openView({ kind: "folder", id: folderId })} key={folderId}>{folders[folderId].title}</button>
                   ))}
                 </aside>
@@ -860,6 +942,7 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
               <div className="affan-os-document-meta"><span>{activeDocument.type}</span><span>Read only</span></div>
               <h1>{activeDocument.title}</h1>
               <p className="affan-os-document-intro">{activeDocument.intro}</p>
+              {activeDocument.body && <LearningLogMarkdown body={activeDocument.body} />}
               {activeDocument.bullets && <ul>{activeDocument.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>}
               {activeDocument.links && <div className="affan-os-document-actions">{activeDocument.links.map((link) => <a href={link.href} target="_blank" rel="noreferrer" key={link.href}>{link.label}<ExternalMark /></a>)}</div>}
             </div>
