@@ -128,7 +128,7 @@ export default function Info() {
           <a href="https://www.linkedin.com/in/sil6428" target="_blank" rel="noreferrer">LinkedIn <Arrow /></a>
           <a href="https://github.com/sil6428" target="_blank" rel="noreferrer">GitHub <Arrow /></a>
           <a href="tel:+16473091927">Phone <Arrow /></a>
-          <a href="/Affan_Shaikh_Resume.pdf" target="_blank">Resume <Arrow /></a>
+          <a href="/Affan_Shaikh_Resume.pdf?v=2026-08-17" target="_blank">Resume <Arrow /></a>
         </div>
       </section>
 
