@@ -11,6 +11,7 @@ type StaticDocumentId =
   | "archtech"
   | "ssik"
   | "portfolio"
+  | "cicids2017"
   | "password-manager"
   | "event-planner"
   | "skills"
@@ -60,7 +61,7 @@ const baseFolders: Record<StaticFolderId, FolderContent> = {
     title: "Home",
     path: "/home/affan",
     items: [
-      { id: "projects", label: "Projects", meta: "5 items", icon: "folder", view: { kind: "folder", id: "projects" } },
+      { id: "projects", label: "Projects", meta: "6 items", icon: "folder", view: { kind: "folder", id: "projects" } },
       { id: "networking", label: "Network Labs", meta: "2 files", icon: "folder", view: { kind: "folder", id: "networking" } },
       { id: "education", label: "Education", meta: "2 files", icon: "folder", view: { kind: "folder", id: "education" } },
       { id: "experience", label: "Experience", meta: "2 files", icon: "folder", view: { kind: "folder", id: "experience" } },
@@ -81,6 +82,7 @@ const baseFolders: Record<StaticFolderId, FolderContent> = {
       { id: "archtech", label: "Archtech.project", meta: "Work in progress", icon: "code", view: { kind: "document", id: "archtech" } },
       { id: "ssik", label: "SSIK.website", meta: "IT consulting", icon: "code", view: { kind: "document", id: "ssik" } },
       { id: "portfolio", label: "Portfolio.repo", meta: "Three.js + React", icon: "code", view: { kind: "document", id: "portfolio" } },
+      { id: "cicids2017", label: "CICIDS2017.research", meta: "Security data audit", icon: "code", view: { kind: "document", id: "cicids2017" } },
       { id: "password", label: "Password Manager.py", meta: "Python", icon: "code", view: { kind: "document", id: "password-manager" } },
       { id: "events", label: "Event Planner.js", meta: "JavaScript", icon: "code", view: { kind: "document", id: "event-planner" } },
     ],
@@ -219,6 +221,19 @@ const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
     bullets: ["Three.js room and custom models", "Canvas-rendered monitor states", "Keyboard and touch support", "Automated route and content checks"],
     links: [{ label: "View repository", href: "https://github.com/sil6428/Portfolio.github.io" }],
   },
+  cicids2017: {
+    title: "CICIDS2017.research",
+    type: "Research project · Cybersecurity dataset audit",
+    intro: "A reproducible audit and split-sensitivity study of the CICIDS2017 intrusion-detection dataset. I cleaned and traced the public CSV data, reproduced a Random Forest baseline, and tested how the evaluation changes when source files are held out.",
+    bullets: [
+      "Audited 2,830,743 network-flow records and 79 columns across eight source files",
+      "Removed 2,867 rows containing invalid values and retained 2,827,876 clean flows with 77 model features",
+      "Measured 99.5721% mean random-split accuracy across three seeds on a deterministic 239,603-row sample",
+      "Measured 20.7831% accuracy under leave-one-source-file-out evaluation, exposing a 78.7889 percentage-point split sensitivity",
+      "Built 14 automated tests and published the full method, limitations, reports, and generated JSON evidence",
+    ],
+    links: [{ label: "View public research repository", href: "https://github.com/sil6428/cicids2017-reproduction" }],
+  },
   "password-manager": {
     title: "Password Manager.py",
     type: "Python source note",
@@ -239,6 +254,7 @@ const baseDocuments: Record<StaticDocumentId, DocumentContent> = {
       "Networking · Configured IPv4 and IPv6 addressing, subnetting, VLANs, access ports, 802.1Q trunks, DHCP, DNS, NAT, STP, and inter-VLAN routing in Cisco IOS and Packet Tracer labs",
       "Troubleshooting · Used ping, traceroute, show commands, Wireshark, packet captures, routing tables, and interface state to isolate connectivity and configuration problems",
       "Cybersecurity · Applied authentication, authorization, role-based access control, encryption, hashing, vulnerability analysis, and privacy requirements while planning Archtech and completing security coursework",
+      "Security data research · Audited 2,830,743 CICIDS2017 flows, built deterministic cleaning and sampling pipelines, reproduced Random Forest baselines, measured split sensitivity, and documented limitations through 14 automated tests",
       "Python · Built a command-line password manager with generation, validation, menus, input handling, and encrypted-storage fundamentals",
       "JavaScript and DOM · Built an event-planning tool that adds, edits, displays, and removes events while keeping the page state synchronized",
       "TypeScript and React · Built AFFAN_OS, the portfolio interface, reusable components, window state, keyboard interactions, and accessible controls",
