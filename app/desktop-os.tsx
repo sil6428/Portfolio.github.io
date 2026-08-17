@@ -923,10 +923,10 @@ export default function DesktopOs({ onExit }: { onExit: () => void }) {
             <div className="affan-os-resume-viewer">
               <nav aria-label="Resume controls">
                 <div><strong>Affan_Shaikh_Resume.pdf</strong><span>1 page</span></div>
-                <a href="/Affan_Shaikh_Resume.pdf?v=2026-08-17" target="_blank" rel="noreferrer">Open full size <ExternalMark /></a>
-                <a href="/Affan_Shaikh_Resume.pdf?v=2026-08-17" download>Download PDF</a>
+                <a href="/Affan_Shaikh_Resume.pdf?v=2026-08-17-dense" target="_blank" rel="noreferrer">Open full size <ExternalMark /></a>
+                <a href="/Affan_Shaikh_Resume.pdf?v=2026-08-17-dense" download>Download PDF</a>
               </nav>
-              <iframe src="/Affan_Shaikh_Resume.pdf?v=2026-08-17#view=FitH&toolbar=0" title="Affan Shaikh resume PDF" />
+              <iframe src="/Affan_Shaikh_Resume.pdf?v=2026-08-17-dense#view=FitH&toolbar=0" title="Affan Shaikh resume PDF" />
             </div>
           )}
 
